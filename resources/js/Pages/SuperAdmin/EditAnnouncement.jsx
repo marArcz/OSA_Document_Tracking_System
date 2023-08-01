@@ -23,7 +23,6 @@ const EditAnnouncement = ({ auth,announcement }) => {
     return (
         <PanelLayout userAuth={auth} layout={LayoutType.SUPER_ADMIN} headerTitle="Announcements" defaultActiveLink="announcements">
             <ImageUploader closeOnComplete onCompleted={imgUrl => setData('image', imgUrl)} show={showUploader} handleClose={() => setShowUploader(false)} />
-            <Head title='Welcome' />
             <div className='py-3'>
                 <div className="container-fluid">
                     <Card className='border-0 shadow-sm'>

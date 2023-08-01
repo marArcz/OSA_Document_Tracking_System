@@ -64,7 +64,6 @@ const Reminders = ({ auth, reminders }) => {
                 }
             </ModalComponent>
             <ConfirmModal title='Are you sure to delete this reminder?' message='This action cannot be undone.' processing={processing} show={showConfirmModal} handleClose={() => setShowConfirmModal(false)} onConfirm={deleteReminder} onCancel={() => setShowConfirmModal(false)} />
-            <Head title='Welcome' />
             <div className='py-3'>
                 <div className="px-[1.5rem]">
                     {/* <div className="text-end mb-2">

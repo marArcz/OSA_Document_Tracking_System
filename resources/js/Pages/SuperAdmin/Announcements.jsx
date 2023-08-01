@@ -55,7 +55,6 @@ const Announcements = ({ auth, announcements }) => {
                 }
             </ModalComponent>
             <ConfirmModal show={showConfirmModal} handleClose={() => setShowConfirmModal(false)} onConfirm={() => { }} onCancel={() => setShowConfirmModal(false)} />
-            <Head title='Welcome' />
             <div className='py-3'>
                 <div className="px-[1.5rem]">
                     {/* <div className="text-end mb-2">

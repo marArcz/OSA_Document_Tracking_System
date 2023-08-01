@@ -8,6 +8,7 @@ import UnitHeadSidebar from '@/Components/UnitHeadSidebar'
 import BottomNav from '@/Components/BottomNav'
 import { ToastContainer, toast } from 'react-toastify'
 import { useNavState } from '@/States/States'
+import { Head } from '@inertiajs/react'
 
 export const LayoutType = {
     SUPER_ADMIN: 'super_admin',
@@ -32,8 +33,10 @@ const PanelLayout = ({ userAuth, children, layout = null, headerTitle = null, de
 
     const [activeLink, setActiveLink] = useState(defaultActiveLink)
     const {isNavActive, setNavActive} = useNavState();
+
     return (
         <AppLayout auth={userAuth}>
+            <Head title={headerTitle || activeLink[0].toUpperCase() + activeLink.substr(1).toLowerCase()}/>
             <ToastContainer theme='light' />
             <NavbarComponent headerTitle={headerTitle || activeLink} setIsActive={setNavActive} isActive={isNavActive} />
             <Sidebar activeLink={activeLink} isActive={isNavActive} layout={layout} />

@@ -12,7 +12,6 @@ export default function Dashboard({ auth }) {
     return (
 
         <PanelLayout userAuth={auth} layout={LayoutType.SUPER_ADMIN} defaultActiveLink="dashboard">
-            <Head title='Welcome' />
             <div className='py-3'>
                 <div className="container-fluid">
                     <Card className='border-0 shadow-sm'>
