@@ -1,0 +1,17 @@
+import React from 'react'
+import { Modal } from 'react-bootstrap'
+
+const ModalComponent = ({ centered=false,show = false, handleClose, title = "", children,size="md" }) => {
+    return (
+        <Modal backdrop show={show} centered={centered} onHide={handleClose} size={size}>
+            {title !== '' && (
+                <Modal.Header>{title}</Modal.Header>
+            )}
+            <Modal.Body className='p-4'>
+                {children}
+            </Modal.Body>
+        </Modal>
+    )
+}
+
+export default ModalComponent
