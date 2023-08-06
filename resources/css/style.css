@@ -96,6 +96,10 @@
   transform: translateY(-4px) rotate(-45deg);
 }
 
+:root {
+  --toastify-color-success: #1c9c20;
+}
+
 .app {
   min-height: 100vh !important;
 }
@@ -181,16 +185,44 @@
   z-index: 7 !important;
   position: fixed;
   width: 4.5rem;
-  overflow-y: auto !important;
   height: 100vh !important;
   top: 0;
   left: 0;
   padding-top: 4.5rem;
   transition: all 0.2s ease-in;
   box-sizing: border-box !important;
+  overflow-y: auto;
+  /* Scrollbar styles */
+  /* width */
+  /* Track */
+  /* Handle */
+  /* Handle on hover */
+  /* end of scrollbar styles */
 }
 .app-sidebar.active {
   width: 17.5rem !important;
+}
+.app-sidebar::-webkit-scrollbar {
+  width: 3px;
+}
+.app-sidebar::-webkit-scrollbar-track {
+  background: #ffffff;
+}
+.app-sidebar::-webkit-scrollbar-thumb {
+  background: #ffffff;
+}
+.app-sidebar::-webkit-scrollbar-thumb:hover {
+  background: #ffffff;
+}
+.app-sidebar:hover {
+  /* Handle */
+  /* Handle on hover */
+}
+.app-sidebar:hover::-webkit-scrollbar-thumb {
+  background: rgba(40, 53, 147, 0.2);
+}
+.app-sidebar:hover::-webkit-scrollbar-thumb:hover {
+  background: rgba(40, 53, 147, 0.5);
 }
 @media screen and (max-width: 768px) {
   .app-sidebar {
@@ -254,6 +286,9 @@
   background: rgba(40, 53, 147, 0.1);
   color: #283593 !important;
   border-left: 4px solid #283593;
+}
+.app-sidebar .sidebar-menu li a.active span, .app-sidebar .sidebar-menu li a.active i {
+  font-weight: 500;
 }
 .app-sidebar .sidebar-menu li a span {
   transition: 0.2s ease-in-out !important;
@@ -473,4 +508,155 @@
 
 .fi {
   line-height: 0 !important;
+}
+
+.btn-drag-sort {
+  cursor: grab !important;
+}
+
+.btn-tool {
+  background: none !important;
+  border: none !important;
+  outline: none !important;
+  transition: 200ms;
+}
+.btn-tool span {
+  transition: 200ms;
+  display: none;
+}
+.btn-tool:hover {
+  background: rgba(100, 100, 100, 0.1) !important;
+  color: rgb(100, 100, 100) !important;
+}
+.btn-tool:hover span {
+  display: block;
+}
+.btn-tool[aria-checked=true] {
+  background: rgba(28, 156, 32, 0.1) !important;
+  color: #1c9c20 !important;
+}
+.btn-tool[aria-checked=true] span {
+  display: block;
+}
+
+.content-wrapper {
+  padding: 1.3rem 1.5rem !important;
+}
+
+.custom-select {
+  position: relative;
+}
+.custom-select .toggler-btn {
+  z-index: 3;
+  border-radius: 5rem;
+  box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+  padding-top: 1.15rem;
+  padding-bottom: 1.15rem;
+  text-align: center !important;
+  margin: auto !important;
+  outline: none !important;
+  font-size: 1.2rem !important;
+  height: 70px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  border: 3px solid rgba(40, 53, 147, 0.5) !important;
+  color: #283593;
+  font-weight: bold;
+}
+.custom-select .toggler-btn.filled {
+  background: linear-gradient(88deg, #52639E 0%, #223B93 100%) !important;
+  color: white !important;
+  border: none !important;
+}
+.custom-select .toggler-btn::before {
+  content: "\ea4a";
+  line-height: 1 !important;
+  font-family: boxicons !important;
+  position: absolute;
+  left: 25px;
+  font-size: 1.5rem !important;
+  top: 1.3rem;
+  transition: 0.2s;
+}
+.custom-select .toggler-btn[aria-expanded=true]::before {
+  rotate: 180deg;
+}
+.custom-select .select-menu {
+  max-height: 0;
+  display: none;
+  position: absolute;
+  left: 0;
+  top: 1.5rem;
+  padding-top: 3rem !important;
+  z-index: 2;
+  height: -moz-max-content;
+  height: max-content;
+  box-shadow: 1px 1px 5px rgb(186, 184, 184);
+  width: 100%;
+  max-width: 100% !important;
+  box-sizing: border-box;
+  background: white;
+  text-align: left;
+  border-radius: 10px 10px 3px 3px;
+}
+.custom-select .select-menu[aria-expanded=true] {
+  max-height: 100vh;
+  display: block;
+}
+.custom-select .select-menu .select-menu-item {
+  box-sizing: border-box;
+  cursor: pointer;
+  text-align: left;
+  padding-left: 4rem !important;
+  color: black;
+  padding-top: 1.1rem;
+  font-size: 1.1rem;
+  padding-bottom: 1.1rem;
+  border-bottom: 1px solid rgb(215, 215, 215);
+}
+.custom-select .select-menu .select-menu-item:hover {
+  background: rgba(167, 167, 167, 0.1) !important;
+}
+.custom-select .select-menu .select-menu-item[aria-selected=true] {
+  background: rgba(167, 167, 167, 0.1) !important;
+  color: #283593;
+  font-weight: bolder !important;
+}
+
+.google-signin-btn {
+  position: relative;
+  filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.11));
+  padding-top: 10px;
+}
+.google-signin-btn .icon {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 80px;
+  height: 80px;
+  background: white;
+  border-radius: 50%;
+  padding: 20px;
+}
+.google-signin-btn .icon img {
+  max-width: 100%;
+  max-height: 100%;
+  width: 100%;
+  height: 100%;
+}
+.google-signin-btn button {
+  width: 100%;
+  padding: 18px 10px;
+  border-radius: 50px;
+  background: #EEF2FF;
+  color: #283593;
+  font-weight: bold;
+  font-size: 1.2rem;
+  padding-left: 80px;
+}
+
+.h-scrolling-list .list {
+  min-height: 80px;
 }/*# sourceMappingURL=style.css.map */

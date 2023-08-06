@@ -1,38 +1,34 @@
-import ConfirmModal from '@/Components/ConfirmModal'
 import ImageUploader from '@/Components/ImageUploader'
-import Modal from '@/Components/Modal'
 import PanelLayout, { LayoutType } from '@/Layouts/PanelLayout'
 import { Head, Link, useForm } from '@inertiajs/react'
 import React, { useState } from 'react'
 import { Alert, Button, Card, Form, Image } from 'react-bootstrap'
 
-const EditAnnouncement = ({ auth,announcement }) => {
+const CreateAnnouncement = ({ auth }) => {
     const [count, setCount] = useState(0)
     const [showUploader, setShowUploader] = useState(false)
-    const { data, setData, processing,patch } = useForm({
-        title: announcement.title,
-        content: announcement.content,
-        image: announcement.image
+    const { data, setData, processing, post } = useForm({
+        title: '',
+        content: '',
+        image: ''
     });
 
     const onSubmit = (e) => {
         e.preventDefault();
-        patch(route('announcements.edit',{id:announcement.id}))
+        post(route('announcements.create'))
     }
 
     return (
-        <PanelLayout userAuth={auth} layout={LayoutType.SUPER_ADMIN} headerTitle="Announcements" defaultActiveLink="announcements">
+        <PanelLayout userAuth={auth} layout={LayoutType.SUPER_ADMIN} headerTitle="Create Announcement" defaultActiveLink="announcements">
             <ImageUploader closeOnComplete onCompleted={imgUrl => setData('image', imgUrl)} show={showUploader} handleClose={() => setShowUploader(false)} />
             <div className='py-3'>
                 <div className="container-fluid">
-                    <Card className='border-0 shadow-sm'>
-                        <Card.Header className='bg-white p-4'>
-                            <p className="fs-5 fw-bold text-secondary my-0 flex items-center gap-2">
-                                <i className='fi fi-rr-pen-square text-success'></i>
-                                Edit Announcement
-                            </p>
-                        </Card.Header>
-                        <Card.Body className=' p-4'>
+                    <Card className='border-0 shadow-sm p-3'>
+                        <Card.Body>
+                            <Link className='link link-secondary text-sm text-decoration-none' href={route('admin.announcements')}>
+                                <i className='fi fi-rr-arrow-back'></i> Cancel
+                            </Link>
+                            <Alert variant='secondary' className='mb-3 mt-2 text-sm'>Created announcements will be posted and viewed by unit heads and other users.</Alert>
 
                             <Form onSubmit={onSubmit}>
                                 <div className="mb-3">
@@ -47,14 +43,14 @@ const EditAnnouncement = ({ auth,announcement }) => {
                                 </div>
                                 <div className="mb-3">
                                     <Form.Label>Content:</Form.Label>
-                                    <textarea value={data.content} className='form-control' onChange={e => setData('content', e.target.value)} rows={3}></textarea>
+                                    <textarea className='form-control' onChange={e => setData('content', e.target.value)} rows={3}></textarea>
                                 </div>
                                 <div className="mt-3">
                                     <Button onClick={() => setShowUploader(true)} size='sm' className='rounded-1 mb-3 btn-light-primary'>
-                                        <span className='text-sm'>{data.image == '' || data.image == null ? 'Add' : 'Change'} Image</span>
+                                        <span className='text-sm'>{data.image == '' ? 'Add' : 'Change'} Image</span>
                                     </Button>
                                     {
-                                        data.image !== '' && data.image !== null && (
+                                        data.image !== '' && (
                                             <>
                                                 <Button onClick={() => setShowUploader(true)} size='sm' className='rounded-1 mb-3 ms-2 btn-light-secondary'>
                                                     <span className='text-sm'>Remove Image</span>
@@ -70,11 +66,8 @@ const EditAnnouncement = ({ auth,announcement }) => {
                                         )
                                     }
                                 </div>
-                                <div className="text-end mt-3 flex justify-end gap-3 items-center">
-                                    <Link className='link link-secondary text-sm text-decoration-none' href={route('super-admin.announcements')}>
-                                        <i className='fi fi-rr-arrow-back'></i> Cancel
-                                    </Link>
-                                    <Button className='rounded-1 btn-primary ' type='submit' disabled={processing}>
+                                <div className="text-end mt-3">
+                                    <Button className='rounded-1 btn-primary ' type='submit'>
                                         <div className="flex justify-center items-center gap-1">
                                             <span className="text-sm">Submit</span>
                                             <i className='bx bx-right-arrow-alt leading-none'></i>
@@ -90,4 +83,4 @@ const EditAnnouncement = ({ auth,announcement }) => {
     )
 }
 
-export default EditAnnouncement
+export default CreateAnnouncement

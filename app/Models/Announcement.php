@@ -12,5 +12,6 @@ class Announcement extends Model
         'title',
         'content',
         'image',
+        'order'
     ];
 }

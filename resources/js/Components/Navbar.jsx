@@ -10,14 +10,14 @@ const NavbarComponent = ({ isActive, setIsActive, headerTitle }) => {
     const { userAuth, setUserAth } = useUserAuthState();
 
     const getUserType = () => {
-        let url = window.location.pathname.split('/')[1];
+        let role = userAuth.role
 
-        switch (url) {
-            case 'super-admin':
+        switch (role) {
+            case 'super_admin':
                 return 'Super Admin';
             case 'admin':
                 return 'Admin';
-            case 'unit-head':
+            case 'unit_head':
                 return 'Unit Head';
             default:
                 return 'Guest';
@@ -50,7 +50,7 @@ const NavbarComponent = ({ isActive, setIsActive, headerTitle }) => {
                                     <div className=" flex gap-x-2 justify-center text-center items-center">
                                         <Image
                                             className='rounded-circle'
-                                            src='/images/johndoe.jpg'
+                                            src={userAuth?.user?.image}
                                             alt='User Photo'
                                             width={45}
                                             height={45}
@@ -80,7 +80,7 @@ const NavbarComponent = ({ isActive, setIsActive, headerTitle }) => {
                                     <Dropdown.Item href='#' className='link-secondary'>
                                         <i className='bx bx-user text-primary'></i> Profile
                                     </Dropdown.Item>
-                                    <Dropdown.Item href='#' className='link-secondary'>
+                                    <Dropdown.Item href={route('admin.signout')} className='link-secondary'>
                                         <i className='bx bx-log-out text-danger'></i> Log Out
                                     </Dropdown.Item>
                                 </Dropdown.Menu>

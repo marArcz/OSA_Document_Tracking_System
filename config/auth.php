@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\SuperAdmin;
+use App\Models\User;
 use Illuminate\Support\Facades\App;
 
 return [
@@ -77,7 +78,7 @@ return [
     'providers' => [
         'users' => [
             'driver' => 'eloquent',
-            'model' => App\Models\User::class,
+            'model' => User::class,
         ],
         'super_admin' => [
             'driver' => 'eloquent',

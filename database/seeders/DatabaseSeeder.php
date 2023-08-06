@@ -72,5 +72,8 @@ class DatabaseSeeder extends Seeder
                 'name'=>$campus
             ]);
         }
+        $this->call([
+            RolesAndPermission::class,
+        ]);
     }
 }

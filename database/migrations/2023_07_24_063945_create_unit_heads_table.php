@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('super_admins', function (Blueprint $table) {
+        Schema::create('unit_heads', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
             $table->string('firstname');

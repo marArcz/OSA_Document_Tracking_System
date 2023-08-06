@@ -15,6 +15,10 @@ $subheader-h: 3rem;
 $navbar-bg: white;
 $sidebar-bg: white;
 
+:root {
+    --toastify-color-success: #1c9c20;
+}
+
 .app {
     min-height: 100vh !important;
 }
@@ -118,7 +122,6 @@ $sidebar-bg: white;
     z-index: 7 !important;
     position: fixed;
     width: $sidebar-w-closed;
-    overflow-y: auto !important;
     height: 100vh !important;
     top: 0;
     left: 0;
@@ -128,10 +131,53 @@ $sidebar-bg: white;
     -o-transition: all 0.2s ease-in;
     transition: all 0.2s ease-in;
     box-sizing: border-box !important;
+    overflow-y: auto;
+
+
 
     &.active {
         width: $sidebar-w-active !important;
     }
+
+    /* Scrollbar styles */
+
+    /* width */
+    &::-webkit-scrollbar {
+        width: 3px;
+    }
+
+    /* Track */
+    &::-webkit-scrollbar-track {
+        background: #ffffff;
+    }
+
+    /* Handle */
+    &::-webkit-scrollbar-thumb {
+        background: #ffffff;
+    }
+
+    /* Handle on hover */
+    &::-webkit-scrollbar-thumb:hover {
+        background: #ffffff;
+    }
+
+    &:hover {
+
+        /* Handle */
+        &::-webkit-scrollbar-thumb {
+            background: rgba($color: $primary, $alpha: 0.2);
+        }
+
+        /* Handle on hover */
+        &::-webkit-scrollbar-thumb:hover {
+            background: rgba($color: $primary, $alpha: 0.5);
+        }
+    }
+
+
+
+    /* end of scrollbar styles */
+
 
     @media screen and (max-width:768px) {
         border-right: none;
@@ -204,6 +250,9 @@ $sidebar-bg: white;
                     background: $active-link-bg;
                     color: $primary !important;
                     border-left: 4px solid $primary;
+                    span,i{
+                        font-weight: 500;
+                    }
                 }
 
                 span {
@@ -537,6 +586,187 @@ $sidebar-bg: white;
 }
 
 
-.fi{
+.fi {
     line-height: 0 !important;
+}
+
+.btn-drag-sort {
+    cursor: grab !important;
+}
+
+
+.btn-tool {
+    background: none !important;
+    border: none !important;
+    outline: none !important;
+    transition: 200ms;
+
+    span {
+        transition: 200ms;
+        display: none;
+    }
+
+    &:hover {
+        background: rgba($color: rgb(100, 100, 100), $alpha: 0.1) !important;
+        color: rgb(100, 100, 100) !important;
+
+        span {
+            display: block;
+        }
+    }
+
+    &[aria-checked=true] {
+        background: rgba($color: #1c9c20, $alpha: 0.1) !important;
+        color: #1c9c20 !important;
+
+        span {
+            display: block;
+        }
+    }
+}
+
+.list-group-item {
+    // &.dragging{
+    //     border: 1px solid rgba($color: $primary, $alpha: 0.5) !important;
+    //     background: rgba($color: $primary, $alpha: 0.1) !important;
+    //     border-radius: 5px !important;
+    // }
+}
+
+.content-wrapper {
+    padding: 1.3rem 1.5rem !important;
+}
+
+.custom-select {
+    position: relative;
+
+    .toggler-btn {
+        z-index: 3;
+        border-radius: 5rem;
+        box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+        padding-top: 1.15rem;
+        padding-bottom: 1.15rem;
+        text-align: center !important;
+        margin: auto !important;
+        outline: none !important;
+        font-size: 1.2rem !important;
+        height: 70px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        position: relative;
+        border: 3px solid rgba($color: $primary, $alpha: 0.5) !important;
+        color: $primary;
+        font-weight: bold;
+        &.filled {
+            background: linear-gradient(88deg, #52639E 0%, #223B93 100%) !important;
+            color: white !important;
+            border: none !important;
+        }
+
+        &::before {
+            content: "\ea4a";
+            line-height: 1 !important;
+            font-family: boxicons !important;
+            position: absolute;
+            left: 25px;
+            font-size: 1.5rem !important;
+            top: 1.3rem;
+            transition: 0.2s;
+        }
+
+        &[aria-expanded=true] {
+            &::before {
+                rotate: 180deg;
+            }
+        }
+    }
+
+    .select-menu {
+        max-height: 0;
+        display: none;
+        position: absolute;
+        left: 0;
+        top: 1.5rem;
+        padding-top: 3rem !important;
+        z-index: 2;
+        height: max-content;
+        box-shadow: 1px 1px 5px rgb(186, 184, 184);
+        width: 100%;
+        max-width: 100% !important;
+        box-sizing: border-box;
+        background: white;
+        text-align: left;
+        border-radius: 10px 10px 3px 3px;
+
+        &[aria-expanded=true] {
+            max-height: 100vh;
+            display: block;
+        }
+
+        .select-menu-item {
+            box-sizing: border-box;
+            cursor: pointer;
+            text-align: left;
+            padding-left: 4rem !important;
+            color: black;
+            padding-top: 1.1rem;
+            font-size: 1.1rem;
+            padding-bottom: 1.1rem;
+            border-bottom: 1px solid rgb(215, 215, 215);
+
+            &:hover {
+                background: rgba($color: rgb(167, 167, 167), $alpha: 0.1) !important;
+            }
+
+            &[aria-selected=true] {
+                background: rgba($color: rgb(167, 167, 167), $alpha: 0.1) !important;
+                color: $primary;
+                font-weight: bolder !important;
+            }
+        }
+    }
+
+}
+
+.google-signin-btn {
+    position: relative;
+    filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.11));
+    $size: 80px;
+    padding-top: 10px;
+
+    .icon {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: $size;
+        height: $size;
+        background: white;
+        border-radius: 50%;
+        padding: 20px;
+
+        img {
+            max-width: 100%;
+            max-height: 100%;
+            width: 100%;
+            height: 100%;
+        }
+    }
+
+    button {
+        width: 100%;
+        padding: 18px 10px;
+        border-radius: 50px;
+        background: #EEF2FF;
+        color: $primary;
+        font-weight: bold;
+        font-size: 1.2rem;
+        padding-left: $size;
+    }
+}
+
+.h-scrolling-list{
+    .list{
+        min-height: 80px;
+    }
 }

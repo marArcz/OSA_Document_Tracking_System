@@ -45,7 +45,7 @@ const EditReminder = ({ auth,reminder }) => {
                                     <textarea value={data.content} className='form-control' onChange={e => setData('content', e.target.value)} rows={3}></textarea>
                                 </div>
                                 <div className="text-end flex items-center justify-end gap-3 mt-5">
-                                    <Link className='link link-secondary text-sm text-decoration-none' href={route('super-admin.reminders')}>
+                                    <Link className='link link-secondary text-sm text-decoration-none' href={route('admin.reminders')}>
                                         <i className='fi fi-rr-arrow-back'></i> Cancel
                                     </Link>
                                     <Button className='rounded-1 btn-primary' type='submit'>

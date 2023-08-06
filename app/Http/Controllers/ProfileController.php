@@ -13,6 +13,16 @@ use Inertia\Response;
 
 class ProfileController extends Controller
 {
+    public function checkEmailAndPhone(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|unique:users,email',
+            'phone' => 'required|unique:users,phone|min:11|max:12'
+        ]);
+
+        return response()->json(['success' => true], 200);
+    }
+    
     /**
      * Display the user's profile form.
      */

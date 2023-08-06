@@ -14,7 +14,7 @@ const SuperAdminSidebar = ({ isActive, activeLink }) => {
             type: NavType.LINK,
             text: 'Dashboard',
             icon: <i className="fi fi-rr-apps"></i>,
-            href: route('super-admin.dashboard'),
+            href: route('admin.dashboard'),
             urlPath: 'dashboard',
         },
         {
@@ -24,6 +24,12 @@ const SuperAdminSidebar = ({ isActive, activeLink }) => {
             key: 'document-tracking',
             opened: false,
             navList: [
+                {
+                    type: NavType.LINK,
+                    text: 'Submission Bin',
+                    icon: <i className='fi fi-rr-box'></i>,
+                    href: route('admin.submission_bins')
+                },
                 {
                     type: NavType.DROPDOWN,
                     text: 'Reports',
@@ -38,22 +44,49 @@ const SuperAdminSidebar = ({ isActive, activeLink }) => {
             type: NavType.LINK,
             text: 'Announcements',
             icon: <i className="fi fi-rr-bullhorn"></i>,
-            href: route('super-admin.announcements'),
+            href: route('admin.announcements'),
             urlPath: 'announcements',
         },
         {
             type: NavType.LINK,
             text: 'Reminders',
             icon: <i className="fi fi-rr-note"></i>,
-            href: route('super-admin.reminders'),
+            href: route('admin.reminders'),
             urlPath: 'reminders',
         },
         {
             type: NavType.LINK,
             text: 'Feedback',
             icon: <i className="fi fi-rr-comment-alt"></i>,
-            href: '/super-admin/feedback',
+            href: '/admin/feedback',
             urlPath: 'feedback'
+        },
+        {
+            type: NavType.LINK,
+            text: 'Campus Admins',
+            icon: <i className="fi fi-rr-user"></i>,
+            href: route('admin.admins'),
+            urlPath: 'admins'
+        },
+        {
+            type: NavType.DROPDOWN,
+            text: 'Unit Heads',
+            icon: <i className="fi fi-rr-users-alt"></i>,
+            key: 'unit-heads',
+            navList: [
+                {
+                    type: NavType.LINK,
+                    text: 'Profile',
+                    href: route('admin.unit_heads.profiles'),
+                    urlPath: 'unit-heads/profile'
+                },
+                {
+                    type: NavType.LINK,
+                    text: 'Info and Account',
+                    href: route('admin.unit_heads.records'),
+                    urlPath: 'unit-heads/records'
+                },
+            ]
         },
 
     ];
@@ -70,7 +103,7 @@ const SuperAdminSidebar = ({ isActive, activeLink }) => {
                 })
                 .catch((error) => console.log('error getting classifications ', error))
         }
-        if(!isLoaded) fetchClassifications()
+        if (!isLoaded) fetchClassifications()
     }, [])
 
     // load document tracking nav from classifications
@@ -124,6 +157,13 @@ const SuperAdminSidebar = ({ isActive, activeLink }) => {
             key: 'document-tracking',
             opened: false,
             navList: [
+                {
+                    type: NavType.LINK,
+                    text: 'Submission Bins',
+                    icon: <i className='fi fi-rr-boxes'></i>,
+                    href: route('admin.submission_bins'),
+                    urlPath: 'submission-bins',
+                },
                 {
                     type: NavType.DROPDOWN,
                     text: 'Reports',

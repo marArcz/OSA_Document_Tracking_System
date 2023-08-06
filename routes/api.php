@@ -1,9 +1,12 @@
 <?php
 
-use App\Http\Controllers\Api\AnnouncementController;
+use App\Http\Controllers\AdminController;
+use App\Http\Controllers\AnnouncementController;
 use App\Http\Controllers\Api\ClassificationController;
+use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ReminderController;
 use App\Http\Controllers\SuperAdminController;
+use App\Http\Controllers\UsersController;
 use App\Models\Reminder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -23,8 +26,9 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::prefix('/super-admin')->group(function () {
-    Route::post('/check', [SuperAdminController::class, 'checkEmailAndPhone']);
+Route::prefix('/users')->group(function () {
+    // Route::post('/check', [ProfileController::class, 'checkEmailAndPhone']);
+    Route::post('/check', [UsersController::class, 'check']);
 });
 
 Route::prefix('/classifications')->group(function () {
@@ -40,4 +44,9 @@ Route::post('/image-upload', function (Request $request) {
     return response()->json(['imageUrl' => $imageUrl]);
 });
 
-Route::delete('/reminders/{id}', [ReminderController::class, 'delete'])->name('api.announcements.delete');
+Route::delete('/reminders/{id}', [ReminderController::class, 'delete']);
+Route::delete('/announcements/{id}', [AnnouncementController::class, 'delete']);
+Route::patch('/announcements/order', [AnnouncementController::class, 'order']);
+Route::post('/unit-heads/designations', [AdminController::class, 'unit_heads_by_designation']);
+Route::get('/admins', [AdminController::class, 'getAdmins']);
+Route::get('/admins/{campus_id}', [AdminController::class, 'getAdminsByCampus']);

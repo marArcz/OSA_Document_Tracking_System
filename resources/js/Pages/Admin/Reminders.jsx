@@ -79,40 +79,47 @@ const Reminders = ({ auth, reminders }) => {
                                     <small>Edit / Remove</small>
                                 </p>
                             </div>
-                            <Link href={route('super-admin.create_reminder')} className='btn btn-light-primary rounded-1 my-1 font-semibold'><i className='bx bx-plus'></i> Create new</Link>
+                            <Link href={route('admin.create_reminder')} className='btn btn-light-primary rounded-1 my-1 font-semibold'><i className='bx bx-plus'></i> Create new</Link>
                         </Card.Header>
                         <Card.Body className=' position-relative '>
                             <ListGroup variant="flushed" className=' list-group-flush'>
+
                                 {
-                                    reminderList && reminderList.map((item, index) => (
-                                        <ListGroupItem key={index}>
-                                            <Row key={index} className='mt-1 align-items-center gy-3'>
-                                                <Col>
-                                                    <p className=' fw-bold fs-5 mb-0'>{item.title}</p>
-                                                    <p className="mt-0 mb-2 text-sm text-secondary">
-                                                        <small>{format(new Date(item.created_at), 'MMM dd, yyy / hh:mm a')}</small>
-                                                    </p>
-                                                    <p>{item.content}</p>
-                                                </Col>
-                                                <Col lg={1}>
-                                                    <div className="flex ">
-                                                        <button className='btn btn-link fs-6 hover:bg-gray-200 text-decoration-none' type='button' onClick={() => viewAnnouncement(item)}>
-                                                            <i className='fi fi-br-expand'></i>
-                                                        </button>
-                                                        <Dropdown>
-                                                            <Dropdown.Toggle bsPrefix='toggler' className=' btn-link bg-transparent text-decoration-none'>
-                                                                <i className=' fi fi-br-menu-dots-vertical'></i>
-                                                            </Dropdown.Toggle>
-                                                            <Dropdown.Menu align="end">
-                                                                <Dropdown.Item href={route('super-admin.edit_reminder', { id: item.id })}>Edit</Dropdown.Item>
-                                                                <Dropdown.Item onClick={() => confirmAction(item.id)}>Delete</Dropdown.Item>
-                                                            </Dropdown.Menu>
-                                                        </Dropdown>
-                                                    </div>
-                                                </Col>
-                                            </Row>
-                                        </ListGroupItem>
-                                    ))
+                                    reminderList && reminderList.length > 0? (
+                                        reminderList.map((item, index) => (
+                                            <ListGroupItem key={index}>
+                                                <Row key={index} className='mt-1 align-items-center gy-3'>
+                                                    <Col>
+                                                        <p className=' fw-bold fs-5 mb-0'>{item.title}</p>
+                                                        <p className="mt-0 mb-2 text-sm text-secondary">
+                                                            <small>{format(new Date(item.created_at), 'MMM dd, yyy / hh:mm a')}</small>
+                                                        </p>
+                                                        <p>{item.content}</p>
+                                                    </Col>
+                                                    <Col lg={1}>
+                                                        <div className="flex ">
+                                                            <button className='btn btn-link fs-6 hover:bg-gray-200 text-decoration-none' type='button' onClick={() => viewAnnouncement(item)}>
+                                                                <i className='fi fi-br-expand'></i>
+                                                            </button>
+                                                            <Dropdown>
+                                                                <Dropdown.Toggle bsPrefix='toggler' className=' btn-link bg-transparent text-decoration-none'>
+                                                                    <i className=' fi fi-br-menu-dots-vertical'></i>
+                                                                </Dropdown.Toggle>
+                                                                <Dropdown.Menu align="end">
+                                                                    <Dropdown.Item href={route('admin.edit_reminder', { id: item.id })}>Edit</Dropdown.Item>
+                                                                    <Dropdown.Item onClick={() => confirmAction(item.id)}>Delete</Dropdown.Item>
+                                                                </Dropdown.Menu>
+                                                            </Dropdown>
+                                                        </div>
+                                                    </Col>
+                                                </Row>
+                                            </ListGroupItem>
+                                        ))
+                                    ):(
+                                        <div className='text'>
+                                            <p className='mb-0 text-secondary text-sm'>No reminders to show.</p>
+                                        </div>
+                                    )
                                 }
                             </ListGroup>
                         </Card.Body>

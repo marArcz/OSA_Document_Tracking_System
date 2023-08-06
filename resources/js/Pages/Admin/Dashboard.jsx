@@ -10,7 +10,6 @@ export default function Dashboard({ auth }) {
     const [count, setCount] = useState(0)
 
     return (
-
         <PanelLayout userAuth={auth} layout={LayoutType.SUPER_ADMIN} defaultActiveLink="dashboard">
             <div className='py-3'>
                 <div className="container-fluid">

@@ -16,7 +16,7 @@ class ReminderController extends Controller
             'content' => $request->content
         ]);
 
-        return redirect()->intended(route('super-admin.reminders'))->with('success', 'Successfully added reminder!');
+        return redirect()->intended(route('admin.reminders'))->with('success', 'Successfully added reminder!');
     }
 
     public function edit(Request $request)
@@ -26,7 +26,7 @@ class ReminderController extends Controller
         $reminder->title = $request->title;
         $reminder->content = $request->content;
         $reminder->save();
-        return redirect()->intended(route('super-admin.reminders'))->with('success', 'Successfully updated reminder!');
+        return redirect()->intended(route('admin.reminders'))->with('success', 'Successfully updated reminder!');
     }
 
     public function delete(Request $request)

@@ -6,11 +6,13 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Laratrust\Contracts\LaratrustUser;
+use Laratrust\Traits\HasRolesAndPermissions;
 use Laravel\Sanctum\HasApiTokens;
 
-class User extends Authenticatable
+class User extends Authenticatable implements LaratrustUser
 {
-    use HasApiTokens, HasFactory, Notifiable;
+    use HasApiTokens, HasFactory, Notifiable, HasRolesAndPermissions;
 
     /**
      * The attributes that are mass assignable.
@@ -18,10 +20,26 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $fillable = [
-        'name',
+        'firstname',
+        'middlename',
+        'lastname',
         'email',
+        'phone',
         'password',
+        'designation_id',
+        'campus_id',
+        'employee_no',
+        'image',
+        'google_access_token'
     ];
+
+    /* Relations */
+    public function designation(){
+        return $this->belongsTo(Designation::class,'designation_id','id')->with(['classification']);
+    }
+    public function campus(){
+        return $this->belongsTo(Campus::class,'campus_id','id');
+    }
 
     /**
      * The attributes that should be hidden for serialization.
@@ -42,4 +60,5 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+    
 }

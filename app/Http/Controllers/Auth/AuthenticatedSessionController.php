@@ -31,13 +31,12 @@ class AuthenticatedSessionController extends Controller
     public function store(LoginRequest $request): RedirectResponse
     {
         $request->authenticate();
-
         $request->session()->regenerate();
-        $home='/';
+        $home='/admin/dashboard';
 
         switch($request->get('type')){
             case 'super_admin':
-                $home=route('super-admin.dashboard');
+                $home='/admin/dashboard';
                 break;
             case 'admin':
                 $home='/admin/dashboard';

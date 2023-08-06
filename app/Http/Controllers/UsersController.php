@@ -1,0 +1,38 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Models\User;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+
+class UsersController extends Controller
+{
+    /* API */
+    public function check(Request $request)
+    {
+        $user = User::where('email', $request->email)->first();
+        $success = false;
+        if ($user && $user->hasRole($request->get('type'))) {
+            $success = true;
+        }
+
+        return response()->json(['success' => $success]);
+    }
+
+    /* Web - auth */
+    public function login(Request $request)
+    {
+        $user = User::where('email', $request->email)->whereHasRole($request->type)->first();
+
+        if (!$user) {
+            return redirect()->back()->with('error', 'Sorry that google account is not registered on our system.');
+        } else {
+            $user->google_access_token = $request->access_token;
+            $user->save();
+
+            Auth::login($user, true);
+            return redirect()->intended(route('admin.dashboard'));
+        }
+    }
+}
