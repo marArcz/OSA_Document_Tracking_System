@@ -33,7 +33,7 @@ const SubmissionBins = ({ auth, submission_bins }) => {
                 <Accordion defaultActiveKey="0">
                     {
                         submission_bins && submission_bins.map((item, index) => (
-                            <Card className='border-0 mb-1 shadow-sm'>
+                            <Card className='border-0 mb-1 shadow-sm' key={index}>
                                 <Card.Header className='bg-white'>
                                     <CustomToggle eventKey={index}>
                                         <div className="row items-center">
@@ -66,15 +66,19 @@ const SubmissionBins = ({ auth, submission_bins }) => {
                                                     </p>
                                                     <p className='text-sm'>{item.instruction || 'No instruction.'}</p>
                                                 </div>
-                                                <Dropdown>
-                                                    <Dropdown.Toggle bsPrefix='toggler' className=' btn-link bg-transparent text-decoration-none'>
-                                                        <i className=' fi fi-br-menu-dots-vertical'></i>
-                                                    </Dropdown.Toggle>
-                                                    <Dropdown.Menu align="end">
-                                                        <Dropdown.Item href={route('admin.edit_submission_bin', { id: item.id })}>Edit</Dropdown.Item>
-                                                        <Dropdown.Item onClick={() => deleteRow(item.id)}>Delete</Dropdown.Item>
-                                                    </Dropdown.Menu>
-                                                </Dropdown>
+                                                {
+                                                    auth.role === 'super_admin' && (
+                                                        <Dropdown>
+                                                            <Dropdown.Toggle bsPrefix='toggler' className=' btn-link bg-transparent text-decoration-none'>
+                                                                <i className=' fi fi-br-menu-dots-vertical'></i>
+                                                            </Dropdown.Toggle>
+                                                            <Dropdown.Menu align="end">
+                                                                <Dropdown.Item href={route('admin.edit_submission_bin', { id: item.id })}>Edit</Dropdown.Item>
+                                                                <Dropdown.Item onClick={() => deleteRow(item.id)}>Delete</Dropdown.Item>
+                                                            </Dropdown.Menu>
+                                                        </Dropdown>
+                                                    )
+                                                }
                                             </div>
                                             <div className="flex justify-end items-center gap-4">
                                                 <div className='text-center'>

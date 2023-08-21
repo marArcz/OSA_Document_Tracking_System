@@ -5,7 +5,7 @@ import React from 'react'
 import { Button, Card, Form } from 'react-bootstrap'
 
 const EditSubmissionBin = ({ submissionBin }) => {
-    const { post, processing, data, setData } = useForm({
+    const { patch, processing, data, setData } = useForm({
         title: submissionBin.title,
         instruction: submissionBin.instruction,
         deadline_date: submissionBin.deadline_date,
@@ -14,7 +14,7 @@ const EditSubmissionBin = ({ submissionBin }) => {
 
     const onSubmit = (e) => {
         e.preventDefault();
-        post(route('submission_bins.update'))
+        patch(route('submission_bins.update',{id:submissionBin.id}))
     }
 
     return (

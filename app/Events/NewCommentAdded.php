@@ -35,13 +35,13 @@ class NewCommentAdded implements ShouldBroadcast
         return new PrivateChannel('comments.' . $this->reportComment->submission_bin_id . '.' . $this->reportComment->unit_head_id);
     }
 
-    // public function broadcastAs(){
-    //     return 'new-comment';
-    // }
-
-    public function broadcastWith()
-    {
-        $data['comments'] = ReportComment::where('submission_bin_id', $this->reportComment->submission_bin_id)->where('unit_head_id', $this->reportComment->unit_head_id)->get();
-        return $data;
+    public function broadcastAs(){
+        return 'new-comment';
     }
+
+    // public function broadcastWith()
+    // {
+    //     $data['comments'] = ReportComment::where('submission_bin_id', $this->reportComment->submission_bin_id)->where('unit_head_id', $this->reportComment->unit_head_id)->get();
+    //     return $data;
+    // }
 }

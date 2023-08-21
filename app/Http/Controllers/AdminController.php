@@ -135,9 +135,10 @@ class AdminController extends Controller
     {
         return Inertia::render('Admin/CreateSubmissionBin');
     }
-    public function edit_submission_bin()
+    public function edit_submission_bin(Request $request)
     {
-        return Inertia::render('Admin/EditSubmissionBin');
+        $data['submissionBin'] = SubmissionBin::find($request->id);
+        return Inertia::render('Admin/EditSubmissionBin', $data);
     }
 
     /* unit heads */
@@ -224,9 +225,8 @@ class AdminController extends Controller
     public function viewReport(Request $request)
     {
         // $reports = SubmissionBin::whereIn('id',Report::select('id')->where('status','Approved'))->with(['reports'])->get();
-        $data['report'] = Report::with(['submission_bin'])->where('id',$request->report_id)->first();
+        $data['report'] = Report::with(['submission_bin'])->where('id', $request->report_id)->first();
 
         return Inertia::render('Admin/ViewReport', $data);
     }
 }
-                                                                        

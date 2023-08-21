@@ -7,7 +7,7 @@ const ModalComponent = ({ backdrop = true, centered = false, show = false, handl
             {title !== '' && (
                 <Modal.Header closeButton={closeButton}>{title}</Modal.Header>
             )}
-            <Modal.Body className='p-4'>
+            <Modal.Body className='p-3'>
                 {children}
             </Modal.Body>
         </Modal>

@@ -6,12 +6,14 @@ import InputLabel from '@/Components/InputLabel';
 import PrimaryButton from '@/Components/PrimaryButton';
 import TextInput from '@/Components/TextInput';
 import { Head, Link, useForm } from '@inertiajs/react';
+import CustomSelectDropdown from '@/Components/SignInDropdownButton';
 
 export default function Login({ status, canResetPassword }) {
     const { data, setData, post, processing, errors, reset } = useForm({
         email: '',
         password: '',
         remember: false,
+        type: ''
     });
 
     useEffect(() => {
@@ -23,7 +25,7 @@ export default function Login({ status, canResetPassword }) {
     const submit = (e) => {
         e.preventDefault();
 
-        post(route('login'));
+        post(route('users.login'));
     };
 
     return (
@@ -33,6 +35,19 @@ export default function Login({ status, canResetPassword }) {
             {status && <div className="mb-4 font-medium text-sm text-green-600">{status}</div>}
 
             <form onSubmit={submit}>
+
+                <div>
+                    <CustomSelectDropdown
+                        handleSelect={(selected) => setData('type', selected.value)}
+                        menu={[
+                            { value: 'admin', text: 'Administrator' },
+                            { value: 'unit_head', text: 'Unit Head' },
+                            { value: 'super_admin', text: 'Super Admin' },
+                        ]}
+                        className="my-3"
+                    />
+                    <p>Type: {data.type}</p>
+                </div>
                 <div>
                     <InputLabel htmlFor="email" value="Email" />
 
@@ -48,22 +63,6 @@ export default function Login({ status, canResetPassword }) {
                     />
 
                     <InputError message={errors.email} className="mt-2" />
-                </div>
-
-                <div className="mt-4">
-                    <InputLabel htmlFor="password" value="Password" />
-
-                    <TextInput
-                        id="password"
-                        type="password"
-                        name="password"
-                        value={data.password}
-                        className="mt-1 block w-full"
-                        autoComplete="current-password"
-                        onChange={(e) => setData('password', e.target.value)}
-                    />
-
-                    <InputError message={errors.password} className="mt-2" />
                 </div>
 
                 <div className="block mt-4">

@@ -42,6 +42,9 @@ const UnitHeadReportCard = ({ data, handleClick }) => {
                 }
 
             </div>
+            <p className='text-sm mb-0 mt-3 text-secondary'>
+                <small>{data.status}</small>
+            </p>
         </div>
     )
 }

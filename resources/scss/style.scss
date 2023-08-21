@@ -991,3 +991,16 @@ $sidebar-bg: white;
         background: rgba($color: gray, $alpha: 0.8);
     }
 }
+
+.anim-flash{
+    animation: 200ms flash linear infinite !important;
+}
+
+@keyframes flash {
+    from{
+        background: rgb(113, 50, 50) !important;
+    }
+    to{
+        background: transparent;
+    }
+}

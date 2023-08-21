@@ -73,15 +73,23 @@ const CommentsView = ({ user, submissionBin, unitHead, className = "" }) => {
     useEffect(() => {
         fetchComments();
         const channelName = `private-comments.${submissionBin.id}.${unitHead.id}`;
+        // const channelName = `App.Models.User.${user.id}`;
 
         var pusher = new Pusher('19a0335a19628a91e19f', {
-            cluster: 'ap1'
+            cluster: 'ap1',
+            authEndpoint: '/broadcasting/auth',
         });
 
         var channel = pusher.subscribe(channelName);
         channel.bind('new-comment', function (data) {
-            setComments(comments => ([...comments,data.reportComment]));
+            setComments(comments => ([...comments, data.reportComment]));
         });
+
+        // window.Echo.private(channelName)
+        //     .listen('new-comment', (e) => {
+        //         // console.log(e.order.name);
+        //         alert('recieved new comment')
+        //     });
     }, []);
 
 

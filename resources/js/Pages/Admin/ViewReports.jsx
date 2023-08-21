@@ -10,7 +10,7 @@ import { Button, Card, Col, Form, Image, ListGroup, ListGroupItem, Placeholder, 
 import DataTable from 'react-data-table-component'
 
 const ViewReports = ({ submissionBin, campuses }) => {
-    const {auth, role} = usePage().props;
+    const {auth} = usePage().props;
     const [selectedCampus, setSelectedCampus] = useState(campuses[0])
     const [reports, setReports] = useState([]);
     const [fetching, setFetching] = useState(false)
@@ -37,7 +37,7 @@ const ViewReports = ({ submissionBin, campuses }) => {
         setFetching(true)
         var reports = {};
         
-        if(role === 'admin'){
+        if(auth.role === 'admin'){
              reports = await axios.get(`/reports/${selectedCampus.id}/${submissionBin.id}/all`);
         }else{
             // if superadmin only get reports that were approved
@@ -185,7 +185,7 @@ const ViewReports = ({ submissionBin, campuses }) => {
                                                 <ListGroup variant='flush'>
                                                     {
                                                         unitHeads.map((unitHead, index) => (
-                                                            <ListGroupItem className='text-sm px-0'>
+                                                            <ListGroupItem key={index} className='text-sm px-0'>
                                                                 <div className='flex gap-3 items-center cursor-pointer'>
                                                                     <Image
                                                                         src={unitHead.image}

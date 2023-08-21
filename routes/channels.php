@@ -18,7 +18,7 @@ Broadcast::channel('App.Models.User.{id}', function ($user, $id) {
     return (int) $user->id === (int) $id;
 });
 
-Broadcast::channel('private-comments.{submission_bin_id}.{unit_head_id}', function (User $user, int $submission_bin_id, int $unit_head_id) {
+Broadcast::channel('comments.{submission_bin_id}.{unit_head_id}', function (User $user, int $submission_bin_id, int $unit_head_id) {
     // return $user->hasRole('unit_head') ? ($user->id === $unit_head_id) : true;
     return true;
 });

@@ -26,7 +26,7 @@ const Welcome = () => {
                     {
                         headers: {
                             Authorization: `Bearer ${tokenResponse.access_token}`,
-                        }
+                        },
                     },
                 );
 

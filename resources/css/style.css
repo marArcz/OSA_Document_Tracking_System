@@ -856,4 +856,17 @@
 }
 .custom-scroll::-webkit-scrollbar-thumb:hover {
   background: rgba(128, 128, 128, 0.8);
+}
+
+.anim-flash {
+  animation: 200ms flash linear infinite !important;
+}
+
+@keyframes flash {
+  from {
+    background: rgb(113, 50, 50) !important;
+  }
+  to {
+    background: transparent;
+  }
 }/*# sourceMappingURL=style.css.map */

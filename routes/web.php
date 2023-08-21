@@ -13,7 +13,9 @@ use App\Http\Controllers\SuperAdminController;
 use App\Http\Controllers\UnitHeadController;
 use App\Http\Controllers\UsersController;
 use App\Models\User;
+use GuzzleHttp\Psr7\Request;
 use Illuminate\Foundation\Application;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -27,6 +29,10 @@ use Inertia\Inertia;
 | contains the "web" middleware group. Now create something great!
 |
 */
+
+Route::post('/broadcasting-auth', function () {
+    return true;
+});
 
 Route::get('/', function () {
     $hasAdmin = count(User::whereHasRole(['super_admin'])->get()) > 0;
@@ -44,7 +50,7 @@ Route::prefix('/admin')->group(function () {
     Route::post('/create', [AdminController::class, 'create'])->name('admin.create')->middleware('guest');
 });
 
-Route::prefix('/admin')->middleware(['auth'])->group(function () {
+Route::prefix('/admin')->middleware(['auth:web'])->group(function () {
     Route::get('/signout', [AdminController::class, 'signout'])->name('admin.signout');
     Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
     Route::get('/announcements', [AdminController::class, 'announcements'])->name('admin.announcements');
@@ -62,8 +68,8 @@ Route::prefix('/admin')->middleware(['auth'])->group(function () {
     Route::get('/campus-admins/{id}/edit', [AdminController::class, 'editCampusAdmin'])->name('admin.campus_admin.edit')->middleware(['role:super_admin']);
     Route::prefix('/document-tracking')->group(function () {
         Route::get('/submission-bins', [AdminController::class, 'submission_bins'])->name('admin.submission_bins');
-        Route::get('/submission-bins/create', [AdminController::class, 'create_submission_bin'])->name('admin.create_submission_bin');
-        Route::get('/submission-bins/{id}/edit', [AdminController::class, 'edit_submission_bin'])->name('admin.edit_submission_bin');
+        Route::get('/submission-bins/create', [AdminController::class, 'create_submission_bin'])->name('admin.create_submission_bin')->middleware(['role:super_admin']);
+        Route::get('/submission-bins/{id}/edit', [AdminController::class, 'edit_submission_bin'])->name('admin.edit_submission_bin')->middleware(['role:super_admin']);
         Route::get('/reports/{submission_bin_id}/view', [AdminController::class, 'viewReports'])->name('admin.reports.view');
         Route::get('/reports/unit-head/{report_id}/view', [AdminController::class, 'viewReport'])->name('admin.report.open');
     });
@@ -94,9 +100,9 @@ Route::prefix('/announcements')->middleware(['auth', 'role:super_admin'])->group
 });
 
 Route::prefix('/reports')->middleware(['auth'])->group(function () {
-    Route::patch('/{submission_bin_id}/submit', [ReportController::class,'submitReport'])->name('reports.submit');
-    Route::patch('/{submission_bin_id}/unsubmit', [ReportController::class,'unSubmitReport'])->name('reports.unsubmit');
-    Route::get('/attachment/{id}/view', [ReportAttachmentController::class,'view'])->name('reports.attachment.view');
+    Route::patch('/{submission_bin_id}/submit', [ReportController::class, 'submitReport'])->name('reports.submit');
+    Route::patch('/{submission_bin_id}/unsubmit', [ReportController::class, 'unSubmitReport'])->name('reports.unsubmit');
+    Route::get('/attachment/{id}/view', [ReportAttachmentController::class, 'view'])->name('reports.attachment.view');
 });
 
 
