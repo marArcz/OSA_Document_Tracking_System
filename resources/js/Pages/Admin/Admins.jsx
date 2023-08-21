@@ -8,15 +8,16 @@ import { useState } from 'react'
 import { Button, Card, Form, Nav, Spinner, Table } from 'react-bootstrap'
 import DataTable from 'react-data-table-component'
 
-const Admins = () => {
-    const [rows, setRows] = useState([])
+const Admins = ({campus_admins}) => {
+    const [rows, setRows] = useState([...campus_admins])
     const [fetching, setFetching] = useState(false)
     const [selectedRows, setSelectedRows] = useState([])
 
     const ExpandedComponent = ({ data }) => <pre>{JSON.stringify(data, null, 2)}</pre>;
 
-    useEffect(() => {
-        const fetchAllAdmins = () => {
+    const fetchAllAdmins = () => {
+        if (!fetching) {
+            setFetching(true);
             axios.get('/admins')
                 .then((res) => {
                     console.log(res);
@@ -24,10 +25,7 @@ const Admins = () => {
                     setFetching(false)
                 })
         }
-
-        setFetching(true);
-        fetchAllAdmins();
-    }, []);
+    }
 
     const columns = [
         {
@@ -49,15 +47,15 @@ const Admins = () => {
         {
             name: 'Campus',
             selector: row => row.campus.name
-        },{
-            name:'',
-            button:true,
+        }, {
+            name: '',
+            button: true,
             cell: row => (
-                <Link href={route('admin.campus_admin.edit',{id:row.id})} className='fs-5 link-success nav-link'>
+                <Link href={route('admin.campus_admin.edit', { id: row.id })} className='fs-5 link-success nav-link'>
                     <i className='fi fi-rr-pen-square'></i>
                 </Link>
             ),
-            grow:0
+            grow: 0
         }
     ]
 
@@ -76,10 +74,10 @@ const Admins = () => {
                                 </Link>
                             </div>
                             <div className='cursor-pointer'>
-                                <div className="flex gap-2 items-center text-primary fw-medium text-sm">
+                                <button onClick={fetchAllAdmins} disabled={fetching} className="d-flex gap-2 align-items-center text-decoration-none fw-medium text-sm btn btn-link btn-sm link-primary">
                                     <i className='fi fi-rr-refresh'></i>
                                     <span>Refresh</span>
-                                </div>
+                                </button>
                             </div>
                             <div className='cursor-pointer'>
                                 <button disabled={selectedRows.length == 0} type='button' className="d-flex align-items-center text-decoration-none gap-2 items-center btn btn-link link-danger btn-sm fw-medium text-sm">
@@ -139,15 +137,15 @@ const Admins = () => {
                         </Table> */}
                         <DataTable
                             expandableRows
-                            expandableRowsComponent={ExpandedComponent} 
-                            columns={columns} 
-                            data={rows} 
-                            selectableRows 
-                            onSelectedRowsChange={(s => setSelectedRows(s.selectedRows))} 
+                            expandableRowsComponent={ExpandedComponent}
+                            columns={columns}
+                            data={rows}
+                            selectableRows
+                            onSelectedRowsChange={(s => setSelectedRows(s.selectedRows))}
                             pagination
                             progressPending={fetching}
-                            progressComponent={<Spinner size='sm'/>}
-                            />
+                            progressComponent={<Spinner size='sm' />}
+                        />
                     </Card.Body>
                 </CardComponent>
             </div>

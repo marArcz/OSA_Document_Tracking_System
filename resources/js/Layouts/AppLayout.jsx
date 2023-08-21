@@ -9,10 +9,13 @@ const AppLayout = ({ children, auth }) => {
     const { showLoader, setShowLoader } = useLoaderState();
     const [showPageLoader, setShowPageLoader] = useState(true)
     const { auth:authPageProps } = usePage().props;
+
     useEffect(() => {
+        console.log('auth: ', authPageProps)
         setUserAuth(authPageProps)
         setTimeout(() => setShowLoader(false), 1000)
     }, []);
+    
     useEffect(() => {
         document.querySelector('html').setAttribute('data-bs-theme', theme)
     }, [theme])

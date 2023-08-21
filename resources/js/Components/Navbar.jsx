@@ -5,9 +5,10 @@ import NavbarHeader from './NavbarHeader';
 import NavLink from './NavLink';
 import ThemeSwitch from './ThemeSwitch';
 import { useThemeState, useUserAuthState } from '@/States/States';
+import { Link, usePage } from '@inertiajs/react';
 const NavbarComponent = ({ isActive, setIsActive, headerTitle }) => {
     const { theme, setTheme } = useThemeState();
-    const { userAuth, setUserAth } = useUserAuthState();
+    const { auth: userAuth } = usePage().props;
 
     const getUserType = () => {
         let role = userAuth.role
@@ -77,20 +78,38 @@ const NavbarComponent = ({ isActive, setIsActive, headerTitle }) => {
                                     </div>
                                 </DropdownToggle>
                                 <Dropdown.Menu>
-                                    <Dropdown.Item href='#' className='link-secondary'>
-                                        <i className='bx bx-user text-primary'></i> Profile
-                                    </Dropdown.Item>
-                                    <Dropdown.Item href={route('admin.signout')} className='link-secondary'>
-                                        <i className='bx bx-log-out text-danger'></i> Log Out
-                                    </Dropdown.Item>
+                                    <div className="text-center w-[13rem] pt-2">
+                                        <Image
+                                            src={userAuth?.user?.image}
+                                            className='mx-auto rounded-circle'
+                                            width={70}
+                                            height={70}
+                                        />
+                                        <p className="my-1 text-sm fw-bold">{userAuth?.user?.firstname} {userAuth?.user?.lastname}</p>
+                                    </div>
+                                    <div className="px-2">
+                                        <hr className='bg-light text-black-50 mb-1' />
+                                    </div>
+                                    <Nav className='flex-column px-3 mt-2'>
+                                        <Nav.Item>
+                                            <Nav.Link as={Link} href={route('profile.edit')} className='link-secondary'>
+                                                Profile
+                                            </Nav.Link>
+                                        </Nav.Item>
+                                        <Nav.Item>
+                                            <Nav.Link as={Link} href={route('admin.signout')} className='link-secondary'>
+                                                Log Out
+                                            </Nav.Link>
+                                        </Nav.Item>
+                                    </Nav>
                                 </Dropdown.Menu>
                             </Dropdown>
                         </Nav>
                     </Container>
                 </Navbar>
                 <div className={`${theme === 'light' ? 'bg-white' : 'bg-dark'} sub-header w-full px-3 border-bottom shadow-sm`}>
-                    <div className="container-fluid">
-                        <p className='my-0 text-xl text-capitalize'>{headerTitle}</p>
+                    <div className="container-fluid fs-6 text-capitalize">
+                        {headerTitle}
                     </div>
                 </div>
             </div>

@@ -33,7 +33,7 @@ class AnnouncementController extends Controller
             'title' => $request->title,
             'content' => $request->content,
             'image' => $request->image,
-            'order'=> $order
+            'order' => $order
         ]);
 
         return redirect()->intended(route('admin.announcements'))->with('success', "Successfully added new accouncement!");
@@ -65,6 +65,13 @@ class AnnouncementController extends Controller
         $row_1->save();
         $row_2->save();
 
-        return response()->json(['success'=>true,'rows'=>[$row_1,$row_2]]);
+        return response()->json(['success' => true, 'rows' => [$row_1, $row_2]]);
+    }
+
+    /* API */
+    public function getAll(Request $request)
+    {
+        $data['announcements'] = Announcement::all();
+        return response()->json($data);
     }
 }

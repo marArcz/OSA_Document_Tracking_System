@@ -3,71 +3,55 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ProfileUpdateRequest;
+use App\Models\User;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Redirect;
 use Inertia\Inertia;
 use Inertia\Response;
+use Illuminate\Validation\Rules;
+
 
 class ProfileController extends Controller
 {
-    public function checkEmailAndPhone(Request $request)
+    public function index()
     {
-        $request->validate([
-            'email' => 'required|unique:users,email',
-            'phone' => 'required|unique:users,phone|min:11|max:12'
-        ]);
-
-        return response()->json(['success' => true], 200);
-    }
-    
-    /**
-     * Display the user's profile form.
-     */
-    public function edit(Request $request): Response
-    {
-        return Inertia::render('Profile/Edit', [
-            'mustVerifyEmail' => $request->user() instanceof MustVerifyEmail,
-            'status' => session('status'),
-        ]);
+        return Inertia::render('Profile');
     }
 
-    /**
-     * Update the user's profile information.
-     */
-    public function update(ProfileUpdateRequest $request): RedirectResponse
+    public function update(Request $request)
     {
-        $request->user()->fill($request->validated());
+        $user = User::find($request->user()->id);
+        if ($user) {
+            $user->image = $request->image;
+            $user->firstname = $request->firstname;
+            $user->lastname = $request->lastname;
+            $user->middlename = $request->middlename;
+            $user->phone = $request->phone;
 
-        if ($request->user()->isDirty('email')) {
-            $request->user()->email_verified_at = null;
+            $user->save();
+            return redirect()->intended(route('profile.edit'))->with('success', 'Successfully saved changes!');
         }
 
-        $request->user()->save();
-
-        return Redirect::route('profile.edit');
+        return redirect()->intended(route('profile.edit'))->with('error', 'Something please try again later!');
     }
 
-    /**
-     * Delete the user's account.
-     */
-    public function destroy(Request $request): RedirectResponse
+    public function changePassword(Request $request)
     {
         $request->validate([
-            'password' => ['required', 'current_password'],
+            'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ]);
+        $user = User::find($request->user()->id);
+        if ($user) {
+            $hashed = Hash::make($request->password);
+            $user->password = $hashed;
+            $user->save();
+            return redirect()->intended(route('profile.edit'))->with('success', 'Successfully saved changes!');
+        }
 
-        $user = $request->user();
-
-        Auth::logout();
-
-        $user->delete();
-
-        $request->session()->invalidate();
-        $request->session()->regenerateToken();
-
-        return Redirect::to('/');
+        return redirect()->intended(route('profile.edit'))->with('error', 'Something please try again later!');
     }
 }

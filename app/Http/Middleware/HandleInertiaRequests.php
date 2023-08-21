@@ -46,6 +46,7 @@ class HandleInertiaRequests extends Middleware
                     'location' => $request->url(),
                 ]);
             },
+            'prevPage' => url()->previous(),
         ]);
     }
 }

@@ -236,6 +236,48 @@
     left: -100% !important;
   }
 }
+.app-sidebar:not(.active):hover {
+  width: 17.5rem !important;
+}
+.app-sidebar:not(.active):hover .sidebar-menu ul {
+  padding: 0 !important;
+}
+.app-sidebar:not(.active):hover .sidebar-menu a {
+  -moz-column-gap: 1.1rem !important;
+       column-gap: 1.1rem !important;
+  justify-content: start !important;
+}
+.app-sidebar:not(.active):hover .sidebar-menu a span {
+  width: 100% !important;
+}
+.app-sidebar:not(.active):hover .sidebar-menu a.has-arrow::after {
+  display: block !important;
+}
+.app-sidebar:not(.active):hover .sidebar-menu ul.nested {
+  display: block;
+  position: relative;
+  top: 0 !important;
+  left: 0 !important;
+}
+.app-sidebar:not(.active):hover .sidebar-menu ul.nested li {
+  position: relative;
+}
+.app-sidebar:not(.active):hover .sidebar-menu ul.nested li::before {
+  content: " ";
+  position: absolute;
+  top: 1.5rem;
+  left: 1.5rem;
+  width: 7px;
+  height: 7px;
+  border: 2px solid rgb(167, 167, 167);
+  border-radius: 50%;
+}
+.app-sidebar:not(.active):hover .sidebar-menu ul.nested[aria-expanded=true] {
+  max-height: 100vh !important;
+}
+.app-sidebar:not(.active) .sidebar-menu .nested[aria-expanded=true] {
+  max-height: 0 !important;
+}
 .app-sidebar .sidebar-menu {
   padding: 0 !important;
 }
@@ -287,7 +329,8 @@
   color: #283593 !important;
   border-left: 4px solid #283593;
 }
-.app-sidebar .sidebar-menu li a.active span, .app-sidebar .sidebar-menu li a.active i {
+.app-sidebar .sidebar-menu li a.active span,
+.app-sidebar .sidebar-menu li a.active i {
   font-weight: 500;
 }
 .app-sidebar .sidebar-menu li a span {
@@ -334,34 +377,8 @@
   .app-sidebar:not(.active) ul li {
     position: relative !important;
   }
-  .app-sidebar:not(.active) ul li:hover > .nested {
-    display: block !important;
-  }
   .app-sidebar:not(.active) a.has-arrow::after {
     display: none;
-  }
-  .app-sidebar:not(.active) .nested {
-    display: none;
-    position: absolute;
-    top: 0;
-    right: -7.65rem !important;
-    background: white !important;
-    padding: 10px !important;
-    overflow: visible !important;
-  }
-  .app-sidebar:not(.active) .nested li {
-    position: relative !important;
-  }
-  .app-sidebar:not(.active) .nested li .nested {
-    display: none !important;
-  }
-  .app-sidebar:not(.active) .nested li:hover > .nested {
-    display: block !important;
-    max-height: 100vh !important;
-  }
-  .app-sidebar:not(.active) .nested .nested {
-    background: rgb(100, 11, 11) !important;
-    position: absolute;
   }
 }
 .app-sidebar.active .sidebar-menu ul {
@@ -416,7 +433,7 @@
 .content-body {
   width: 100%;
   min-height: 100vh;
-  padding-left: 18.5rem !important;
+  padding-left: 17.5rem !important;
   transition: 100ms !important;
   padding-top: 7.5rem;
 }
@@ -434,6 +451,10 @@
 
 .elegant-nav {
   transition: 200ms !important;
+  flex-wrap: nowrap !important;
+  width: -moz-max-content !important;
+  width: max-content !important;
+  overflow-x: auto;
 }
 .custom-input-group .inner {
   position: relative !important;
@@ -659,4 +680,180 @@
 
 .h-scrolling-list .list {
   min-height: 80px;
+}
+
+.file-icon {
+  max-width: 100% !important;
+  width: 100px;
+  height: 100px;
+  overflow: hidden !important;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.file-icon.xs {
+  width: 20px;
+  height: 20px;
+}
+.file-icon.sm {
+  width: 40px;
+  height: 40px;
+}
+.file-icon.md {
+  width: 100px;
+  height: 100px;
+}
+.file-icon.lg {
+  width: 150px;
+  height: 150px;
+}
+
+.file-item {
+  position: relative !important;
+}
+.file-item button {
+  position: absolute;
+  right: 5px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: transparent;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  border-radius: 50%;
+  justify-content: center;
+}
+.file-item button:hover {
+  background: rgba(128, 128, 128, 0.2);
+}
+.file-item button i {
+  font-size: 1.2rem;
+}
+.file-item.processing {
+  background: rgba(240, 240, 240, 0.2) !important;
+}
+.file-item .loading-bar {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100% !important;
+}
+.file-item .loading-bar .wrapper {
+  width: 100%;
+  position: relative !important;
+  overflow: hidden;
+  height: 5px;
+  background: rgb(240, 240, 240);
+}
+.file-item .loading-bar .wrapper .bar {
+  width: 30%;
+  height: 3px;
+  border-radius: 30px;
+  background: rgba(40, 53, 147, 0.7);
+  animation-name: enterfade;
+  animation-timing-function: linear;
+  animation-duration: 1.5s;
+  animation-iteration-count: infinite;
+  position: absolute;
+  left: 0;
+  bottom: 0;
+}
+
+/* animations */
+@keyframes enterfade {
+  0% {
+    left: 0;
+    opacity: 0;
+  }
+  35% {
+    left: 41%;
+    opacity: 1;
+  }
+  65% {
+    left: 59%;
+    opacity: 1;
+  }
+  100% {
+    left: 100%;
+    opacity: 0.5;
+    width: 1%;
+  }
+}
+#react-doc-viewer {
+  background: rgb(221, 221, 221) !important;
+}
+
+.crop-container {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 10 !important;
+  display: none;
+  width: 100%;
+  transition: 200ms !important;
+}
+.crop-container[aria-hidden=false] {
+  display: block;
+}
+.crop-container .controls {
+  position: absolute;
+  z-index: 10;
+  width: 100%;
+  left: 0;
+  bottom: 0;
+  display: flex;
+  justify-content: end;
+  background: rgba(0, 0, 0, 0.549);
+  padding: 10px;
+  gap: 10px;
+}
+
+.comments-area {
+  max-height: 200px;
+  overflow-y: auto;
+  /* Scrollbar styles */
+  /* width */
+  /* Track */
+  /* Handle */
+  /* Handle on hover */
+}
+.comments-area::-webkit-scrollbar {
+  width: 3px;
+}
+.comments-area::-webkit-scrollbar-track {
+  background: #ffffff;
+}
+.comments-area::-webkit-scrollbar-thumb {
+  background: #ffffff;
+}
+.comments-area::-webkit-scrollbar-thumb:hover {
+  background: #ffffff;
+}
+.comments-area:hover {
+  /* Handle */
+  /* Handle on hover */
+}
+.comments-area:hover::-webkit-scrollbar-thumb {
+  background: rgba(40, 53, 147, 0.2);
+}
+.comments-area:hover::-webkit-scrollbar-thumb:hover {
+  background: rgba(40, 53, 147, 0.5);
+}
+
+.custom-scroll {
+  padding-bottom: 3px !important;
+  /* Handle */
+  /* Handle on hover */
+}
+.custom-scroll::-webkit-scrollbar {
+  width: 3px;
+  height: 3px;
+}
+.custom-scroll::-webkit-scrollbar-thumb {
+  background: rgba(128, 128, 128, 0.4);
+}
+.custom-scroll::-webkit-scrollbar-thumb:hover {
+  background: rgba(128, 128, 128, 0.8);
 }/*# sourceMappingURL=style.css.map */

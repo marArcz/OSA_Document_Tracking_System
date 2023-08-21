@@ -11,9 +11,13 @@
 @import "../../node_modules/bootstrap/scss/variables";
 @import "../../node_modules/bootstrap/scss/variables-dark";
 
+
 // 4. Include any default map overrides here
 $theme-colors: map-merge($theme-colors, $custom-colors);
-
+$dropdown-spacer: .11rem;
+$dropdown-border-radius: 0.5rem;
+$dropdown-border-color: rgb(220, 220, 220);
+$dropdown-min-width:10rem;
 // 5. Include remainder of required parts
 @import "../../node_modules/bootstrap/scss/maps";
 @import "../../node_modules/bootstrap/scss/mixins";
@@ -29,6 +33,7 @@ $theme-colors: map-merge($theme-colors, $custom-colors);
 @import "../../node_modules/bootstrap/scss/helpers";
 @import '../../node_modules/bootstrap/scss/buttons';
 @import '../../node_modules/bootstrap/scss/alert';
+@import '../../node_modules/bootstrap/scss/dropdown';
 
 // 7. Optionally include utilities API last to generate classes based on the Sass map in `_utilities.scss`
 @import "../../node_modules/bootstrap/scss/utilities/api";
@@ -40,11 +45,13 @@ $value in $theme-colors {
     .btn-light-#{$name} {
         background: rgba($color: $value, $alpha: 0.2) !important;
         color: $value !important;
-        border: 1px solid rgba($color: $value, $alpha: 0.2) !important;;
+        border: 1px solid rgba($color: $value, $alpha: 0.2) !important;
+        ;
 
         &:hover {
             background: rgba($color: $value, $alpha: 0.35) !important;
-            border: 1px solid rgba($color: $value, $alpha: 0.3) !important;;
+            border: 1px solid rgba($color: $value, $alpha: 0.3) !important;
+            ;
         }
     }
 

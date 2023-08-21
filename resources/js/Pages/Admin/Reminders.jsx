@@ -71,7 +71,7 @@ const Reminders = ({ auth, reminders }) => {
                     <Card className='border-0 shadow-sm mt-3 p-lg-3 p-3'>
                         <Card.Header className='bg-white bg-opacity-80 lg:flex justify-content-between items-center pb-3'>
                             <div className='my-1'>
-                                <p className="text-dark my-0 fw-bold fs-5 flex justify-center items-center gap-2">
+                                <p className="text-dark my-0 fw-bold fs-5 flex items-center gap-2">
                                     Reminder list
                                     <i className="fi fi-rr-note text-primary"></i>
                                 </p>

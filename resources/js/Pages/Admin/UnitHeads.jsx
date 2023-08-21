@@ -99,7 +99,15 @@ const UnitHeads = ({ campuses, classifications }) => {
                                                         <small><i className='bx bx-plus leading-none'></i></small>
                                                     </Button> */}
                                                 </div>
-                                                <HorizontalScrollingList loading={fetching} list={designation.unit_heads} />
+                                                <HorizontalScrollingList 
+                                                loading={fetching} 
+                                                list={designation.unit_heads} 
+                                                selector={(item,index)=>(
+                                                    <div>
+                                                        <p>{item.firstname} {item.lastname}</p>
+                                                    </div>
+                                                )} 
+                                                />
                                             </>
                                         ))
                                     }

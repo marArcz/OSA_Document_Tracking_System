@@ -17,37 +17,60 @@ const Welcome = () => {
 
     const googleLogin = useGoogleLogin({
         onSuccess: async (tokenResponse) => {
+            console.log('tokenResponse: ', tokenResponse)
             setShowProgressModal(true)
             setSigninError('')
-            const userInfo = await axios.get(
-                'https://www.googleapis.com/oauth2/v3/userinfo',
-                { headers: { Authorization: `Bearer ${tokenResponse.access_token}` } },
-            );
-            console.log(userInfo)
-
-            axios.post('/users/check', {
-                type: userType.value,
-                email: userInfo.data.email,
-            }).then((res) => {
-                console.log('res: ', res)
-                setTimeout(() => setShowProgressModal(false), 1200)
-                if (res.data.success) {
-                    router.visit(route('users.login'), {
-                        method: 'post',
-                        data: {
-                            type: userType.value,
-                            email: userInfo.data.email,
-                            access_token: tokenResponse.access_token
+            try {
+                const userInfo = await axios.get(
+                    'https://www.googleapis.com/oauth2/v3/userinfo',
+                    {
+                        headers: {
+                            Authorization: `Bearer ${tokenResponse.access_token}`,
                         }
+                    },
+                );
+
+                console.log(userInfo)
+
+                axios.post('/users/check', {
+                    type: userType.value,
+                    email: userInfo.data.email,
+                }).then((res) => {
+                    console.log('res: ', res)
+                    setTimeout(() => setShowProgressModal(false), 1200)
+                    if (res.data.success) {
+                        router.visit(route('users.login'), {
+                            method: 'post',
+                            data: {
+                                type: userType.value,
+                                email: userInfo.data.email,
+                                access_token: tokenResponse.access_token,
+                                image: userInfo.data.picture
+                            }
+                        })
+                        setSigninError('')
+                    } else {
+                        setTimeout(() => setSigninError("Sorry that account is not registered in our system."), 1200)
+                    }
+                })
+                    .catch((err) => {
+                        console.log(err)
+                        setShowProgressModal(false)
+                        setSigninError(err.message)
                     })
-                    setSigninError('')
-                } else {
-                    setTimeout(() => setSigninError("Sorry that account is not registered in our system."), 1200)
-                }
-            })
+            } catch (error) {
+                setTimeout(() => {
+                    setShowProgressModal(false)
+                    setSigninError("Something went wrong, please try again later!");
+                }, 1000)
+            }
 
         },
-        onError: errorResponse => console.log(errorResponse),
+        onError: errorResponse => {
+            console.log(errorResponse)
+            setShowProgressModal(false)
+            setSigninError(errorResponse.error_description)
+        },
     });
 
 
@@ -56,7 +79,7 @@ const Welcome = () => {
             <ToastContainer hideProgressBar autoClose={1500} theme="dark" position="bottom-right" />
             <ModalComponent backdrop="static" centered handleClose={() => setShowProgressModal(false)} show={showProgressModal} size='sm'>
                 <div className="text-center">
-                    <p className='my-0 fw-bold'>You are signing in as {userType?.value=='super_admin'?'Super Admin':(userType?.value=='admin'?'Admin':'Unit Head')}</p>
+                    <p className='my-0 fw-bold'>You are signing in as {userType?.value == 'super_admin' ? 'Super Admin' : (userType?.value == 'admin' ? 'Admin' : 'Unit Head')}</p>
                     <div className='mt-2 text-secondary text-sm mb-0 flex items-center justify-center gap-2'>
                         <span>Please wait</span>
                         <Spinner variant='secondary' size='sm' />

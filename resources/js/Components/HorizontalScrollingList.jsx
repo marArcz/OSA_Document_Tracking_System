@@ -1,7 +1,7 @@
 import React from 'react'
 import { Spinner } from 'react-bootstrap'
 
-const HorizontalScrollingList = ({ list, loading=false }) => {
+const HorizontalScrollingList = ({ list, loading=false, selector }) => {
   return (
     <div className='h-scrolling-list'>
       <div className='list'>
@@ -12,11 +12,7 @@ const HorizontalScrollingList = ({ list, loading=false }) => {
             </div>
           ) : (
             list && list.length > 0 ? (
-              list.map((item, index) => (
-                <div className="item" key={index}>
-                  {item}
-                </div>
-              ))
+              list.map(selector)
             ) : (
               <p className='mb-1 mt-2 text-black-50 text-sm'>Nothing to show.</p>
             )

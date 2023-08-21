@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Inertia\Inertia;
 
 class UsersController extends Controller
 {
@@ -29,10 +30,17 @@ class UsersController extends Controller
             return redirect()->back()->with('error', 'Sorry that google account is not registered on our system.');
         } else {
             $user->google_access_token = $request->access_token;
+            if(!$user->image) {
+                $user->image = $request->image;
+            }
             $user->save();
 
             Auth::login($user, true);
-            return redirect()->intended(route('admin.dashboard'));
+            return redirect()->intended(route('admin.dashboard'))->with('success','You successfully signed in!');
         }
+    }
+
+    public function profile(){
+        return Inertia::render('Profile');
     }
 }

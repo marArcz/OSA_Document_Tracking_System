@@ -1,22 +1,30 @@
+import AdminDashboard from '@/Components/AdminDashboard';
 import NavbarComponent from '@/Components/Navbar';
+import SuperAdminDashboard from '@/Components/SuperAdminDashboard';
+import UnitHeadDashboard from '@/Components/UnitHeadDashboard';
 import AppLayout from '@/Layouts/AppLayout';
 import PanelLayout, { LayoutType } from '@/Layouts/PanelLayout';
 import { useThemeState } from '@/States/States';
 import { Link, Head } from '@inertiajs/react';
 import { useEffect, useState } from 'react';
-import { Alert, Card } from 'react-bootstrap';
+import { Alert, Card, Col, Row } from 'react-bootstrap';
+
 
 export default function Dashboard({ auth }) {
     return (
-        <PanelLayout userAuth={auth} layout={LayoutType.SUPER_ADMIN} defaultActiveLink="dashboard">
-            <div className='py-3'>
-                <div className="container-fluid">
-                    <Card className='border-0 shadow-sm'>
-                        <Card.Body>
-                            <p className='my-2 text-gray-900'>Welcome</p>
-                        </Card.Body>
-                    </Card>
-                </div>
+        <PanelLayout userAuth={auth} defaultActiveLink="dashboard">
+            <div className='py-3 px-[1.5rem]'>
+                {
+                    auth.role === 'unit_head' ? (
+                        <UnitHeadDashboard />
+                    ) : (
+                        auth.role === 'admin' ? (
+                            <AdminDashboard />
+                        ) : (
+                            <SuperAdminDashboard />
+                        )
+                    )
+                }
             </div>
         </PanelLayout>
     );

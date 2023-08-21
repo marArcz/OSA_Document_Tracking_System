@@ -8,6 +8,7 @@ use App\Models\Campus;
 use App\Models\Classification;
 use App\Models\Designation;
 use App\Models\Reminder;
+use App\Models\Report;
 use App\Models\SubmissionBin;
 use App\Models\SuperAdmin;
 use App\Models\UnitHead;
@@ -134,6 +135,10 @@ class AdminController extends Controller
     {
         return Inertia::render('Admin/CreateSubmissionBin');
     }
+    public function edit_submission_bin()
+    {
+        return Inertia::render('Admin/EditSubmissionBin');
+    }
 
     /* unit heads */
     public function unit_heads_profile(Request $request)
@@ -155,18 +160,31 @@ class AdminController extends Controller
 
     public function create_unit_head(Request $request)
     {
-        return Inertia::render('Admin/CreateUnitHead');
+        $data['classifications'] = Classification::all();
+        return Inertia::render('Admin/CreateUnitHead', $data);
+    }
+    public function edit_unit_head(Request $request)
+    {
+        $data['classifications'] = Classification::all();
+        $data['unitHead'] = User::find($request->id);
+        return Inertia::render('Admin/EditUnitHead', $data);
     }
 
     public function unit_heads_records(Request $request)
     {
-        $data['unitHeads'] = User::with(['campus', 'designation'])->whereHasRole('unit_head')->get();
+        if ($request->user()->hasRole('super_admin')) {
+            $data['unitHeads'] = User::with(['campus', 'designation'])->whereHasRole('unit_head')->get();
+        } else {
+            $campus_id = $request->user()->campus_id;
+            $data['unitHeads'] = User::with(['campus', 'designation'])->whereHasRole('unit_head')->where('campus_id', $campus_id)->get();
+        }
         return Inertia::render('Admin/UnitHeadRecord', $data);
     }
 
     public function admins(Request $request)
     {
-        return Inertia::render('Admin/Admins');
+        $data['campus_admins'] = User::with(['campus'])->whereHasRole('admin')->orderBy('campus_id')->get();
+        return Inertia::render('Admin/Admins', $data);
     }
 
     public function getAdmins(Request $request)
@@ -186,10 +204,29 @@ class AdminController extends Controller
         return Inertia::render('Admin/CreateAdmin', $data);
     }
 
-    public function editCampusAdmin(Request $request){
-        $data['admin'] = User::where('id',$request->id)->whereHasRole('admin')->firstOrFail();
+    public function editCampusAdmin(Request $request)
+    {
+        $data['admin'] = User::where('id', $request->id)->whereHasRole('admin')->firstOrFail();
         $data['campuses'] = Campus::all();
 
-        return Inertia::render('Admin/EditAdmin',$data);
+        return Inertia::render('Admin/EditAdmin', $data);
+    }
+
+    public function viewReports(Request $request)
+    {
+        // $reports = SubmissionBin::whereIn('id',Report::select('id')->where('status','Approved'))->with(['reports'])->get();
+        $data['submissionBin'] = SubmissionBin::find($request->submission_bin_id);
+        $data['campuses'] = Campus::all();
+
+        return Inertia::render('Admin/ViewReports', $data);
+    }
+
+    public function viewReport(Request $request)
+    {
+        // $reports = SubmissionBin::whereIn('id',Report::select('id')->where('status','Approved'))->with(['reports'])->get();
+        $data['report'] = Report::with(['submission_bin'])->where('id',$request->report_id)->first();
+
+        return Inertia::render('Admin/ViewReport', $data);
     }
 }
+                                                                        

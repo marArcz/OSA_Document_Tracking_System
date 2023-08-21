@@ -4,7 +4,7 @@ import SidebarComponent, { NavType } from './SidebarComponent'
 import { Link } from '@inertiajs/react'
 import axios from 'axios'
 
-const SuperAdminSidebar = ({ isActive, activeLink }) => {
+const SuperAdminSidebar = ({ isActive, activeLink,setShowFeedbackModal }) => {
     const url = window.location.href;
     const [classifications, setClassifications] = useState([])
     const [navList, setNavList] = useState([])
@@ -26,9 +26,10 @@ const SuperAdminSidebar = ({ isActive, activeLink }) => {
             navList: [
                 {
                     type: NavType.LINK,
-                    text: 'Submission Bin',
-                    icon: <i className='fi fi-rr-box'></i>,
-                    href: route('admin.submission_bins')
+                    text: 'Submission Bins',
+                    icon: <i className='fi fi-rr-boxes'></i>,
+                    href: route('admin.submission_bins'),
+                    urlPath:'submission-bins'
                 },
                 {
                     type: NavType.DROPDOWN,
@@ -56,7 +57,7 @@ const SuperAdminSidebar = ({ isActive, activeLink }) => {
         },
         {
             type: NavType.LINK,
-            text: 'Feedback',
+            text: 'Feedbacks',
             icon: <i className="fi fi-rr-comment-alt"></i>,
             href: '/admin/feedback',
             urlPath: 'feedback'

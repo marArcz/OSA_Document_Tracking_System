@@ -24,7 +24,6 @@ const SignIn = () => {
         post('/login');
     }
 
-    const [cookies, setCookie, removeCookie] = useCookies(['osa-user-jwt']);
     const login = useGoogleLogin({
         onSuccess: codeResponse => {
             console.log(codeResponse)
@@ -45,10 +44,6 @@ const SignIn = () => {
         },
         onError: errorResponse => console.log(errorResponse),
     });
-
-    useEffect(() => {
-
-    })
 
     return (
         <AuthLayout title="Super admin">

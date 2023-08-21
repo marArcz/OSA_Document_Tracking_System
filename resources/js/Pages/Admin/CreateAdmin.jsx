@@ -107,7 +107,7 @@ const CreateAdmin = ({ campuses }) => {
                             </div>
 
                             <div className="text-end">
-                                <Button as={Link} href={route('admin.admins')} variant='primary' type='submit' className='mt-3 rounded-1'>Cancel</Button>
+                                <Button as={Link} href={route('admin.admins')} variant='light' type='submit' className='mt-3 me-2 rounded-1'>Cancel</Button>
                                 <Button variant='primary' type='submit' className='mt-3 rounded-1'>Submit</Button>
                             </div>
                         </Form>

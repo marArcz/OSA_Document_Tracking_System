@@ -11,11 +11,16 @@ import { createInertiaApp } from '@inertiajs/react';
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
 import axios from 'axios';
 import { GoogleOAuthProvider } from '@react-oauth/google';
+import TimeAgo from 'javascript-time-ago';
+import en from 'javascript-time-ago/locale/en.json'
+import ru from 'javascript-time-ago/locale/ru.json'
 
 const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
 const googleClientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
 
 axios.defaults.baseURL = import.meta.env.VITE_APP_URL + '/api';
+TimeAgo.addDefaultLocale(en)
+TimeAgo.addLocale(ru)
 
 createInertiaApp({
     title: (title) => `${title} - ${appName}`,
@@ -23,7 +28,7 @@ createInertiaApp({
     setup({ el, App, props }) {
         const root = createRoot(el);
         root.render(
-            <GoogleOAuthProvider onScriptLoadError={(err) => console.log('google oauth error: ',err)} clientId={googleClientId}>
+            <GoogleOAuthProvider onScriptLoadError={(err) => console.log('google oauth error: ', err)} clientId={googleClientId}>
                 <App {...props} />
             </GoogleOAuthProvider>
         );

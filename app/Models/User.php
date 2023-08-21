@@ -14,6 +14,11 @@ class User extends Authenticatable implements LaratrustUser
 {
     use HasApiTokens, HasFactory, Notifiable, HasRolesAndPermissions;
 
+    /* 
+        load relationships
+    */
+    protected $with = ['campus','designation','userRoles'];
+
     /**
      * The attributes that are mass assignable.
      *
@@ -39,6 +44,10 @@ class User extends Authenticatable implements LaratrustUser
     }
     public function campus(){
         return $this->belongsTo(Campus::class,'campus_id','id');
+    }
+
+    public function userRoles(){
+        return $this->roles();
     }
 
     /**

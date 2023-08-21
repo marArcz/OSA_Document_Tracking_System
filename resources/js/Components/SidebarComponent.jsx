@@ -4,14 +4,15 @@ import { Nav } from 'react-bootstrap'
 
 export const NavType = {
     LINK: 0,
-    DROPDOWN: 1
+    DROPDOWN: 1,
+    BUTTON: 2
 }
 
-const NavLink = ({ item,activeLink }) => {
+const NavLink = ({ item, activeLink }) => {
     const currentUrl = window.location;
     return (
         <li>
-            <Link className={currentUrl.href === item.href ? 'active' : (activeLink == item.urlPath?'active':'')} href={item.href}>
+            <Link className={currentUrl.href === item.href ? 'active' : (activeLink == item.urlPath ? 'active' : '')} href={item.href}>
                 {item.icon}
                 <span>{item.text}</span>
             </Link>
@@ -19,7 +20,7 @@ const NavLink = ({ item,activeLink }) => {
     )
 }
 
-const NavDropdown = ({ item,activeLink }) => {
+const NavDropdown = ({ item, activeLink }) => {
     const currentUrl = window.location;
     const matched = 0;
 
@@ -50,7 +51,7 @@ const NavDropdown = ({ item,activeLink }) => {
     )
 }
 
-const SidebarComponent = ({ isActive, navList,activeLink}) => {
+const SidebarComponent = ({ isActive, navList, activeLink }) => {
     return (
         <div className={`app-sidebar border-end bg-white shadow-sm ${isActive ? 'active' : ''}`}>
             <div className="sidebar-menu">
