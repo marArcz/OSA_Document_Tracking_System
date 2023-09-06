@@ -23,8 +23,8 @@ const AddCommentForm = ({ comment, setComment, addComment, submittingComment = f
                 submittingComment ? (
                     <Spinner variant='primary' size='sm' />
                 ) : (
-                    <button type='submit' className='btn btn-white'>
-                        <i className='bx bx-send fs-5 text-secondary'></i>
+                    <button type='submit' disabled={comment.length == 0} className='border-0 btn btn-white'>
+                        <i className='bx bx-send fs-5 text-success'></i>
                     </button>
                 )
             }
@@ -73,7 +73,6 @@ const CommentsView = ({ user, submissionBin, unitHead, className = "" }) => {
     useEffect(() => {
         fetchComments();
         const channelName = `private-comments.${submissionBin.id}.${unitHead.id}`;
-        // const channelName = `App.Models.User.${user.id}`;
 
         var pusher = new Pusher('19a0335a19628a91e19f', {
             cluster: 'ap1',
@@ -84,12 +83,6 @@ const CommentsView = ({ user, submissionBin, unitHead, className = "" }) => {
         channel.bind('new-comment', function (data) {
             setComments(comments => ([...comments, data.reportComment]));
         });
-
-        // window.Echo.private(channelName)
-        //     .listen('new-comment', (e) => {
-        //         // console.log(e.order.name);
-        //         alert('recieved new comment')
-        //     });
     }, []);
 
 

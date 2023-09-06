@@ -11,13 +11,13 @@ const NavbarHeader = ({isActive,setIsActive}) => {
                     className='navbar-logo'
                 />
 
-                <div className="nav-control ">
+                {/* <div className="nav-control ">
                     <div onClick={() => setIsActive(!isActive)} className={`hamburger ${isActive ? '' : 'is-active'}`}>
                         <span className="line"></span>
                         <span className="line"></span>
                         <span className="line"></span>
                     </div>
-                </div>
+                </div> */}
             </div>
         </>
     )

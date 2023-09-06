@@ -136,14 +136,20 @@ const Profile = ({ auth, }) => {
 
                             <Row className='gy-3 align-items-end' >
                                 <Col lg={"auto"}>
-                                    <Image
-                                        src={data.image}
-                                        fluid
-                                        thumbnail
-                                        width={150}
-                                        height={150}
-                                        className='m-0 rounded-3'
-                                    />
+                                    {
+                                        data.image ? (
+                                            <Image
+                                                src={data.image}
+                                                fluid
+                                                thumbnail
+                                                width={150}
+                                                height={150}
+                                                className='m-0 rounded-3'
+                                            />
+                                        ):(
+                                            <TextProfilePic  text={`${unitHead.firstname[0]} ${unitHead.lastname[0]}`} bg='light' className="text-primary fw-bold" />
+                                        )
+                                    }
                                 </Col>
                                 <Col lg>
                                     <p className=' text-sm text-secondary'>Change Photo (2x2 ID Pic):</p>

@@ -4,12 +4,13 @@ import SidebarComponent, { NavType } from './SidebarComponent'
 import { Link } from '@inertiajs/react'
 import axios from 'axios'
 import FeedBackModal from './FeedBackModal'
+import { useNavMenuLoadedState, useNavMenuState } from '@/States/States'
 
 const AdminSidebar = ({ isActive, activeLink, setShowFeedbackModal }) => {
   const url = window.location.href;
   const [classifications, setClassifications] = useState([])
-  const [navList, setNavList] = useState([])
-  const [isLoaded, setIsLoaded] = useState(false)
+  const { navList, setNavList } = useNavMenuState()
+  const { isLoaded, setIsLoaded } = useNavMenuLoadedState()
 
   const menu = [
     {
@@ -25,6 +26,7 @@ const AdminSidebar = ({ isActive, activeLink, setShowFeedbackModal }) => {
       icon: <i className='fi fi-rs-search-alt'></i>,
       key: 'document-tracking',
       opened: false,
+      active: false,
       navList: [
         {
           type: NavType.LINK,
@@ -37,6 +39,7 @@ const AdminSidebar = ({ isActive, activeLink, setShowFeedbackModal }) => {
           text: 'Reports',
           icon: <i className='fi fi-rr-document'></i>,
           key: 'reports',
+          active: false,
           opened: false,
           navList: []
         }
@@ -46,13 +49,17 @@ const AdminSidebar = ({ isActive, activeLink, setShowFeedbackModal }) => {
       type: NavType.BUTTON,
       text: 'Feedback',
       icon: <i className="fi fi-rr-comment-alt"></i>,
-      onClick: () => setShowFeedbackModal(true),
+      onClick: (e) => {
+        e.preventDefault()
+        setShowFeedbackModal(true)
+      },
     },
     {
       type: NavType.DROPDOWN,
       text: 'Unit Heads',
       icon: <i className="fi fi-rr-users-alt"></i>,
       key: 'unit-heads',
+      active: false,
       navList: [
         {
           type: NavType.LINK,
@@ -68,12 +75,10 @@ const AdminSidebar = ({ isActive, activeLink, setShowFeedbackModal }) => {
         },
       ]
     },
-
   ];
 
   useEffect(() => {
     const fetchClassifications = () => {
-      setNavList(menu)
       axios.get(route('api.classifications.all'))
         .then((res) => {
           console.log(res)
@@ -101,7 +106,8 @@ const AdminSidebar = ({ isActive, activeLink, setShowFeedbackModal }) => {
             type: NavType.LINK,
             text: designation.name,
             key: designation.name,
-            href: ''
+            urlPath: `submission_bin.reports.${campus.id}.${designation.id}`,
+            href: route('admin.reports.view.filtered', { campus_id: campus.id, designation_id: designation.id })
           }
           // append designation nav
           designationMenu.push(designationNav)
@@ -110,7 +116,8 @@ const AdminSidebar = ({ isActive, activeLink, setShowFeedbackModal }) => {
         let classificationNav = {
           type: NavType.DROPDOWN,
           text: classification.name,
-          key: classification.name,
+          key: classification.id,
+          active: false,
           navList: designationMenu,
           icon: <i className='fi fi-rr-brackets-square'></i>
         }
@@ -122,7 +129,8 @@ const AdminSidebar = ({ isActive, activeLink, setShowFeedbackModal }) => {
       let campusNav = {
         type: NavType.DROPDOWN,
         text: campus.name,
-        key: campus.name,
+        key: 'reports',
+        active: false,
         navList: classificationMenu,
         icon: <i className='fi fi-rr-school'></i>
       }
@@ -135,6 +143,7 @@ const AdminSidebar = ({ isActive, activeLink, setShowFeedbackModal }) => {
       text: 'Document Tracking',
       icon: <i className='fi fi-rs-search-alt'></i>,
       key: 'document-tracking',
+      active: false,
       opened: false,
       navList: [
         {
@@ -149,6 +158,7 @@ const AdminSidebar = ({ isActive, activeLink, setShowFeedbackModal }) => {
           text: 'Reports',
           icon: <i className='fi fi-rr-document'></i>,
           key: 'reports',
+          active: false,
           opened: false,
           navList: campusMenu
         }
@@ -158,12 +168,13 @@ const AdminSidebar = ({ isActive, activeLink, setShowFeedbackModal }) => {
     let temp = [...menu];
     temp[1] = navMenu;
     setNavList(temp)
+    console.log('updated navbar')
   }
 
 
   return (
     <>
-      <SidebarComponent isActive={isActive} navList={navList} activeLink={activeLink} />
+      <SidebarComponent isActive={isActive} activeLink={activeLink} />
     </>
   )
 }

@@ -137,12 +137,14 @@ const SubmissionBin = ({ submissionBin, auth, report }) => {
                                         )
                                     )
                                 }
-                                <div className="mt-3 mb-2">
-                                    <AddFileButton removable={!report?.is_submitted} disableAddingFile={report?.is_submitted} accept='application/pdf' handleViewFile={showFile} submissionBinId={submissionBin.id} userId={auth.user.id} files={files} setFiles={setFiles} />
+                                <div className="mt-3 mb-2 ">
+                                    <div className='max-h-[245px] overflow-auto'>
+                                        <AddFileButton removable={!report?.is_submitted} disableAddingFile={report?.is_submitted} accept='application/pdf' handleViewFile={showFile} submissionBinId={submissionBin.id} userId={auth.user.id} files={files} setFiles={setFiles} />
+                                    </div>
                                     {
                                         files && files.length > 0 && (
                                             report?.is_submitted ? (
-                                                <Button variant='secondary' as={Link} method='patch' href={route('reports.unsubmit', { id: submissionBin.id })} className='col-12 rounded-1 mt-2'>
+                                                <Button disabled={report.status != 'Pending' && report.status != 'Rejected'} variant='secondary' as={Link} method='patch' href={route('reports.unsubmit', { id: submissionBin.id })} className='col-12 rounded-1 mt-2'>
                                                     <small>Unsubmit</small>
                                                 </Button>
                                             ) : (

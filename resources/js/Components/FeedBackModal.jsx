@@ -1,11 +1,22 @@
 import React from 'react'
 import ModalComponent from './ModalComponent'
-import { Button, ButtonGroup, Container, Image } from 'react-bootstrap'
+import { Button, ButtonGroup, Container, Form, Image } from 'react-bootstrap'
 import { useState } from 'react'
+import { toast } from 'react-toastify'
+import { useForm } from '@inertiajs/react'
 
 const FeedBackModal = ({ show = false, handleClose }) => {
     const [selectedReaction, setSelectedReaction] = useState(null)
-    const [selectedType, setSelectedType] = useState(0)
+    const [showReactionError, setShowReactionError] = useState(false)
+    const [selectedType, setSelectedType] = useState("Suggestion")
+    const [comment, setComment] = useState('')
+
+    const { data, setData, post, reset } = useForm({
+        reaction: null,
+        type: 'Suggestion',
+        comment: ''
+    })
+
     const reactions = [
         {
             text: 'Very Unsatisfied',
@@ -34,6 +45,19 @@ const FeedBackModal = ({ show = false, handleClose }) => {
         },
     ]
 
+    const onSubmit = () => {
+        if (data.reaction == null) {
+            toast.error("You need to select a reaction first!");
+            setShowReactionError(true)
+            return
+        }
+        handleClose();
+        setData('reaction',null)
+        setData('type','Suggestion');
+        reset('comment')
+        post(route('feedback.create'));
+    }
+
     return (
         <ModalComponent closeButton show={show} handleClose={handleClose} title='Your Feedback'>
             <Container>
@@ -47,7 +71,7 @@ const FeedBackModal = ({ show = false, handleClose }) => {
                         reactions.map((reaction, index) => (
                             <div key={index}>
                                 {
-                                    index == selectedReaction ? (
+                                    reaction.text == data.reaction ? (
                                         <Image
                                             className='cursor-pointer scale-[1.15]'
                                             width={50}
@@ -63,7 +87,10 @@ const FeedBackModal = ({ show = false, handleClose }) => {
                                             height={50}
                                             src={reaction.image}
                                             alt={reaction.text}
-                                            onClick={() => setSelectedReaction(index)}
+                                            onClick={() => {
+                                                setData('reaction', reaction.text)
+                                                setShowReactionError(false)
+                                            }}
 
                                         />
                                     )
@@ -72,6 +99,11 @@ const FeedBackModal = ({ show = false, handleClose }) => {
                         ))
                     }
                 </div>
+                {
+                    showReactionError && (
+                        <p className='text-danger text-center text-sm mt-4 fw-bold'>You need to select a reaction first!</p>
+                    )
+                }
                 <hr />
                 <p className="text-center mt-2 mb-3 text-secondary text-sm">Please select your feedback category below.</p>
                 <div className="text-center mt-2">
@@ -79,7 +111,7 @@ const FeedBackModal = ({ show = false, handleClose }) => {
                         {
                             ['Suggestion', 'Something is not quite right', 'Compliment']
                                 .map((item, index) => (
-                                    <Button key={index} onClick={() => setSelectedType(index)} variant='outline-purple' active={selectedType == index}>
+                                    <Button key={index} onClick={() => setData('type', item)} variant='outline-purple' active={data.type == item}>
                                         <small>{item}</small>
                                     </Button>
                                 ))
@@ -90,10 +122,10 @@ const FeedBackModal = ({ show = false, handleClose }) => {
                 <p className="text-secondary mb-2">
                     Please leave your feedback below:
                 </p>
-                <textarea className='form-control' rows={5} placeholder='Your feedback here..'>
+                <textarea className='form-control' value={data.comment} onChange={e => setData('comment', e.target.value)} rows={5} placeholder='Your feedback here..'>
                 </textarea>
                 <div className="text-end mt-3">
-                    <Button variant='purple' className='rounded-1'>Submit</Button>
+                    <Button variant='purple' type='button' onClick={onSubmit} className='rounded-1'>Submit</Button>
                 </div>
             </Container>
         </ModalComponent>

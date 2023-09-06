@@ -1,0 +1,61 @@
+import FullCalendar from '@fullcalendar/react'
+import React from 'react'
+import { Button, Card } from 'react-bootstrap'
+import dayGridPlugin from '@fullcalendar/daygrid'
+import listViewPlugin from '@fullcalendar/list'
+import interactionPlugin from '@fullcalendar/interaction'
+import timeGridPlugin from '@fullcalendar/timegrid'
+import axios from 'axios'
+import { useEffect } from 'react'
+import { Link } from '@inertiajs/react'
+import { useState } from 'react'
+
+const CalendarCard = ({ viewButton = false,className="" }) => {
+    const [events, setEvents] = useState([]);
+
+    const fetchEvents = () => {
+        axios.get('/calendar')
+            .then((res) => {
+                setEvents(res.data.events)
+            })
+    }
+
+    useEffect(() => {
+        fetchEvents();
+    }, [])
+    return (
+        <Card className={`border-0 shadow-sm ${className}`}>
+            <Card.Header className='bg-white'>
+                <div className="flex justify-between items-center">
+                    <p className="my-0 fw-bold">
+                        Event Calendar
+                    </p>
+                    {
+                        viewButton && (
+                            <Button href={route('calendar')} variant='light-success' as={Link}>
+                                View
+                            </Button>
+                        )
+                    }
+                </div>
+            </Card.Header>
+            <Card.Body className='p-4 text-sm'>
+                <FullCalendar
+                    viewClassNames={"custom-scroll"}
+                    plugins={[dayGridPlugin, interactionPlugin,listViewPlugin,timeGridPlugin]}
+                    initialView="dayGridMonth"
+                    weekends:false
+                    events={events}
+                    headerToolbar={{
+                        left: 'today',
+                        center: 'title',
+                        right: 'prev,next'
+                    }}
+                    themeSystem="bootstrap5"
+                />
+            </Card.Body>
+        </Card>
+    )
+}
+
+export default CalendarCard

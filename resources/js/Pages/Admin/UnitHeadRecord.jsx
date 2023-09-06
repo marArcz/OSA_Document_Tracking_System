@@ -1,24 +1,51 @@
+import TextProfilePic from '@/Components/TextProfilePic'
 import PanelLayout from '@/Layouts/PanelLayout'
+import { MultipartHeader } from '@/constants/constants'
 import { Link } from '@inertiajs/react'
+import axios from 'axios'
 import React from 'react'
 import { useState } from 'react'
-import { Button, Card, Table } from 'react-bootstrap'
+import { Button, Card, Image, Table } from 'react-bootstrap'
 import DataTable from 'react-data-table-component'
+import { toast } from 'react-toastify'
+import Swal from 'sweetalert2'
 
 const UnitHeadRecord = ({ unitHeads }) => {
     const [rows, setRows] = useState([...unitHeads])
+    const [selectedRows, setSelectedRows] = useState([]);
     const columns = [
+
         {
-            name: 'Lastname',
-            selector: row => row.lastname
+            name: 'Unit Head',
+            cell: row => (
+                <div className='flex items-center gap-3'>
+                    <div>
+                        {
+                            row.image ? (
+                                <Image
+                                    src={row.image}
+                                    fluid roundedCircle
+                                    width={35}
+                                    height={35}
+                                />
+                            ) : (
+                                <TextProfilePic size='sm' text={`${row.firstname[0]} ${row.lastname[0]}`} bg='light' className="text-primary fw-bold" />
+                            )
+                        }
+                    </div>
+                    <div>
+                        {row.firstname} {row.lastname}
+                    </div>
+                </div>
+            )
         },
         {
-            name: 'Firstname',
-            selector: row => row.firstname
+            name: 'Email',
+            selector: row => row.email
         },
         {
-            name: 'Middlename',
-            selector: row => row.middlename
+            name: 'Campus',
+            selector: row => row.campus.name
         },
         {
             name: 'Classification',
@@ -34,12 +61,43 @@ const UnitHeadRecord = ({ unitHeads }) => {
             button: true,
             cell: row => (
                 <Link href={route('admin.unit_heads.edit', { id: row.id })} className='fs-5 link-success nav-link'>
-                    <i className='fi fi-rr-pen-square'></i>
+                    {/* <i className='fi fi-rr-pen-square'></i> */}
+                    <i className="bx bx-edit bx-sm"></i>
                 </Link>
             ),
             grow: 0
         }
     ]
+
+    const deleteBtnClicked = () => {
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "You won't be able to revert this!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, delete it!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+               deleteRows();
+            }
+        })
+    }
+    const deleteRows = () => {
+        var formData = new FormData();
+        for (let row of selectedRows) {
+            formData.append('id[]', row.id);
+            axios.post(route('unit_heads.delete.many'), formData, MultipartHeader)
+                .then((res) => {
+                    toast.success('Successfully deleted!');
+                    let newRows = rows.filter((row,index) => !selectedRows.includes(row));
+                    setRows(newRows);
+                    setSelectedRows([]);
+                })
+        }
+    }
+
     return (
         <PanelLayout headerTitle="Unit Heads" defaultActiveLink="unit-heads/records">
             <div className="py-3 px-[1.5rem]">
@@ -67,7 +125,7 @@ const UnitHeadRecord = ({ unitHeads }) => {
                                     </button>
                                 </div>
                                 <div className='cursor-pointer'>
-                                    <button type='button' className="d-flex align-items-center text-decoration-none gap-2 items-center btn btn-link link-danger btn-sm fw-medium text-sm">
+                                    <button type='button' onClick={deleteBtnClicked} disabled={selectedRows.length == 0} className="d-flex align-items-center text-decoration-none gap-2 items-center btn btn-link link-danger btn-sm fw-medium text-sm">
                                         <i className='fi fi-rr-trash'></i>
                                         <span>Delete Selected</span>
                                     </button>
@@ -75,7 +133,7 @@ const UnitHeadRecord = ({ unitHeads }) => {
                             </div>
                         </div>
                         {/* <hr /> */}
-                        <DataTable selectableRows columns={columns} data={rows}/>
+                        <DataTable selectableRows onSelectedRowsChange={(selected) => setSelectedRows(selected.selectedRows)} columns={columns} data={rows} pagination />
                     </Card.Body>
                 </Card>
             </div>

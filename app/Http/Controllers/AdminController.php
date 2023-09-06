@@ -7,6 +7,7 @@ use App\Models\Announcement;
 use App\Models\Campus;
 use App\Models\Classification;
 use App\Models\Designation;
+use App\Models\Feedback;
 use App\Models\Reminder;
 use App\Models\Report;
 use App\Models\SubmissionBin;
@@ -26,7 +27,7 @@ class AdminController extends Controller
 {
     public function index()
     {
-        /* 
+        /*
             check if no admin account exists yet.
         */
         $hasAdmin = count(User::whereHasRole(['super_admin'])->get()) > 0;
@@ -45,7 +46,7 @@ class AdminController extends Controller
         return redirect()->intended('/');
     }
 
-    /* 
+    /*
         shows registration form
     */
     public function register()
@@ -84,9 +85,11 @@ class AdminController extends Controller
     /* admin panel pages */
     public function dashboard()
     {
-        return Inertia::render('Dashboard');
+        $data['campuses'] = Campus::with(['unitHeads'])->get();
+
+        return Inertia::render('Dashboard', $data);
     }
-    /* 
+    /*
         announcements page
     */
     public function announcements()
@@ -105,7 +108,7 @@ class AdminController extends Controller
         return Inertia::render('Admin/EditAnnouncement', $data);
     }
 
-    /* 
+    /*
         reminders page
     */
     public function reminders()
@@ -125,9 +128,14 @@ class AdminController extends Controller
     }
 
     /* Submission bin */
-    public function submission_bins()
+    public function submission_bins(Request $request)
     {
-        $data['submission_bins'] = SubmissionBin::orderByDesc('id')->get();
+        if ($request->user()->hasRole('admin')) {
+            $data['submission_bins'] = SubmissionBin::limit(10)->orderByDesc('id')->get();
+        }else{
+            $data['submission_bins'] = SubmissionBin::with(['approved_reports'])->limit(5)->orderByDesc('id')->get();
+        }
+        $data['rows'] = count(SubmissionBin::all());
         return Inertia::render('Admin/SubmissionBins', $data);
     }
 
@@ -161,12 +169,13 @@ class AdminController extends Controller
 
     public function create_unit_head(Request $request)
     {
-        $data['classifications'] = Classification::all();
+        $data['classifications'] = Classification::with(['designations'])->get();
+        $data['campuses'] = Campus::all();
         return Inertia::render('Admin/CreateUnitHead', $data);
     }
     public function edit_unit_head(Request $request)
     {
-        $data['classifications'] = Classification::all();
+        $data['classifications'] = Classification::with(['designations'])->get();
         $data['unitHead'] = User::find($request->id);
         return Inertia::render('Admin/EditUnitHead', $data);
     }
@@ -221,12 +230,29 @@ class AdminController extends Controller
 
         return Inertia::render('Admin/ViewReports', $data);
     }
+    public function viewFilteredReports(Request $request)
+    {
+        $data['campus'] = Campus::find($request->campus_id);
+        $data['designation'] = Designation::with(['classification'])->find($request->designation_id);
+        $data['submissionBins'] = SubmissionBin::all();
+
+        return Inertia::render('Admin/ViewFilteredReports', $data);
+    }
 
     public function viewReport(Request $request)
     {
         // $reports = SubmissionBin::whereIn('id',Report::select('id')->where('status','Approved'))->with(['reports'])->get();
         $data['report'] = Report::with(['submission_bin'])->where('id', $request->report_id)->first();
-
         return Inertia::render('Admin/ViewReport', $data);
+    }
+
+    public function viewSubmissionBin(Request $request)
+    {
+        $data['submissionBin'] = SubmissionBin::find($request->id);
+        return Inertia::render('Admin/SubmissionBin', $data);
+    }
+    public function feedbacks(Request $request){
+        $data['feedbacks'] = Feedback::with(['user'])->get();
+        return Inertia::render('Admin/Feedbacks',$data);
     }
 }

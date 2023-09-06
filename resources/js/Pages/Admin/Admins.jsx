@@ -136,8 +136,8 @@ const Admins = ({campus_admins}) => {
                             </tbody>
                         </Table> */}
                         <DataTable
-                            expandableRows
-                            expandableRowsComponent={ExpandedComponent}
+                            // expandableRows
+                            // expandableRowsComponent={ExpandedComponent}
                             columns={columns}
                             data={rows}
                             selectableRows

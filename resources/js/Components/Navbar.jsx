@@ -6,6 +6,9 @@ import NavLink from './NavLink';
 import ThemeSwitch from './ThemeSwitch';
 import { useThemeState, useUserAuthState } from '@/States/States';
 import { Link, usePage } from '@inertiajs/react';
+import axios from 'axios';
+import NotificationsDropdown from './NotificationsDropdown';
+import CalendarDropdown from './CalendarDropdown';
 const NavbarComponent = ({ isActive, setIsActive, headerTitle }) => {
     const { theme, setTheme } = useThemeState();
     const { auth: userAuth } = usePage().props;
@@ -25,36 +28,35 @@ const NavbarComponent = ({ isActive, setIsActive, headerTitle }) => {
         }
     }
 
-
     return (
         <>
             <NavbarHeader isActive={isActive} setIsActive={setIsActive} />
             <div className={`${isActive ? '' : 'active'} app-header `}>
                 <Navbar bg={theme === 'light' ? 'white' : 'dark'} data-bs-theme={theme} className={`border-bottom `}>
                     <Container fluid>
-                        <Nav className='ms-auto align-items-center lg:gap-4 md:gap-3 sm:gap-3'>
-                            <Nav.Item>
+                        <div className='me-auto align-items-center lg:gap-3 md:gap-3 gap-0 position-relative'>
+                            <div className="nav-control ">
+                                <div onClick={() => setIsActive(!isActive)} className={`hamburger ${isActive ? '' : 'is-active'}`}>
+                                    <span className="line"></span>
+                                    <span className="line"></span>
+                                    <span className="line"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <Nav className='ms-auto align-items-center lg:gap-3 md:gap-3 gap-0'>
+                            {/* <Nav.Item>
                                 <ThemeSwitch />
-                            </Nav.Item>
-                            <Nav.Link href='#' className='d-flex justify-content-center align-items-center'>
-                                <div className="c-icon flex justify-center items-center my-0">
-                                    <i className='fi fi-rr-bell text-[1.1rem] text-dark leading-none  my-0'></i>
-                                </div>
-                            </Nav.Link>
-                            <Nav.Link href='#' className='d-flex justify-content-center align-items-center'>
-                                <div className="c-icon flex justify-center items-center my-0">
-                                    <i className='fi fi-rr-calendar-day text-[1.1rem] text-dark leading-none my-0'></i>
-                                </div>
-                            </Nav.Link>
+                            </Nav.Item> */}
+                            <NotificationsDropdown />
+                            <CalendarDropdown />
                             <Dropdown align="end" as={NavItem} className=''>
                                 <DropdownToggle bsPrefix="nav-profile-toggler" data-bs-theme={theme} className="cursor-pointer btn btn-link nav-link bg-transparent text-decoration-none">
                                     <div className=" flex gap-x-2 justify-center text-center items-center">
                                         <Image
-                                            className='rounded-circle'
+                                            className='rounded-circle lg:w-[45px] w-[35px]'
                                             src={userAuth?.user?.image}
                                             alt='User Photo'
-                                            width={45}
-                                            height={45}
+
                                         />
                                         <div className="text-start lg:block sm:hidden md:block hidden">
                                             {

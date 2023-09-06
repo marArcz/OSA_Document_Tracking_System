@@ -3,12 +3,13 @@ import { Nav } from 'react-bootstrap'
 import SidebarComponent, { NavType } from './SidebarComponent'
 import { Link } from '@inertiajs/react'
 import axios from 'axios'
+import { useNavMenuLoadedState, useNavMenuState } from '@/States/States'
 
-const SuperAdminSidebar = ({ isActive, activeLink,setShowFeedbackModal }) => {
+const SuperAdminSidebar = ({ isActive, activeLink, setShowFeedbackModal }) => {
     const url = window.location.href;
     const [classifications, setClassifications] = useState([])
-    const [navList, setNavList] = useState([])
-    const [isLoaded, setIsLoaded] = useState(false)
+    const { navList, setNavList } = useNavMenuState()
+    const { isLoaded, setIsLoaded } = useNavMenuLoadedState()
     const menu = [
         {
             type: NavType.LINK,
@@ -29,7 +30,7 @@ const SuperAdminSidebar = ({ isActive, activeLink,setShowFeedbackModal }) => {
                     text: 'Submission Bins',
                     icon: <i className='fi fi-rr-boxes'></i>,
                     href: route('admin.submission_bins'),
-                    urlPath:'submission-bins'
+                    urlPath: 'submission-bins'
                 },
                 {
                     type: NavType.DROPDOWN,
@@ -59,7 +60,7 @@ const SuperAdminSidebar = ({ isActive, activeLink,setShowFeedbackModal }) => {
             type: NavType.LINK,
             text: 'Feedbacks',
             icon: <i className="fi fi-rr-comment-alt"></i>,
-            href: '/admin/feedback',
+            href: route("admin.feedbacks"),
             urlPath: 'feedback'
         },
         {
@@ -69,32 +70,45 @@ const SuperAdminSidebar = ({ isActive, activeLink,setShowFeedbackModal }) => {
             href: route('admin.admins'),
             urlPath: 'admins'
         },
+        // {
+        //     type: NavType.DROPDOWN,
+        //     text: 'Unit Heads',
+        //     icon: <i className="fi fi-rr-users-alt"></i>,
+        //     key: 'unit-heads',
+        //     navList: [
+        //         {
+        //             type: NavType.LINK,
+        //             text: 'Profile',
+        //             href: route('admin.unit_heads.profiles'),
+        //             urlPath: 'unit-heads/profile'
+        //         },
+        //         {
+        //             type: NavType.LINK,
+        //             text: 'Info and Account',
+        //             href: route('admin.unit_heads.records'),
+        //             urlPath: 'unit-heads/records'
+        //         },
+        //     ]
+        // },
         {
-            type: NavType.DROPDOWN,
+            type: NavType.LINK,
             text: 'Unit Heads',
-            icon: <i className="fi fi-rr-users-alt"></i>,
-            key: 'unit-heads',
-            navList: [
-                {
-                    type: NavType.LINK,
-                    text: 'Profile',
-                    href: route('admin.unit_heads.profiles'),
-                    urlPath: 'unit-heads/profile'
-                },
-                {
-                    type: NavType.LINK,
-                    text: 'Info and Account',
-                    href: route('admin.unit_heads.records'),
-                    urlPath: 'unit-heads/records'
-                },
-            ]
+            icon:<i className='fi fi-rr-user'></i>,
+            href: route('admin.unit_heads.records'),
+            urlPath: 'unit-heads/records'
+        },
+        {
+            type: NavType.LINK,
+            text: 'Calendar',
+            icon: <i className="fi fi-rr-calendar"></i>,
+            href: route('calendar'),
+            urlPath: 'calendar'
         },
 
     ];
 
     useEffect(() => {
         const fetchClassifications = () => {
-            setNavList(menu)
             axios.get(route('api.classifications.all'))
                 .then((res) => {
                     console.log(res)
@@ -122,7 +136,8 @@ const SuperAdminSidebar = ({ isActive, activeLink,setShowFeedbackModal }) => {
                         type: NavType.LINK,
                         text: designation.name,
                         key: designation.name,
-                        href: ''
+                        urlPath: `submission_bin.reports.${campus.id}.${designation.id}`,
+                        href: route('admin.reports.view.filtered', { campus_id: campus.id, designation_id: designation.id })
                     }
                     // append designation nav
                     designationMenu.push(designationNav)
@@ -131,7 +146,8 @@ const SuperAdminSidebar = ({ isActive, activeLink,setShowFeedbackModal }) => {
                 let classificationNav = {
                     type: NavType.DROPDOWN,
                     text: classification.name,
-                    key: classification.name,
+                    key: classification.id,
+                    active: false,
                     navList: designationMenu,
                     icon: <i className='fi fi-rr-brackets-square'></i>
                 }
@@ -143,7 +159,8 @@ const SuperAdminSidebar = ({ isActive, activeLink,setShowFeedbackModal }) => {
             let campusNav = {
                 type: NavType.DROPDOWN,
                 text: campus.name,
-                key: campus.name,
+                key: 'reports',
+                active: false,
                 navList: classificationMenu,
                 icon: <i className='fi fi-rr-school'></i>
             }
@@ -156,6 +173,7 @@ const SuperAdminSidebar = ({ isActive, activeLink,setShowFeedbackModal }) => {
             text: 'Document Tracking',
             icon: <i className='fi fi-rs-search-alt'></i>,
             key: 'document-tracking',
+            active: false,
             opened: false,
             navList: [
                 {
@@ -170,6 +188,7 @@ const SuperAdminSidebar = ({ isActive, activeLink,setShowFeedbackModal }) => {
                     text: 'Reports',
                     icon: <i className='fi fi-rr-document'></i>,
                     key: 'reports',
+                    active: false,
                     opened: false,
                     navList: campusMenu
                 }
@@ -179,11 +198,12 @@ const SuperAdminSidebar = ({ isActive, activeLink,setShowFeedbackModal }) => {
         let temp = [...menu];
         temp[1] = navMenu;
         setNavList(temp)
+        console.log('updated navbar')
     }
 
 
     return (
-        <SidebarComponent isActive={isActive} navList={navList} activeLink={activeLink} />
+        <SidebarComponent isActive={isActive} activeLink={activeLink} />
     )
 }
 

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Announcement;
 use App\Models\Report;
 use App\Models\SubmissionBin;
 use App\Models\User;
@@ -60,9 +61,11 @@ class UnitHeadController extends Controller
     }
 
     /* reports page*/
-    public function reports()
+    public function reports(Request $request)
     {
-        $data['submissionBins'] = SubmissionBin::all();
+        $data['submissionBins'] = SubmissionBin::limit(5)->orderByDesc('id')->get();
+        $data['rows'] = count(SubmissionBin::all());
+        $data['reports'] = $request->user()->reports()->get();
         return Inertia::render('UnitHead/UnitHeadReports', $data);
     }
 
@@ -72,5 +75,22 @@ class UnitHeadController extends Controller
         $data['report'] = Report::with(['attachments'])->where('submission_bin_id', $request->id)->where('user_id', $request->user()->id)->first();
 
         return Inertia::render('UnitHead/SubmissionBin', $data);
+    }
+
+    public function announcements()
+    {
+        $data['announcements'] = Announcement::all();
+        return Inertia::render('UnitHead/Announcements', $data);
+    }
+    public function deleteMany(Request $request)
+    {
+        $ids = $request->id;
+
+        foreach ($ids as $key => $id) {
+            $unitHead = User::find($id);
+            $unitHead->delete();
+        }
+
+        return response()->json(['success' => true]);
     }
 }

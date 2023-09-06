@@ -2,8 +2,11 @@
 
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AnnouncementController;
+use App\Http\Controllers\CalendarEventController;
 use App\Http\Controllers\CampusAdminController;
 use App\Http\Controllers\CampusController;
+use App\Http\Controllers\FeedbackController;
+use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ReminderController;
 use App\Http\Controllers\ReportAttachmentController;
@@ -12,9 +15,11 @@ use App\Http\Controllers\SubmissionBinController;
 use App\Http\Controllers\SuperAdminController;
 use App\Http\Controllers\UnitHeadController;
 use App\Http\Controllers\UsersController;
+use App\Models\SubmissionBin;
 use App\Models\User;
-use GuzzleHttp\Psr7\Request;
+use App\Notifications\NewSubmissionBin;
 use Illuminate\Foundation\Application;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -65,14 +70,22 @@ Route::prefix('/admin')->middleware(['auth:web'])->group(function () {
     Route::get('/unit-heads/{id}/edit', [AdminController::class, 'edit_unit_head'])->name('admin.unit_heads.edit')->middleware(['role:super_admin|admin']);
     Route::get('/campus-admins', [AdminController::class, 'admins'])->name('admin.admins')->middleware(['role:super_admin']);
     Route::get('/admins/create', [AdminController::class, 'createAdmin'])->name('admin.admins.create')->middleware(['role:super_admin']);
+    Route::get('/calendar', [CalendarEventController::class, 'index'])->name('calendar')->middleware(['role:super_admin|admin']);
     Route::get('/campus-admins/{id}/edit', [AdminController::class, 'editCampusAdmin'])->name('admin.campus_admin.edit')->middleware(['role:super_admin']);
+    Route::get('/feedbacks', [AdminController::class, 'feedbacks'])->name('admin.feedbacks')->middleware(['role:super_admin']);
     Route::prefix('/document-tracking')->group(function () {
         Route::get('/submission-bins', [AdminController::class, 'submission_bins'])->name('admin.submission_bins');
+        Route::get('/submission-bins/{id}/details', [AdminController::class, 'viewSubmissionBin'])->name('admin.submission_bin.details');
         Route::get('/submission-bins/create', [AdminController::class, 'create_submission_bin'])->name('admin.create_submission_bin')->middleware(['role:super_admin']);
         Route::get('/submission-bins/{id}/edit', [AdminController::class, 'edit_submission_bin'])->name('admin.edit_submission_bin')->middleware(['role:super_admin']);
         Route::get('/reports/{submission_bin_id}/view', [AdminController::class, 'viewReports'])->name('admin.reports.view');
+        Route::get('/reports/{campus_id}/{designation_id}/view/filtered', [AdminController::class, 'viewFilteredReports'])->name('admin.reports.view.filtered');
         Route::get('/reports/unit-head/{report_id}/view', [AdminController::class, 'viewReport'])->name('admin.report.open');
     });
+});
+
+Route::prefix('/notifications')->middleware(['auth', 'role:unit_head'])->group(function () {
+    Route::get('/{id}', [NotificationController::class, 'open'])->name('notifications.open');
 });
 
 Route::prefix('/unit-head')->middleware(['auth', 'role:super_admin|admin'])->group(function () {
@@ -85,6 +98,7 @@ Route::prefix('/unit-head')->middleware(['auth', 'role:super_admin|admin'])->gro
 Route::prefix('/unit-head')->middleware(['auth', 'role:unit_head'])->group(function () {
     Route::get('/reports', [UnitHeadController::class, 'reports'])->name('unit_head.reports');
     Route::get('/reports/{id}/submission-bin', [UnitHeadController::class, 'submission_bin'])->name('unit_head.submission_bin');
+    Route::get('/announcements', [UnitHeadController::class, 'announcements'])->name('unit_head.announcements');
 });
 
 Route::prefix('/submission-bins')->middleware(['auth', 'role:super_admin'])->group(function () {
@@ -103,6 +117,11 @@ Route::prefix('/reports')->middleware(['auth'])->group(function () {
     Route::patch('/{submission_bin_id}/submit', [ReportController::class, 'submitReport'])->name('reports.submit');
     Route::patch('/{submission_bin_id}/unsubmit', [ReportController::class, 'unSubmitReport'])->name('reports.unsubmit');
     Route::get('/attachment/{id}/view', [ReportAttachmentController::class, 'view'])->name('reports.attachment.view');
+    Route::patch('{id}/status/update', [ReportAttachmentController::class, 'updateStatus'])->name('reports.status.update');
+});
+
+Route::prefix('/feedback')->middleware(['auth'])->group(function () {
+    Route::post('/create', [FeedbackController::class, 'create'])->name('feedback.create');
 });
 
 
@@ -117,7 +136,12 @@ Route::prefix('/campus-admin')->middleware(['auth', 'role:super_admin'])->group(
     Route::patch('/{id}', [CampusAdminController::class, 'edit'])->name('campus_admin.edit');
 });
 
-Route::get('/dashboard', function () {
+Route::get('/dashboard', function (Request $request) {
+    if ($request->user()->hasRole('admin')) {
+        return redirect(route('admin.dashboard'));
+    } else if ($request->user()->hasRole('super_admin')) {
+        return redirect(route('admin.dashboard'));
+    }
     return Inertia::render('Dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
@@ -137,6 +161,12 @@ Route::prefix('/super-admin')->group(function () {
 });
 
 
+Route::get('/mailable', function () {
+    $submissionBin = SubmissionBin::where('id', '>', 0)->first();
+    $unitHead = User::where('id','>',0)->first();
 
+    return (new NewSubmissionBin($submissionBin))
+        ->toMail($unitHead);
+});
 
 require __DIR__ . '/auth.php';

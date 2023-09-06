@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Report;
 use App\Models\ReportAttachment;
 use App\Models\User;
+use App\Notifications\NewReportSubmitted;
 use Illuminate\Http\Request;
 
 class ReportController extends Controller
@@ -14,8 +15,8 @@ class ReportController extends Controller
     {
         $campus_id = $request->campus_id;
         $submission_bin_id = $request->submission_bin_id;
-        $unit_heads = User::select('id')->where('campus_id',$campus_id);
-        $data['reports'] = Report::whereIn('user_id', $unit_heads)->where('submission_bin_id', $submission_bin_id)->where('is_submitted',true)->get();
+        $unit_heads = User::select('id')->where('campus_id', $campus_id);
+        $data['reports'] = Report::whereIn('user_id', $unit_heads)->where('submission_bin_id', $submission_bin_id)->where('user_id', $request->unit_head_id)->where('is_submitted', true)->get();
 
         return response()->json($data);
     }
@@ -24,8 +25,8 @@ class ReportController extends Controller
     {
         $campus_id = $request->campus_id;
         $submission_bin_id = $request->submission_bin_id;
-        $unit_heads = User::select('id')->where('campus_id',$campus_id);
-        $data['reports'] = Report::whereIn('user_id', $unit_heads)->where('submission_bin_id', $submission_bin_id)->where('is_submitted',true)->where('status','Approved')->get();
+        $unit_heads = User::select('id')->where('campus_id', $campus_id);
+        $data['reports'] = Report::whereIn('user_id', $unit_heads)->where('submission_bin_id', $submission_bin_id)->where('user_id', $request->unit_head_id)->where('is_submitted', true)->where('status', 'Approved')->get();
 
         return response()->json($data);
     }
@@ -74,11 +75,16 @@ class ReportController extends Controller
     public function submitReport(Request $request)
     {
         $user = $request->user();
-        $report = Report::where('submission_bin_id', $request->submission_bin_id)->where('user_id', $user->id)->first();
+        $report = Report::with(['submission_bin','unitHead'])->where('submission_bin_id', $request->submission_bin_id)->where('user_id', $user->id)->first();
 
         if ($report) {
             $report->is_submitted = true;
             if ($report->save()) {
+                $users = User::whereHasRole(['admin'])->get();
+                foreach ($users as $key => $user) {
+                    $user->notify(new NewReportSubmitted($report));
+                }
+
                 return redirect()->back()->with("success", 'Successfully submitted!');
             }
         }
@@ -101,8 +107,15 @@ class ReportController extends Controller
     }
 
     /* API */
-    public function unit_heads(Request $request){
-        $unit_heads = User::where('campus_id',$request->campus_id)->whereHasRole(['unit_head'])->get();
-        return response()->json(['unitHeads'=> $unit_heads]);
+    public function unit_heads(Request $request)
+    {
+        $unit_heads = User::where('campus_id', $request->campus_id)->whereHasRole(['unit_head'])->get();
+        return response()->json(['unitHeads' => $unit_heads]);
+    }
+    /* API */
+    public function unit_heads_designated(Request $request)
+    {
+        $unit_heads = User::where('campus_id', $request->campus_id)->whereHasRole(['unit_head'])->get();
+        return response()->json(['unitHeads' => $unit_heads]);
     }
 }

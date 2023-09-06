@@ -79,39 +79,50 @@ const Register = () => {
 
     const onSubmit = (e) => {
         e.preventDefault();
-        router.visit(route('super_admin.register'),{
-            data:{
+        router.visit(route('super_admin.register'), {
+            data: {
                 email,
                 firstname,
                 lastname,
                 middlename,
                 phone,
-                access_token:googleAccesstoken,
+                access_token: googleAccesstoken,
                 image
             },
-            method:'post'
+            method: 'post'
         });
     }
 
     const googleLogin = useGoogleLogin({
         onSuccess: async (tokenResponse) => {
             console.log('response: ', tokenResponse)
-            const userInfo = await axios.get(
-                'https://www.googleapis.com/oauth2/v3/userinfo',
-                {
-                    headers: { Authorization: `Bearer ${tokenResponse.access_token}` },
-                    baseURL:''
-                },
-            );
+            // const userInfo = await axios.get(
+            //     'https://www.googleapis.com/oauth2/v3/userinfo',
+            //     {
+            //         headers: { Authorization: `Bearer ${tokenResponse.access_token}` },
+            //         baseURL:''
+            //     },
+            // );
+            const userInfo = await new Promise(resolve => {
+                const xhr = new XMLHttpRequest();
 
+                xhr.open('GET', `https://www.googleapis.com/oauth2/v3/userinfo`);
+                xhr.setRequestHeader('Authorization', `Bearer ${tokenResponse.access_token}`)
+                xhr.onload = function () {
+                    if (this.status >= 200 && this.status < 300)
+                        resolve(JSON.parse(this.responseText));
+                    else resolve({ err: '404' });
+                };
+                xhr.send();
+            });
+            console.log('user info: ',userInfo);
 
             setGoogleAccesstoken(tokenResponse.access_token)
-            setGoogleAccount(userInfo.data)
-            console.log(userInfo);
-            setFirstname(userInfo.data.given_name)
-            setLastname(userInfo.data.family_name)
-            setImage(userInfo.data.picture)
-            setEmail(userInfo.data.email)
+            setGoogleAccount(userInfo)
+            setFirstname(userInfo.given_name)
+            setLastname(userInfo.family_name)
+            setImage(userInfo.picture)
+            setEmail(userInfo.email)
 
             const hasAccess = hasGrantedAllScopesGoogle(
                 tokenResponse,
@@ -122,7 +133,7 @@ const Register = () => {
         },
         onError: errorResponse => console.log(errorResponse),
         flow: 'implicit',
-        prompt:'consent'
+        prompt: 'consent'
     });
 
     const checkBasicInfo = () => {

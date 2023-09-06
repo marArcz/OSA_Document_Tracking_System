@@ -1,5 +1,7 @@
+import { useNavMenuState } from '@/States/States'
 import { Link } from '@inertiajs/react'
 import React, { memo, useState } from 'react'
+import { useEffect } from 'react'
 import { Nav } from 'react-bootstrap'
 
 export const NavType = {
@@ -20,11 +22,73 @@ const NavLink = ({ item, activeLink }) => {
     )
 }
 
+const NavButton = ({ item }) => {
+    return (
+        <li>
+            <Link onClick={item.onClick}>
+                {item.icon}
+                <span>{item.text}</span>
+            </Link>
+        </li>
+    )
+}
+
+const isActive = (item, activeLink) => {
+    var links = findLinks(item);
+
+    // console.log('activeLink ', activeLink)
+    for (let link of links) {
+        if (link.urlPath == activeLink) {
+            return true;
+        }
+    }
+    return false;
+}
+const getNavLink = (item) => {
+    for (let navLink of item.navList) {
+        if (navLink.type == NavType.DROPDOWN) {
+            return getNavLink(navLink)
+        } else if (navLink.type == NavType.LINK) {
+            return navLink;
+        }
+    }
+
+    return null;
+}
+const getNavLinks = (item) => {
+    var navLinks = [];
+    for (let navItem of item.navList) {
+        if (navItem.type == NavType.DROPDOWN) {
+            let navLink = getNavLink(navItem);
+            if (navLink != null) {
+                navLinks.push(navLink);
+            }
+        }
+    }
+    return navLinks
+}
+
+const findLinks = (dropdown) => {
+    let links = [];
+    for (let item of dropdown.navList) {
+        if (item.type == NavType.DROPDOWN) {
+            // let index = 0;
+            links.push(...findLinks(item))
+        } else if (item.type == NavType.LINK) {
+            links.push(item)
+        }
+    }
+    return links;
+}
+
 const NavDropdown = ({ item, activeLink }) => {
     const currentUrl = window.location;
     const matched = 0;
 
-    const active = currentUrl.pathname.split('/')[2] === item.key;
+    const matchesKey = currentUrl.pathname.split('/')[2] === item.key;
+    const active = isActive(item,activeLink) || matchesKey
+
+    // console.log('dropdownItemData: ', { item, active })
 
     const [expanded, setExpanded] = useState(active)
 
@@ -42,7 +106,11 @@ const NavDropdown = ({ item, activeLink }) => {
                             <NavLink key={index} activeLink={activeLink} item={i} />
                         ) : (
                             /* for dropdown */
-                            <NavDropdown key={index} item={i} />
+                            i.type === NavType.BUTTON ? (
+                                <NavButton key={index} item={i} />
+                            ) : (
+                                <NavDropdown activeLink={activeLink} key={index} item={i} />
+                            )
                         )
                     ))
                 }
@@ -51,9 +119,10 @@ const NavDropdown = ({ item, activeLink }) => {
     )
 }
 
-const SidebarComponent = ({ isActive, navList, activeLink }) => {
+const SidebarComponent = ({ isActive: activeNav, activeLink }) => {
+    const {navList, setNavList} = useNavMenuState()
     return (
-        <div className={`app-sidebar border-end bg-white shadow-sm ${isActive ? 'active' : ''}`}>
+        <div className={`app-sidebar shadow-sm bg-white ${activeNav ? 'active' : ''}`}>
             <div className="sidebar-menu">
                 <ul className='main'>
                     {
@@ -63,7 +132,11 @@ const SidebarComponent = ({ isActive, navList, activeLink }) => {
                                 <NavLink activeLink={activeLink} key={index} item={item} />
                             ) : (
                                 /* for dropdown */
-                                <NavDropdown activeLink={activeLink} key={index} item={item} />
+                                item.type === NavType.BUTTON ? (
+                                    <NavButton key={index} item={item} />
+                                ) : (
+                                    <NavDropdown activeLink={activeLink} key={index} item={item} />
+                                )
                             )
                         ))
                     }
@@ -73,4 +146,4 @@ const SidebarComponent = ({ isActive, navList, activeLink }) => {
     )
 }
 
-export default memo(SidebarComponent)
+export default SidebarComponent

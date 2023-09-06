@@ -8,8 +8,8 @@ const Comment = ({ data, pos = "left" }) => (
         <div>
             <Image
                 src={data.user.image}
-                width={35}
-                height={35}
+                width={'35px'}
+                height={'35px'}
                 alt='User image'
                 roundedCircle
             />

@@ -3,12 +3,18 @@
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AnnouncementController;
 use App\Http\Controllers\Api\ClassificationController;
+use App\Http\Controllers\CalendarEventController;
+use App\Http\Controllers\CampusController;
+use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ReminderController;
 use App\Http\Controllers\ReportCommentController;
 use App\Http\Controllers\ReportController;
+use App\Http\Controllers\SubmissionBinController;
 use App\Http\Controllers\SuperAdminController;
+use App\Http\Controllers\UnitHeadController;
 use App\Http\Controllers\UsersController;
+use App\Models\CalendarEvent;
 use App\Models\Reminder;
 use App\Models\ReportComment;
 use Illuminate\Http\Request;
@@ -64,8 +70,8 @@ Route::post('/file-upload', function (Request $request) {
     return response()->json(['fileUrl' => $fileUrl]);
 });
 
-Route::post('/upload-report',[ReportController::class,'addReport']);
-Route::delete('/report/{id}/attachment',[ReportController::class,'removeAttachment']);
+Route::post('/upload-report', [ReportController::class, 'addReport']);
+Route::delete('/report/{id}/attachment', [ReportController::class, 'removeAttachment']);
 
 Route::delete('/reminders/{id}', [ReminderController::class, 'delete']);
 Route::delete('/announcements/{id}', [AnnouncementController::class, 'delete']);
@@ -76,13 +82,49 @@ Route::get('/admins', [AdminController::class, 'getAdmins']);
 Route::get('/admins/{campus_id}', [AdminController::class, 'getAdminsByCampus']);
 
 
-Route::prefix('/reports')->group(function(){
-    Route::get('/{campus_id}/{submission_bin_id}/all',[ReportController::class,'all']);
-    Route::get('/{campus_id}/{submission_bin_id}/approved',[ReportController::class,'getApproved']);
-    Route::get('/{campus_id}/unit_heads',[ReportController::class,'unit_heads']);
+Route::prefix('/reports')->group(function () {
+    Route::get('/{campus_id}/{submission_bin_id}/{unit_head_id}/all', [ReportController::class, 'all']);
+    Route::get('/{campus_id}/{submission_bin_id}/{unit_head_id}/approved', [ReportController::class, 'getApproved']);
+    Route::get('/{campus_id}/unit_heads', [ReportController::class, 'unit_heads']);
+    Route::get('/{campus_id}/unit_heads/{designation_id}', [ReportController::class, 'unit_heads_designated']);
 });
 
-Route::prefix('/comments')->group(function(){
-    Route::post('/add',[ReportCommentController::class,'add']);
-    Route::get('/{unit_head_id}/{submission_bin_id}/get',[ReportCommentController::class,'get']);
+Route::prefix('/comments')->group(function () {
+    Route::post('/add', [ReportCommentController::class, 'add']);
+    Route::get('/{unit_head_id}/{submission_bin_id}/get', [ReportCommentController::class, 'get']);
 });
+
+
+Route::prefix('/campus')->group(function () {
+    Route::get('/', [CampusController::class, 'all']);
+    Route::post('/', [CampusController::class, 'store']);
+})->middleware(['auth']);
+
+Route::prefix('/submissionBins')->group(function () {
+    Route::get('/{id}', [SubmissionBinController::class, 'all']);
+    Route::get('/{text}/search', [SubmissionBinController::class, 'search']);
+    Route::delete('/{id}', [SubmissionBinController::class, 'delete']);
+})->middleware(['auth']);
+
+Route::prefix('/calendar')->group(function () {
+    Route::get('/', [CalendarEventController::class, 'index']);
+    Route::post('/', [CalendarEventController::class, 'store']);
+    Route::delete('/{id}', [CalendarEventController::class, 'destroy']);
+})->middleware(['auth']);
+
+Route::prefix('/notifications')->group(function () {
+    Route::get('/{id}', [NotificationController::class, 'get']);
+    Route::get('/general/{id}', [NotificationController::class, 'general']);
+    Route::get('/calendar/{id}', [NotificationController::class, 'calendar']);
+    Route::get('/read', [NotificationController::class, 'marAsRead']);
+})->middleware(['auth']);
+
+Route::prefix('/unit_heads')->group(function () {
+    Route::post('/delete/many', [UnitHeadController::class, 'deleteMany'])->name('unit_heads.delete.many');
+})->middleware(['auth']);
+
+Route::prefix('/reminders')->group(function () {
+    Route::get('/', [ReminderController::class, 'all']);
+})->middleware(['auth']);
+
+

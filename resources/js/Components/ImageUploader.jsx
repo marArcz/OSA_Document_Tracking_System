@@ -40,30 +40,28 @@ const ImageUploader = ({ show, handleClose, onCompleted, closeOnComplete = false
 
     return (
         <>
-            <Modal backdrop={isUploading ? 'static' : 'backdrop'} centered size='lg' className='image-uploader-modal' show={show} onHide={handleClose}>
-                <Modal.Dialog>
-                    <Modal.Header closeButton className='bg-white'>
-                        <Modal.Title className=' fs-5 text-secondary'>Media Upload</Modal.Title>
-                    </Modal.Header>
-                    <Modal.Body className='p-3'>
-                        <div className={`image-uploader h-100 ${isUploading ? 'uploading' : ''}`}>
-                            <div className=" text-center">
-                                <div>
-                                    <p><i className=' bx bx-folder-plus bx-md'></i></p>
-                                    <p className='fs-5 fw-bold'>{isUploading ? 'Uploading image...' : 'Click to upload or drop an image here.'}</p>
-                                    <p className='fs-5 text-black-50'>JPG, PNG or GIF. </p>
-                                </div>
+            <Modal backdrop={isUploading ? 'static' : 'backdrop'} centered size='md' className='image-uploader-modal' show={show} onHide={handleClose}>
+                <Modal.Header closeButton className='bg-light-secondary'>
+                    <Modal.Title className=' fs-5'>Media Upload</Modal.Title>
+                </Modal.Header>
+                <Modal.Body className='p-3'>
+                    <div className={`image-uploader h-100 ${isUploading ? 'uploading' : ''}`}>
+                        <div className=" text-center text-secondary">
+                            <div>
+                                <p><i className=' bx bx-image bx-md'></i></p>
+                                <p className='fs-6 fw-bold'>{isUploading ? 'Uploading image...' : 'Click to upload or drop an image here.'}</p>
+                                <p className='text-sm text-black-50'>JPG, PNG or GIF. </p>
                             </div>
-                            {/* <Form.Control onChange={onChange} accept='image/*' type='file' value={image}/> */}
-                            <input onChange={onChange} accept='image/*' id='image-input' className='image-uploader-input' type='file' value={image} />
                         </div>
-                    </Modal.Body>
-                    <Modal.Footer>
-                        <Button variant="secondary" disabled={isUploading} onClick={handleClose} className='col-12'>
-                            Cancel
-                        </Button>
-                    </Modal.Footer>
-                </Modal.Dialog>
+                        {/* <Form.Control onChange={onChange} accept='image/*' type='file' value={image}/> */}
+                        <input onChange={onChange} accept='image/*' id='image-input' className='image-uploader-input' type='file' value={image} />
+                    </div>
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button variant="light-secondary" disabled={isUploading} onClick={handleClose} className='col-12'>
+                        Cancel
+                    </Button>
+                </Modal.Footer>
             </Modal>
         </>
     )

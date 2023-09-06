@@ -3,15 +3,27 @@ import FileIcon from '@/Components/FileIcon';
 import HeaderTitle from '@/Components/HeaderTitle';
 import ModalComponent from '@/Components/ModalComponent';
 import PanelLayout from '@/Layouts/PanelLayout'
-import { Head, usePage } from '@inertiajs/react';
+import { Head, useForm, usePage } from '@inertiajs/react';
 import React, { useState, useEffect } from 'react'
-import { Button, Card, Col, Image, ListGroup, ListGroupItem, Row } from 'react-bootstrap';
-import DocViewer, { DocViewerRenderers } from 'react-doc-viewer';
+import { Button, Card, Col, Dropdown, Form, Image, ListGroup, ListGroupItem, Row } from 'react-bootstrap';
+import DocViewer, { DocViewerRenderers, PDFRenderer } from 'react-doc-viewer';
 
 const ViewReport = ({ report }) => {
     const [selectedFile, setSelectedFile] = useState(null);
     const { prevPage, auth } = usePage().props
     const [showFileModal, setShowFileModal] = useState(false)
+    const [showStatusModal, setShowStatusModal] = useState(false)
+    // const [status, setStatus] = useState(report.status)
+
+    const { data, setData, patch } = useForm({
+        status: report.status
+    })
+
+    const updateStatus = (e) => {
+        e.preventDefault();
+        patch(route('reports.status.update', { id: report.id }));
+    }
+
     console.log(report)
 
     useEffect(() => {
@@ -24,143 +36,112 @@ const ViewReport = ({ report }) => {
                 <HeaderTitle
                     text='Unit Head Report'
                     backButton
-                    backButtonLink={route('admin.reports.view',{submission_bin_id:report.submission_bin.id})}
+                // backButtonLink={route('admin.reports.view', { submission_bin_id: report.submission_bin.id })}
                 />
             )}
             defaultActiveLink="submission-bins"
         >
             <ModalComponent
                 className={"rounded-0 bg-transparent"}
+                bodyClassname='p-0 overflow-hidden'
                 show={showFileModal}
                 handleClose={() => {
                     setShowFileModal(s => !s)
                 }}
                 closeButton
-                title={report.submission_bin.title}
+                title={selectedFile?.name}
                 size='fullscreen'
             >
-                {
-                    report.attachments.length > 0 && (
-                        <div className="overflow-x-auto custom-scroll">
-                            <div className="flex gap-x-3 flex-nowrap">
-                                {
-                                    report.attachments.map((att, index) => (
-                                        // <ListGroupItem key={index} className={` cursor-pointer ${att.id === selectedFile.id ? 'bg-light-primary rounded-1' : ''}`} onClick={() => setSelectedFile(att)}>
-                                        //     {att.name}
-                                        // </ListGroupItem>
-                                        <div onClick={() => setSelectedFile(att)} className={`text-center rounded p-3 cursor-pointer ${selectedFile?.id === att.id ? 'bg-light' : ''}`} title={att.name}>
-                                            <FileIcon
-                                                file={att}
-                                                className={"mx-auto"}
-                                                size='xs'
-                                            />
-                                            <p className="text-center text-xs mt-3 mb-0 col-11 text-truncate">
-                                                <small>{att.name}</small>
-                                            </p>
-                                        </div>
-                                    ))
-                                }
-                            </div>
-                        </div>
-                    )
-                }
                 <hr className='my-1' />
                 {
                     selectedFile && (
                         <DocViewer
+                            style={{ maxHeight: '100% !important', height: "100%" }}
                             pluginRenderers={DocViewerRenderers}
                             documents={[
                                 { uri: selectedFile.uri }
                             ]}
                             config={
                                 {
-                                    zoom: 1
+                                    zoom: 0.5,
+                                    header: {
+                                        disableHeader: true
+                                    }
                                 }
                             }
+
+                            theme={{
+                                primary: "#5296d8",
+                                secondary: "#ffffff",
+                                tertiary: "#5296d899",
+                                text_primary: "#ffffff",
+                                text_secondary: "#5296d8",
+                                text_tertiary: "#00000099",
+                                disableThemeScrollbar: false,
+                            }}
                         />
-                        // <>
-                        // <iframe className='w-100 h-[90vh]' src={viewFile.uri}/>
-                        // </>
+
+
                     )
                 }
             </ModalComponent>
             <Head title={report.unit_head.firstname + " " + report.unit_head.lastname + ' | ' + report.submission_bin.title} />
             <div className="p-3">
-                <Row className='gy-3 gx-2 h-100'>
-                    <Col className='h-100'>
-                        {
-                            report.attachments.length > 1 && (
-                                <Card className='border-0 shadow-sm rounded-0 p-2 h-100 mb-2'>
-                                    <Card.Body className='h-100'>
-                                        <p className='text-sm fw-bold'>Attachments</p>
-                                        <hr />
-                                        <div className="overflow-x-auto custom-scroll">
-                                            <div className="flex gap-x-3 flex-nowrap">
-                                                {
-                                                    report.attachments.map((att, index) => (
-                                                        // <ListGroupItem key={index} className={` cursor-pointer ${att.id === selectedFile.id ? 'bg-light-primary rounded-1' : ''}`} onClick={() => setSelectedFile(att)}>
-                                                        //     {att.name}
-                                                        // </ListGroupItem>
-                                                        <div onClick={() => setSelectedFile(att)} className={`text-center rounded p-3 cursor-pointer ${selectedFile?.id === att.id ? 'bg-light' : ''}`} title={att.name}>
-                                                            <FileIcon
-                                                                file={att}
-                                                                className={"mx-auto"}
-                                                                size='sm'
-                                                            />
-                                                            <p className="text-center mt-3 mb-0 col-11 text-sm text-truncate">
-                                                                <small>{att.name}</small>
-                                                            </p>
-                                                        </div>
-                                                    ))
-                                                }
-                                            </div>
-                                        </div>
-                                    </Card.Body>
-                                </Card>
-                            )
-                        }
-                        {
-                            selectedFile && (
-                                <Card className='rounded-0 border-0 shadow-sm '>
-                                    <Card.Header className="bg-white py-3">
-                                        <div className="flex items-center">
-                                            <p className="my-0 text-sm fw-bold">{selectedFile.name}</p>
-                                            <div className='ms-auto'>
-                                                <Button variant='light' onClick={() => setShowFileModal(true)} className='d-flex align-items-center text-dark'>
-                                                    <i className=' bx bx-fullscreen'></i>
-                                                    <span className='ms-2 text-sm'>Fullscreen</span>
-                                                </Button>
-                                            </div>
-                                        </div>
-                                    </Card.Header>
-                                    <Card.Body>
-                                        {
-                                            !showFileModal && (
+                <Row className=' bg-transparent gy-2 gx-2'>
+                    <Col>
+                        <Card className='border-0 shadow-sm rounded-0 p-2 mb-2'>
+                            <Card.Body className='h-100'>
+                                <div className="flex justify-between items-center">
+                                    <p className='text-sm fw-bolder my-0 col-4'>Submitted By</p>
+                                    <div className="flex">
+                                        <Dropdown>
+                                            <Dropdown.Toggle
+                                                variant={'light'}
+                                                // className='rounded-0'
+                                                bsPrefix='null'
+                                            >
+                                                <div className="flex items-center gap-2">
+                                                    <span className='fw-bold'>{data.status}</span>
+                                                    <span className='bx bx-chevron-down leading-none'></span>
+                                                </div>
+                                                {/* <div className="flex gap-2">
+                                                    <div className="text-sm my-0 fw-bold ">
+                                                        <span className='me-2 text-dark'>Status:</span>
+                                                        <span className='text-purple'>{data.status}</span>
+                                                    </div>
+                                                    <span className='bx bx-pencil'></span>
+                                                </div> */}
+                                            </Dropdown.Toggle>
 
-                                                <DocViewer
-                                                    documents={[selectedFile]}
-                                                    pluginRenderers={DocViewerRenderers}
-                                                    theme="tertiary"
-                                                    config={{
-                                                        header: {
-                                                            disableHeader: true
-                                                        },
+                                            <Dropdown.Menu>
+                                                {
+                                                    ['Pending', 'Approved', 'Recieved']
+                                                        .map((status, index) => (
+                                                            <>
+                                                                <Dropdown.Item as={"p"} className='mb-2 cursor-pointer' onClick={() => setData('status', status)} key={index}>{status}</Dropdown.Item>
+                                                            </>
+                                                        ))
+                                                }
+                                            </Dropdown.Menu>
+                                        </Dropdown>
+                                        {
+                                            data.status !== report.status && (
+                                                <div className='ms-3 flex gap-1'>
+                                                    <Button size='sm' onClick={updateStatus} variant='light-success'>Save</Button>
+                                                    <Button size='sm' onClick={() => {
+                                                        setData('status', report.status)
                                                     }}
-                                                />
+                                                        variant='light-secondary'
+                                                    >
+                                                        Discard Changes
+                                                    </Button>
+                                                </div>
                                             )
                                         }
-                                    </Card.Body>
-                                </Card>
-                            )
-                        }
-                    </Col>
-                    <Col xl={3} lg={4} className='h-100'>
-
-                        <Card className='border-0 shadow-sm rounded-0 p-2 h-100 mb-2'>
-                            <Card.Body className='h-100'>
-                                <p className='text-sm fw-bolder'>Submitted By</p>
+                                    </div>
+                                </div>
                                 <hr />
-                                <div className='flex gap-2 w-100'>
+                                <div className='flex gap-x-4 w-100'>
                                     <div>
                                         <Image
                                             src={report.unit_head.image}
@@ -170,28 +151,73 @@ const ViewReport = ({ report }) => {
                                         />
                                     </div>
                                     <div className='w-100 '>
-                                        <p className="my-0">{report.unit_head.firstname + ' ' + report.unit_head.lastname}</p>
+                                        <p className="my-0 fw-bold">{report.unit_head.firstname + ' ' + report.unit_head.lastname}</p>
                                         <p className="my-0 text-secondary text-sm">
                                             <small>Unit Head</small>
                                         </p>
                                         {/* <hr className='my-1' /> */}
-                                        <p className=' mt-2 mb-0 text-sm text-dark'>
+                                        {/* <p className=' mt-2 mb-0 text-sm text-dark'>
                                             {report.unit_head.campus.name} Campus
-                                        </p>
+                                        </p> */}
                                     </div>
                                 </div>
 
+                                <ListGroup className='mt-2' variant='flush'>
+                                    <ListGroupItem className='px-0'>
+                                        <p className='my-1 text-dark text-sm'>
+                                            <span className='text-secondary'>Campus:</span> <strong>{report.unit_head.campus.name} </strong>
+                                        </p>
+                                    </ListGroupItem>
+                                    <ListGroupItem className='px-0'>
+                                        <p className='my-1 text-dark text-sm'>
+                                            <span className='text-secondary'>Designation:</span> <strong>{report.unit_head.designation.name} </strong>
+                                        </p>
+                                    </ListGroupItem>
+                                </ListGroup>
                             </Card.Body>
                         </Card>
-                        <Card className='border-0 shadow-sm rounded-0 p-2 h-100 mb-3'>
+                        <Card className='border-0 shadow-sm rounded-0 p-2 mb-2'>
                             <Card.Body className='h-100'>
-                                <p className='text-sm fw-bold'>Private Comments</p>
+                                <p className='text-sm text-danger fw-bold '>Attachments</p>
+                                <hr />
+                                <div className="">
+                                    <div className="row g-3">
+                                        {
+                                            report.attachments.map((att, index) => (
+                                                // <ListGroupItem key={index} className={` cursor-pointer ${att.id === selectedFile.id ? 'bg-light-primary rounded-1' : ''}`} onClick={() => setSelectedFile(att)}>
+                                                //     {att.name}
+                                                // </ListGroupItem>
+                                                <Col key={index} xl={2} lg={3} sm={4} xs={6}>
+                                                    <div onClick={() => {
+                                                        setSelectedFile(att)
+                                                        setShowFileModal(true)
+                                                    }} className={`text-center rounded p-3 cursor-pointer ${selectedFile?.id === att.id ? 'bg-light' : ''}`} title={att.name}>
+                                                        <FileIcon
+                                                            file={att}
+                                                            className={"mx-auto"}
+                                                            size='sm'
+                                                        />
+                                                        <p className="text-center mt-3 mb-0 col-11 text-sm text-truncate">
+                                                            <small>{att.name}</small>
+                                                        </p>
+                                                    </div>
+                                                </Col>
+                                            ))
+                                        }
+                                    </div>
+                                </div>
+                            </Card.Body>
+                        </Card>
+                    </Col>
+                    <Col xl={3} md={4} className=' '>
+                        <Card className='border-0 shadow-sm  rounded-0'>
+                            <Card.Body className='p-4 '>
+                                <p className='text-sm fw-bold text-primary'>Private Comments</p>
                                 <hr />
                                 <CommentsView user={auth.user} submissionBin={report.submission_bin} unitHead={report.unit_head} />
                             </Card.Body>
                         </Card>
                     </Col>
-
                 </Row>
             </div>
         </PanelLayout>

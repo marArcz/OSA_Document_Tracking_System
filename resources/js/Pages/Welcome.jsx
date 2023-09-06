@@ -21,20 +21,22 @@ const Welcome = () => {
             setShowProgressModal(true)
             setSigninError('')
             try {
-                const userInfo = await axios.get(
-                    'https://www.googleapis.com/oauth2/v3/userinfo',
-                    {
-                        headers: {
-                            Authorization: `Bearer ${tokenResponse.access_token}`,
-                        },
-                    },
-                );
+                const userInfo = await new Promise(resolve => {
+                    const xhr = new XMLHttpRequest();
 
-                console.log(userInfo)
+                    xhr.open('GET', `https://www.googleapis.com/oauth2/v3/userinfo`);
+                    xhr.setRequestHeader('Authorization', `Bearer ${tokenResponse.access_token}`)
+                    xhr.onload = function () {
+                        if (this.status >= 200 && this.status < 300)
+                            resolve(JSON.parse(this.responseText));
+                        else resolve({ err: '404' });
+                    };
+                    xhr.send();
+                });
 
                 axios.post('/users/check', {
                     type: userType.value,
-                    email: userInfo.data.email,
+                    email: userInfo.email,
                 }).then((res) => {
                     console.log('res: ', res)
                     setTimeout(() => setShowProgressModal(false), 1200)
@@ -43,9 +45,9 @@ const Welcome = () => {
                             method: 'post',
                             data: {
                                 type: userType.value,
-                                email: userInfo.data.email,
+                                email: userInfo.email,
                                 access_token: tokenResponse.access_token,
-                                image: userInfo.data.picture
+                                image: userInfo.picture
                             }
                         })
                         setSigninError('')

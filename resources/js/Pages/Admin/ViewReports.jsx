@@ -1,5 +1,6 @@
 import ElegantNav from '@/Components/ElegantNav'
 import HeaderTitle from '@/Components/HeaderTitle'
+import TextProfilePic from '@/Components/TextProfilePic'
 import UnitHeadReportCard from '@/Components/UnitHeadReportCard'
 import PanelLayout from '@/Layouts/PanelLayout'
 import { router, usePage } from '@inertiajs/react'
@@ -10,11 +11,13 @@ import { Button, Card, Col, Form, Image, ListGroup, ListGroupItem, Placeholder, 
 import DataTable from 'react-data-table-component'
 
 const ViewReports = ({ submissionBin, campuses }) => {
-    const {auth} = usePage().props;
+    const { auth } = usePage().props;
     const [selectedCampus, setSelectedCampus] = useState(campuses[0])
     const [reports, setReports] = useState([]);
-    const [fetching, setFetching] = useState(false)
+    const [fetchingReports, setFetchingReports] = useState(true)
+    const [fetchingUnitHeads, setFetchingUnitHeads] = useState(true)
     const [unitHeads, setUnitHeads] = useState([])
+    const [selectedUnitHead, setSelectedUnitHead] = useState(null)
     const tableColumns = [
         {
             name: "Unit Head",
@@ -34,30 +37,42 @@ const ViewReports = ({ submissionBin, campuses }) => {
         // },
     ];
     const fetchReports = async () => {
-        setFetching(true)
+        setFetchingReports(true)
         var reports = {};
-        
-        if(auth.role === 'admin'){
-             reports = await axios.get(`/reports/${selectedCampus.id}/${submissionBin.id}/all`);
-        }else{
+
+        if (auth.role === 'admin') {
+            reports = await axios.get(`/reports/${selectedCampus.id}/${submissionBin.id}/${selectedUnitHead.id}/all`);
+        } else {
             // if superadmin only get reports that were approved
-             reports = await axios.get(`/reports/${selectedCampus.id}/${submissionBin.id}/approved`);
+            reports = await axios.get(`/reports/${selectedCampus.id}/${submissionBin.id}/${selectedUnitHead.id}/approved`);
         }
         console.log('reports: ', reports)
         let unitHeads = await axios.get(`/reports/${selectedCampus.id}/unit_heads`);
 
         setReports(reports?.data?.reports || [])
         setUnitHeads(unitHeads.data.unitHeads)
-        setFetching(false)
+        setFetchingReports(false)
     }
 
     useEffect(() => {
-        fetchReports();
-    }, []);
+        const getUnitHeads = async () => {
+            setFetchingUnitHeads(true)
+            let unitHeads = await axios.get(`/reports/${selectedCampus.id}/unit_heads`);
+            setUnitHeads(unitHeads.data.unitHeads)
+            if (unitHeads.data.unitHeads.length > 0 && selectedUnitHead == null) {
+                setSelectedUnitHead(unitHeads.data.unitHeads[0])
+            }
+            setFetchingUnitHeads(false)
+        }
+
+        getUnitHeads();
+    }, [selectedCampus])
 
     useEffect(() => {
-        fetchReports();
-    }, [selectedCampus]);
+        if (selectedUnitHead) {
+            fetchReports();
+        }
+    }, [selectedCampus, selectedUnitHead]);
 
     const openReport = (report) => {
         router.visit(route('admin.report.open', { report_id: report.id }))
@@ -73,7 +88,7 @@ const ViewReports = ({ submissionBin, campuses }) => {
                 //     {/* {submissionBin?.title} */}
                 //     Unit Head Report
                 // </p>
-                <HeaderTitle backButton text='Unit Head Report'/>
+                <HeaderTitle backButton text='Unit Head Report' />
             )}>
 
             <div className="px-[1.5rem] py-3">
@@ -135,7 +150,7 @@ const ViewReports = ({ submissionBin, campuses }) => {
                                     </p>
                                     <Row>
                                         {
-                                            fetching ? (
+                                            fetchingReports ? (
                                                 <>
                                                     <Col lg={3}>
                                                         <Placeholder animation='wave'>
@@ -167,7 +182,7 @@ const ViewReports = ({ submissionBin, campuses }) => {
                                     <p className='text-sm fw-bold'>Unit Heads</p>
                                     <p className='mt-0 text-sm mb-0'></p>
                                     {
-                                        fetching ? (
+                                        fetchingUnitHeads ? (
                                             <>
                                                 <Placeholder animation='wave'>
                                                     <Placeholder bg='light' xs={12} />
@@ -181,32 +196,36 @@ const ViewReports = ({ submissionBin, campuses }) => {
                                             </>
 
                                         ) : (
-                                            reports.length > 0 ? (
-                                                <ListGroup variant='flush'>
+                                            unitHeads.length > 0 ? (
+                                                <div className=' max-h-[300px] overflow-y-auto'>
                                                     {
                                                         unitHeads.map((unitHead, index) => (
-                                                            <ListGroupItem key={index} className='text-sm px-0'>
-                                                                <div className='flex gap-3 items-center cursor-pointer'>
-                                                                    <Image
-                                                                        src={unitHead.image}
-                                                                        width={30}
-                                                                        height={30}
-                                                                        roundedCircle
-                                                                    />
+                                                            <div key={index} className='text-sm px-0 w-max mb-3'>
+                                                                <div
+                                                                    onClick={() => setSelectedUnitHead(unitHead)}
+                                                                    className={`flex gap-2 items-center py-2 px-2 rounded-pill cursor-pointer ${unitHead.id == selectedUnitHead?.id ? 'bg-light-primary' : ''}`}
+                                                                >
+                                                                    {
+                                                                        unitHead.image ? (
+                                                                            <Image
+                                                                                src={unitHead.image}
+                                                                                width={30}
+                                                                                height={30}
+                                                                                roundedCircle
+                                                                            />
+                                                                        ) : (
+                                                                            <TextProfilePic size='sm' text={`${unitHead.firstname[0]} ${unitHead.lastname[0]}`} bg='light' className="text-primary fw-bold" />
+                                                                        )
+                                                                    }
                                                                     <p className="my-0">
                                                                         {unitHead.firstname} {unitHead.lastname}
                                                                     </p>
-                                                                    <div>
-                                                                        <Form.Check
-                                                                            type="checkbox"
-                                                                        />
-                                                                    </div>
                                                                 </div>
-                                                            </ListGroupItem>
+                                                            </div>
                                                         ))
                                                     }
 
-                                                </ListGroup>
+                                                </div>
                                             ) : (
                                                 <p className='text-sm text-secondary'>Nothing to show.</p>
                                             )

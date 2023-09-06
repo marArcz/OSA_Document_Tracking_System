@@ -25,14 +25,11 @@ const CreateAnnouncement = ({ auth }) => {
                 <div className="container-fluid">
                     <Card className='border-0 shadow-sm p-3'>
                         <Card.Body>
-                            <Link className='link link-secondary text-sm text-decoration-none' href={route('admin.announcements')}>
-                                <i className='fi fi-rr-arrow-back'></i> Cancel
-                            </Link>
-                            <Alert variant='secondary' className='mb-3 mt-2 text-sm'>Created announcements will be posted and viewed by unit heads and other users.</Alert>
-
+                            <p className="form-text">New Announcement</p>
+                            <hr />
                             <Form onSubmit={onSubmit}>
                                 <div className="mb-3">
-                                    <Form.Label>Title:</Form.Label>
+                                    <Form.Label className='text-secondary'>Title:</Form.Label>
                                     <Form.Control
                                         type='text'
                                         required
@@ -42,7 +39,7 @@ const CreateAnnouncement = ({ auth }) => {
                                     />
                                 </div>
                                 <div className="mb-3">
-                                    <Form.Label>Content:</Form.Label>
+                                    <Form.Label className='text-secondary'>Content:</Form.Label>
                                     <textarea className='form-control' onChange={e => setData('content', e.target.value)} rows={3}></textarea>
                                 </div>
                                 <div className="mt-3">
@@ -66,7 +63,10 @@ const CreateAnnouncement = ({ auth }) => {
                                         )
                                     }
                                 </div>
-                                <div className="text-end mt-3">
+                                <div className="text-end mt-3 flex items-center justify-end gap-3">
+                                    <Link className='link link-secondary text-sm text-decoration-none' href={route('admin.announcements')}>
+                                        <i className='fi fi-rr-arrow-back'></i> Cancel
+                                    </Link>
                                     <Button className='rounded-1 btn-primary ' type='submit'>
                                         <div className="flex justify-center items-center gap-1">
                                             <span className="text-sm">Submit</span>

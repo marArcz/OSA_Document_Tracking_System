@@ -4,6 +4,7 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laratrust\Contracts\LaratrustUser;
@@ -12,12 +13,12 @@ use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable implements LaratrustUser
 {
-    use HasApiTokens, HasFactory, Notifiable, HasRolesAndPermissions, HasApiTokens;
+    use HasApiTokens, HasFactory, Notifiable, HasRolesAndPermissions;
 
-    /* 
+    /*
         load relationships
     */
-    protected $with = ['campus','designation','userRoles'];
+    protected $with = ['campus', 'designation', 'userRoles'];
 
     /**
      * The attributes that are mass assignable.
@@ -38,17 +39,42 @@ class User extends Authenticatable implements LaratrustUser
         'google_access_token'
     ];
 
-    /* Relations */
-    public function designation(){
-        return $this->belongsTo(Designation::class,'designation_id','id')->with(['classification']);
+    public function name():string
+    {
+        return $this->firstname . ' ' . $this->lastname;
     }
-    public function campus(){
-        return $this->belongsTo(Campus::class,'campus_id','id');
+    /* Relations */
+    public function feedbacks(): HasMany
+    {
+        return $this->hasMany(Feedback::class);
+    }
+    public function designation()
+    {
+        return $this->belongsTo(Designation::class, 'designation_id', 'id')->with(['classification']);
+    }
+    public function campus()
+    {
+        return $this->belongsTo(Campus::class, 'campus_id', 'id');
     }
 
-    public function userRoles(){
+    public function userRoles()
+    {
         return $this->roles();
     }
+
+    public function reports(): HasMany
+    {
+        return $this->hasMany(Report::class);
+    }
+
+    /**
+     * The channels the user receives notification broadcasts on.
+     */
+    public function receivesBroadcastNotificationsOn(): string
+    {
+        return 'users.' . $this->id;
+    }
+
 
     /**
      * The attributes that should be hidden for serialization.
@@ -69,5 +95,4 @@ class User extends Authenticatable implements LaratrustUser
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
-    
 }

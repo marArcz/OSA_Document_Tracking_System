@@ -95,7 +95,7 @@ const Announcements = ({ auth, announcements: announcementList }) => {
             <ModalComponent centered size="lg" show={showViewModal} handleClose={closeViewModal}>
                 {
                     announcement && (
-                        <div className="my-3">
+                        <div className="my-2 container">
                             <p className="fs-4 mb-0 fw-bold">{announcement.title}</p>
                             <p className="mt-0 mb-2 text-sm text-secondary">
                                 <small>{format(new Date(announcement.created_at), 'MMM dd, yyy / hh:mm a')}</small>
@@ -107,7 +107,8 @@ const Announcements = ({ auth, announcements: announcementList }) => {
                                         <Image
                                             fluid
                                             thumbnail
-                                            className='rounded-0 shadow-sm'
+                                            draggable={false}
+                                            className='rounded-0 shadow-sm max-h-[400px]'
                                             src={announcement.image}
                                         />
                                     </div>

@@ -13,6 +13,7 @@
   font-size: 1.4rem;
   padding: 2px 0.5rem 0;
   border-radius: 2px;
+  left: 0 !important;
 }
 
 @media only screen and (max-width: 1023px) {
@@ -32,7 +33,7 @@
 }
 .hamburger {
   display: inline-block;
-  left: 0px;
+  left: 0;
   position: relative;
   top: 3px;
   transition: all 0.3s ease-in-out 0s;
@@ -104,10 +105,33 @@
   min-height: 100vh !important;
 }
 
+.text-profile-pic {
+  width: 80px;
+  height: 80px;
+  font-size: 2rem;
+  padding: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50% !important;
+  max-width: 100% !important;
+  max-height: 100% !important;
+}
+.text-profile-pic.fluid {
+  width: 100% !important;
+  height: 100% !important;
+}
+.text-profile-pic.sm {
+  padding: 6px !important;
+  width: 35px !important;
+  height: 35px !important;
+  font-size: 0.8rem !important;
+}
+
 .navbar-header {
   background-color: white;
   position: fixed;
-  z-index: 10;
+  z-index: 8;
   top: 0;
   height: 4.5rem;
   padding: 10px 15px;
@@ -144,11 +168,11 @@
 .app-header .navbar {
   position: fixed !important;
   background-color: white;
-  width: 100%;
+  width: calc(100% - 17.5rem);
+  margin-left: 17.5rem !important;
   height: 4.5rem;
-  padding-left: 17.5rem !important;
   transition: 300ms;
-  z-index: 8 !important;
+  z-index: 10 !important;
 }
 .app-header .sub-header {
   z-index: 7 !important;
@@ -161,20 +185,22 @@
   transition: 300ms;
 }
 .app-header.active .navbar {
-  padding-left: 4.5rem !important;
+  width: calc(100% - 4.5rem);
+  margin-left: 4.5rem !important;
 }
 .app-header.active .sub-header {
   margin-left: 4.5rem !important;
 }
 @media screen and (max-width: 768px) {
   .app-header .navbar {
-    padding-left: 8rem !important;
+    width: calc(100% - 5rem) !important;
+    margin-left: 5rem !important;
   }
   .app-header .sub-header {
     margin-left: 0 !important;
   }
   .app-header.active .navbar {
-    padding-left: 0 !important;
+    margin-left: 5rem !important;
   }
   .app-header.active .sub-header {
     margin-left: 0 !important;
@@ -275,6 +301,24 @@
 .app-sidebar:not(.active):hover .sidebar-menu ul.nested[aria-expanded=true] {
   max-height: 100vh !important;
 }
+.app-sidebar:not(.active):hover .sidebar-menu ul.nested .nested a {
+  padding-left: 4rem !important;
+}
+.app-sidebar:not(.active):hover .sidebar-menu ul.nested .nested li {
+  padding-left: 0 !important;
+  position: relative;
+}
+.app-sidebar:not(.active):hover .sidebar-menu ul.nested .nested li::before {
+  content: " ";
+  position: absolute;
+  top: 1.8rem;
+  left: 2.2rem;
+  width: 8px !important;
+  height: 2px !important;
+  border: none !important;
+  border-radius: 5px !important;
+  background: rgb(176, 176, 176);
+}
 .app-sidebar:not(.active) .sidebar-menu .nested[aria-expanded=true] {
   max-height: 0 !important;
 }
@@ -301,6 +345,9 @@
   background: transparent !important;
   color: rgb(120, 120, 120) !important;
   border-left: none !important;
+}
+.app-sidebar .sidebar-menu .nested li.active a.has-arrow[aria-expanded=true] {
+  color: #283593 !important;
 }
 .app-sidebar .sidebar-menu ul {
   padding: 0 !important;
@@ -504,6 +551,12 @@
   align-items: center;
   border-radius: 10px;
 }
+@media screen and (max-width: 768px) {
+  .c-icon {
+    width: 35px !important;
+    height: 35px !important;
+  }
+}
 
 .image-uploader {
   width: 100% !important;
@@ -525,6 +578,10 @@
   height: 100%;
   opacity: 0;
   cursor: pointer;
+}
+
+a {
+  text-decoration: none;
 }
 
 .fi {
@@ -567,6 +624,19 @@
 .custom-select {
   position: relative;
 }
+.custom-select.sm .toggler-btn {
+  height: 50px !important;
+  font-size: 1rem !important;
+  padding-top: 0.8rem !important;
+  padding-bottom: 0.8rem !important;
+}
+.custom-select.sm .select-menu {
+  padding-top: 2rem !important;
+}
+.custom-select.sm .select-menu .select-menu-item {
+  font-size: 0.9rem;
+  padding: 10px;
+}
 .custom-select .toggler-btn {
   z-index: 3;
   border-radius: 5rem;
@@ -598,11 +668,12 @@
   position: absolute;
   left: 25px;
   font-size: 1.5rem !important;
-  top: 1.3rem;
+  top: 50%;
+  transform: translateY(-50%);
   transition: 0.2s;
 }
 .custom-select .toggler-btn[aria-expanded=true]::before {
-  rotate: 180deg;
+  transform: translateY(-50%) rotate(180deg);
 }
 .custom-select .select-menu {
   max-height: 0;
@@ -621,6 +692,7 @@
   background: white;
   text-align: left;
   border-radius: 10px 10px 3px 3px;
+  animation: 0.2s fadein linear 1;
 }
 .custom-select .select-menu[aria-expanded=true] {
   max-height: 100vh;
@@ -629,13 +701,11 @@
 .custom-select .select-menu .select-menu-item {
   box-sizing: border-box;
   cursor: pointer;
-  text-align: left;
   padding-left: 4rem !important;
   color: black;
-  padding-top: 1.1rem;
-  font-size: 1.1rem;
-  padding-bottom: 1.1rem;
-  border-bottom: 1px solid rgb(215, 215, 215);
+  font-size: 1rem;
+  padding-top: 1rem;
+  padding-bottom: 1rem;
 }
 .custom-select .select-menu .select-menu-item:hover {
   background: rgba(167, 167, 167, 0.1) !important;
@@ -646,6 +716,14 @@
   font-weight: bolder !important;
 }
 
+@keyframes fadein {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
 .google-signin-btn {
   position: relative;
   filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.11));
@@ -848,13 +926,28 @@
   /* Handle on hover */
 }
 .custom-scroll::-webkit-scrollbar {
-  width: 3px;
-  height: 3px;
+  width: 3px !important;
+  height: 3px !important;
 }
 .custom-scroll::-webkit-scrollbar-thumb {
   background: rgba(128, 128, 128, 0.4);
 }
 .custom-scroll::-webkit-scrollbar-thumb:hover {
+  background: rgba(128, 128, 128, 0.8);
+}
+
+body {
+  /* Handle */
+  /* Handle on hover */
+}
+body::-webkit-scrollbar {
+  width: 5px;
+  height: 3px;
+}
+body::-webkit-scrollbar-thumb {
+  background: rgba(26, 47, 77, 0.418);
+}
+body::-webkit-scrollbar-thumb:hover {
   background: rgba(128, 128, 128, 0.8);
 }
 
@@ -868,5 +961,39 @@
   }
   to {
     background: transparent;
+  }
+}
+.dashboard-card {
+  border-width: 0px 0px 1px 0px;
+  border-style: solid;
+}
+
+.dropdown .dropdown-menu {
+  z-index: 300 !important;
+}
+
+.blob {
+  background: black;
+  border-radius: 50%;
+  margin: 10px;
+  height: 10px;
+  width: 10px;
+  box-shadow: 0 0 0 0 rgb(0, 0, 0);
+  transform: scale(1);
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(0, 0, 0, 0.7);
+  }
+  70% {
+    transform: scale(1);
+    box-shadow: 0 0 0 10px rgba(0, 0, 0, 0);
+  }
+  100% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(0, 0, 0, 0);
   }
 }/*# sourceMappingURL=style.css.map */

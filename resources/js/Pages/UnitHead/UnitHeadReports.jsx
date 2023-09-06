@@ -1,10 +1,45 @@
 import PanelLayout from '@/Layouts/PanelLayout'
 import React from 'react'
-import { Accordion, Button, Card, Container, useAccordionButton } from 'react-bootstrap'
+import { Accordion, Button, Card, Container, Placeholder, useAccordionButton } from 'react-bootstrap'
 import { Link } from '@inertiajs/react'
 import { format } from 'date-fns'
+import { useState } from 'react'
 
-const UnitHeadReports = ({ submissionBins, auth }) => {
+const UnitHeadReports = ({ submissionBins: bins, auth, rows, reports }) => {
+    const [hasRows, setHasRows] = useState(rows > 10)
+    const [submissionBins, setSubmissionBins] = useState([...bins])
+    const [lastRowId, setLastRowId] = useState(bins.length == 0 ? (0) : (bins[bins.length - 1]?.id));
+    const [fetching, setFetching] = useState(false)
+
+    const fetchSubmissionBins = () => {
+        setFetching(true)
+        axios.get(`/submissionBins/${lastRowId}`)
+            .then((res) => {
+                let bins = res.data.submissionBins;
+                setLastRowId(bins[bins.length - 1].id);
+                setTimeout(() => {
+                    setFetching(false)
+                    setSubmissionBins(prev => [...prev, ...bins])
+                    setHasRows(res.data.hasRows)
+                    console.log(res)
+                }, 1500)
+            })
+    }
+
+    const hasSubmitted = (bin) => {
+        for (let report of reports) {
+            if (bin.id == report.submission_bin_id) {
+                if (report.is_submitted && report.status != 'Rejected') {
+                    return true;
+                }
+                break;
+            }
+        }
+
+        return false;
+    }
+
+
     function CustomToggle({ children, eventKey }) {
         const decoratedOnClick = useAccordionButton(eventKey, () =>
             console.log('totally custom!'),
@@ -35,7 +70,13 @@ const UnitHeadReports = ({ submissionBins, auth }) => {
                                         <div className="row">
                                             <div className="col">
                                                 <div className="flex items-center gap-3 text-secondary">
-                                                    <i className='fi fi-rr-box fs-5'></i>
+                                                    {
+                                                        hasSubmitted(item) ? (
+                                                            <i className='fi fi-rr-check-circle text-success fs-5'></i>
+                                                        ) : (
+                                                            <i className='fi fi-rr-box fs-5'></i>
+                                                        )
+                                                    }
                                                     <span className='fw-bold'>{item.title}</span>
                                                 </div>
                                             </div>
@@ -52,7 +93,7 @@ const UnitHeadReports = ({ submissionBins, auth }) => {
                                         </Card.Body>
                                         <Card.Footer className='bg-white py-3'>
                                             <div className="flex items-center justify-between">
-                                                <Link className='rounded-1 text-sm btn btn-light' href={route('unit_head.submission_bin',{id:item.id})}>
+                                                <Link className='rounded-1 text-sm btn btn-light' href={route('unit_head.submission_bin', { id: item.id })}>
                                                     <small>Open Submission Bin</small>
                                                 </Link>
                                             </div>
@@ -66,6 +107,30 @@ const UnitHeadReports = ({ submissionBins, auth }) => {
                 {
                     (!submissionBins || submissionBins.length) < 0 && (
                         <p>Nothing to show</p>
+                    )
+                }
+                {
+                    fetching && (
+                        <>
+                            <Placeholder as="div" animation='wave' className="my-0 ">
+                                <div className="col-12 bg-white shadow-sm h-[60px]">
+                                    <Container>
+                                        <Placeholder as="p" animation='wave' className="my-0 ">
+                                            <Placeholder xs={5} bg="light" />
+                                        </Placeholder>
+                                    </Container>
+                                </div>
+                            </Placeholder>
+                        </>
+                    )
+                }
+                {
+                    hasRows && (
+                        <div className="text-center my-2">
+                            <Button disabled={fetching} variant='light' className='text-primary fw-bold' onClick={fetchSubmissionBins}>
+                                {fetching ? 'Load more...' : 'Load more'}
+                            </Button>
+                        </div>
                     )
                 }
             </div>

@@ -4,8 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Events\SubmissionBinCreated;
 use App\Mail\NewSubmissionBinNotif;
+use App\Models\CalendarEvent;
 use App\Models\SubmissionBin;
 use App\Models\User;
+use App\Notifications\NewSubmissionBin;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 
@@ -14,18 +16,27 @@ class SubmissionBinController extends Controller
     //
     public function create(Request $request)
     {
-        $bin = SubmissionBin::create([
+        $bin = new SubmissionBin([
             'title' => $request->title,
             'instruction' => $request->instruction,
             'deadline_date' => $request->deadline_date,
             'deadline_time' => $request->deadline_time,
         ]);
+        $bin->save();
 
+        if($bin->deadline_date){
+            $calendarEvent = new CalendarEvent([
+                'title' => $bin->title . ", deadline" . ($bin->deadline_time ? " @". $bin->deadline_time :''),
+                'user_id' => $request->user()->id,
+                'start' => $bin->deadline_date,
+                'end' => $bin->deadline_date
+            ]);
+            $calendarEvent->save();
+        }
         // SubmissionBinCreated::dispatch($bin);
-        $users = User::select('email')->whereHasRole(['admin', 'unit_head'])->get();
-
-        foreach ($users as $recipient) {
-            Mail::to($recipient)->queue(new NewSubmissionBinNotif($bin));
+        $users = User::whereHasRole(['admin', 'unit_head'])->get();
+        foreach ($users as $key => $user) {
+            $user->notify(new NewSubmissionBin($bin));
         }
 
         return redirect()->intended(route('admin.submission_bins'))->with('succes', 'Successfully created!');
@@ -47,6 +58,24 @@ class SubmissionBinController extends Controller
         $submission_bin = SubmissionBin::where('id', $request->id)->firstOrFail();
         $submission_bin->delete();
 
+        // return redirect()->back()->with('success','Successfully deleted!');
         return response()->json(['success' => true]);
+    }
+
+    public function all(Request $request)
+    {
+        $lastId = $request->id;
+        $data['submissionBins'] = SubmissionBin::where('id', '<', $lastId)->limit(10)->orderByDesc('id')->get();
+        $lastId = $data['submissionBins'][count($data['submissionBins']) - 1]->id;
+        $data['hasRows'] = SubmissionBin::where('id', '<', $lastId)->count() > 0;
+        return response()->json($data);
+    }
+
+    public function search(Request $request)
+    {
+        $searchText = $request->text;
+        $data['searchText'] = $searchText;
+        $data['submissionBins'] = SubmissionBin::where('title', 'like', '%' . $searchText . '%')->get();
+        return response()->json($data);
     }
 }

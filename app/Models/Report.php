@@ -4,11 +4,12 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Report extends Model
 {
     use HasFactory;
-    
+
     protected $with = ['unitHead','attachments'];
 
     protected $fillable = [
@@ -30,7 +31,8 @@ class Report extends Model
         return $this->hasMany(ReportComment::class,'report_id','id');
     }
 
-    public function submission_bin(){
+    public function submission_bin() :BelongsTo
+    {
         return $this->belongsTo(SubmissionBin::class,'submission_bin_id','id');
     }
 }

@@ -14,7 +14,7 @@ const UnitHeadReportCard = ({ data, handleClick }) => {
                     width={30}
                     height={30}
                 />
-                <p className='my-0 text-sm col-12 text-truncate'>
+                <p className='my-0 text-sm col-8 text-truncate fw-bold'>
                     <span>{data.unit_head.firstname}</span>
                     <span className='ms-2'>{data.unit_head.lastname}</span>
                 </p>

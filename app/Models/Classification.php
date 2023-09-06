@@ -12,8 +12,6 @@ class Classification extends Model
         'name'
     ];
 
-    protected $with = ['designations'];
-
 
     public function designations(){
         return $this->hasMany(Designation::class,'classification_id','id');

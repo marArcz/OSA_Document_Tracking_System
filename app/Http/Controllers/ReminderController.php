@@ -33,7 +33,13 @@ class ReminderController extends Controller
     {
         $reminder = Reminder::where('id', $request->id)->firstOrFail();
         $reminder->delete();
-        
+
         return response()->json(['message'=>'Successfully deleted!']);
+    }
+
+    /* API */
+    public function all(Request $request){
+        $data['reminders'] = Reminder::all();
+        return response()->json($data);
     }
 }
