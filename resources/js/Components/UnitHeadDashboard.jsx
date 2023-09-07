@@ -15,10 +15,10 @@ const UnitHeadDashboard = () => {
         <Row>
             <Col xs={12} lg={5}>
                 <AnnouncementsCard />
-                <RemindersCard className="mt-3"/>
+                <RemindersCard className="my-3"/>
             </Col>
             <Col>
-                <CalendarCard/>
+                <CalendarCard expandButton/>
             </Col>
         </Row>
     )

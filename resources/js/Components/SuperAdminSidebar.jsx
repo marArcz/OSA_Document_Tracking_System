@@ -39,7 +39,14 @@ const SuperAdminSidebar = ({ isActive, activeLink, setShowFeedbackModal }) => {
                     key: 'reports',
                     opened: false,
                     navList: []
-                }
+                },
+                // {
+                //     type: NavType.LINK,
+                //     text: 'Statistics',
+                //     icon: <i className='fi fi-rr-boxes'></i>,
+                //     href: route('admin.submission_bins'),
+                //     urlPath: 'submission-bins'
+                // },
             ]
         },
         {

@@ -3,15 +3,15 @@
 namespace App\Mail;
 
 use App\Models\Report;
-use Illuminate\Mail\Mailables\Address;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
+use Illuminate\Mail\Mailables\Address;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
-class NewReportMail extends Mailable
+class ReportApprovedMail extends Mailable
 {
     use Queueable, SerializesModels;
 
@@ -40,10 +40,10 @@ class NewReportMail extends Mailable
     public function content(): Content
     {
         return new Content(
-            markdown: 'emails.new-report-mail',
-            with:[
-                'url'=>url(route('admin.report.open',['report_id'=>$this->report->id])),
-                'url_submission_bin'=>url(route('admin.report.open',['report_id'=>$this->report->id]))
+            markdown: 'emails.report-approved-mail',
+            with: [
+                'url' => url(route('admin.report.open', ['report_id' => $this->report->id])),
+                'url_submission_bin' => url(route('admin.report.open', ['report_id' => $this->report->id]))
             ],
         );
     }

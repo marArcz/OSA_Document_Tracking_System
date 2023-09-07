@@ -7,4 +7,5 @@ A new submission bin is created
 Open Submission Bin
 </x-mail::button>
 
+
 </x-mail::message>

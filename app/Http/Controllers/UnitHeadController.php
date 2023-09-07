@@ -93,4 +93,7 @@ class UnitHeadController extends Controller
 
         return response()->json(['success' => true]);
     }
+    public function calendar(){
+        return Inertia::render('UnitHead/Calendar');
+    }
 }

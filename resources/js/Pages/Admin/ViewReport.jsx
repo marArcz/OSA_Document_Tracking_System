@@ -34,9 +34,9 @@ const ViewReport = ({ report }) => {
         <PanelLayout
             headerTitle={(
                 <HeaderTitle
-                    text='Unit Head Report'
+                    text={report.submission_bin.title}
                     backButton
-                // backButtonLink={route('admin.reports.view', { submission_bin_id: report.submission_bin.id })}
+                    backButtonLink={route('admin.reports.view', { submission_bin_id: report.submission_bin.id })}
                 />
             )}
             defaultActiveLink="submission-bins"
@@ -94,48 +94,63 @@ const ViewReport = ({ report }) => {
                                 <div className="flex justify-between items-center">
                                     <p className='text-sm fw-bolder my-0 col-4'>Submitted By</p>
                                     <div className="flex">
-                                        <Dropdown>
-                                            <Dropdown.Toggle
-                                                variant={'light'}
-                                                // className='rounded-0'
-                                                bsPrefix='null'
-                                            >
-                                                <div className="flex items-center gap-2">
-                                                    <span className='fw-bold'>{data.status}</span>
-                                                    <span className='bx bx-chevron-down leading-none'></span>
-                                                </div>
-                                                {/* <div className="flex gap-2">
+                                        {
+                                            auth.role === 'admin' && (
+                                                <>
+                                                    <Dropdown>
+                                                        <Dropdown.Toggle
+                                                            variant={'light'}
+                                                            // className='rounded-0'
+                                                            bsPrefix='null'
+                                                        >
+                                                            <div className="flex items-center gap-2">
+                                                                <span className='fw-bold'>{data.status}</span>
+                                                                <span className='bx bx-chevron-down leading-none'></span>
+                                                            </div>
+                                                            {/* <div className="flex gap-2">
                                                     <div className="text-sm my-0 fw-bold ">
                                                         <span className='me-2 text-dark'>Status:</span>
                                                         <span className='text-purple'>{data.status}</span>
                                                     </div>
                                                     <span className='bx bx-pencil'></span>
                                                 </div> */}
-                                            </Dropdown.Toggle>
+                                                        </Dropdown.Toggle>
+                                                        <Dropdown.Menu>
+                                                            {
+                                                                ['Pending', 'Approved', 'Rejected']
+                                                                    .map((status, index) => (
+                                                                        <>
+                                                                            <Dropdown.Item as={"p"} className='mb-2 cursor-pointer' onClick={() => setData('status', status)} key={index}>{status}</Dropdown.Item>
+                                                                        </>
+                                                                    ))
+                                                            }
+                                                        </Dropdown.Menu>
+                                                    </Dropdown>
 
-                                            <Dropdown.Menu>
-                                                {
-                                                    ['Pending', 'Approved', 'Recieved']
-                                                        .map((status, index) => (
-                                                            <>
-                                                                <Dropdown.Item as={"p"} className='mb-2 cursor-pointer' onClick={() => setData('status', status)} key={index}>{status}</Dropdown.Item>
-                                                            </>
-                                                        ))
-                                                }
-                                            </Dropdown.Menu>
-                                        </Dropdown>
+                                                    {
+                                                        data.status !== report.status && (
+                                                            <div className='ms-3 flex gap-1'>
+                                                                <Button size='sm' onClick={updateStatus} variant='light-success'>Save</Button>
+                                                                <Button size='sm' onClick={() => {
+                                                                    setData('status', report.status)
+                                                                }}
+                                                                    variant='light-secondary'
+                                                                >
+                                                                    Discard Changes
+                                                                </Button>
+                                                            </div>
+                                                        )
+                                                    }
+                                                </>
+                                            )
+                                        }
+
                                         {
-                                            data.status !== report.status && (
-                                                <div className='ms-3 flex gap-1'>
-                                                    <Button size='sm' onClick={updateStatus} variant='light-success'>Save</Button>
-                                                    <Button size='sm' onClick={() => {
-                                                        setData('status', report.status)
-                                                    }}
-                                                        variant='light-secondary'
-                                                    >
-                                                        Discard Changes
-                                                    </Button>
-                                                </div>
+                                            auth.role === 'super_admin' && (
+                                                <p className={`text-success fw-bold my-0`}>
+                                                    <i className='bx bxs-check-circle me-2'></i>
+                                                    {report.status}
+                                                </p>
                                             )
                                         }
                                     </div>

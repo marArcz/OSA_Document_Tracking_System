@@ -46,10 +46,10 @@ const Announcements = ({ announcements }) => {
                 )
             }
             <div className="py-3 px-[1.5rem]">
-                <Row>
+                <Row className='g-3'>
                     {
                         announcements.map((item, index) => (
-                            <Col key={index} xl={3} lg={4}>
+                            <Col key={index} xl={3} md={6} lg={4}>
                                 <Card className='border-0 shadow-sm'>
                                     <Card.Body className='p-4 '>
                                         <div className=''>

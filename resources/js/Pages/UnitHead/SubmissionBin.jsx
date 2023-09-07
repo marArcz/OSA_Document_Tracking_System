@@ -29,6 +29,16 @@ const SubmissionBin = ({ submissionBin, auth, report }) => {
 
     }
 
+    const getStatusColor = () => {
+        if(report.status.toLowerCase() == 'approved'){
+            return 'success';
+        }else if(report.status.toLowerCase() === 'rejected'){
+            return 'danger fw-bold';
+        }else{
+            return 'secondary';
+        }
+    }
+
     return (
         <PanelLayout
             defaultActiveLink="reports"
@@ -79,7 +89,7 @@ const SubmissionBin = ({ submissionBin, auth, report }) => {
                             {
                                 submissionBin.deadline_date ? (
                                     <p className="text-sm mt-3 mb-0">
-                                        Due {format(new Date(submissionBin.deadline_date), 'MMM d, Y / hh:mm aaa')}
+                                        Due {format(new Date(submissionBin.deadline_date), 'MMM d, Y')}
                                     </p>
                                 ) : (
                                     <p className='my-1'>
@@ -127,7 +137,7 @@ const SubmissionBin = ({ submissionBin, auth, report }) => {
                                 </p>
                                 {
                                     report?.is_submitted ? (
-                                        <p className='my-0 text-sm text-success text-end fw-bold'>
+                                        <p className={`my-0 text-sm  text-end fw-bold text-${getStatusColor()}`}>
                                             <span className="me-1">{report.status}</span>
                                             {/* <i className='bx bxs-check-circle '></i> */}
                                         </p>

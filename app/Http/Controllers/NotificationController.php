@@ -4,8 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use App\Notifications\NewCalendarEvent;
+use App\Notifications\NewReportApproved;
 use App\Notifications\NewReportSubmitted;
 use App\Notifications\NewSubmissionBin;
+use App\Notifications\ReportStatusUpdated;
 use Illuminate\Http\Request;
 use Illuminate\Notifications\Notification;
 
@@ -24,20 +26,28 @@ class NotificationController extends Controller
         return response()->json($data);
     }
     //
-    public function general(Request $request)
+    public function general(User $user)
     {
-        $user = User::find($request->id);
         if (!$user) {
             $data['notifications'] = [];
             $data['error'] = "User not found!";
         } else {
             if ($user->hasRole('super_admin')) {
-                $data['notifications'] = $user->unreadNotifications()->where('type', NewSubmissionBin::class)->get();
+                $data['notifications'] = $user->unreadNotifications()
+                    ->whereIn('type', [
+                        NewReportApproved::class,
+                    ])
+                    ->get();
             } else if ($user->hasRole('admin')) {
-                $data['notifications'] = $user->unreadNotifications()->where('type', NewReportSubmitted::class)->orWhere('type', NewSubmissionBin::class)->get();
+                $data['notifications'] = $user->unreadNotifications()->where('type', NewReportSubmitted::class)->get();
             } else {
                 // for unit heads
-                $data['notifications'] = $user->unreadNotifications()->where('type', NewSubmissionBin::class)->get();
+                $data['notifications'] = $user->unreadNotifications()
+                    ->whereIn('type', [
+                        NewSubmissionBin::class,
+                        ReportStatusUpdated::class
+                    ])
+                    ->get();
             }
         }
         return response()->json($data);
@@ -67,9 +77,13 @@ class NotificationController extends Controller
         return redirect()->intended($notification->data['link']);
     }
 
-    public function markAsRead(Request $request)
+    public function markAsRead(User $user)
     {
-        $request->user()->unreadNotifications->markAsRead();
-        return response()->json(['success'=>true]);
+        $notifications = $user->Notifications()->get();
+        foreach ($notifications as $notification) {
+            $notification->markAsRead();
+        }
+
+        return response()->json(['success' => true, 'user' => $user, 'notifications' => $notifications]);
     }
 }

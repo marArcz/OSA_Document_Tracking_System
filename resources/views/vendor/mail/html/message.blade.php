@@ -6,7 +6,7 @@
     <x-slot:header>
         <x-mail::header :url="config('app.url')">
             <div style="">
-                <img src="{{config('app.logo')}}" class="logo">
+                <img src="{{asset('images/logo.png')}}" class="logo">
                 <!-- <span>OSA</span> -->
             </div>
         </x-mail::header>

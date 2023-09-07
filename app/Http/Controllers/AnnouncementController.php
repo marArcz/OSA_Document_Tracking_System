@@ -74,4 +74,10 @@ class AnnouncementController extends Controller
         $data['announcements'] = Announcement::all();
         return response()->json($data);
     }
+    /* API */
+    public function dashboard(Request $request)
+    {
+        $data['announcements'] = Announcement::orderByDesc('order')->limit(2)->get();
+        return response()->json($data);
+    }
 }

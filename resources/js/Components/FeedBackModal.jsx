@@ -63,7 +63,7 @@ const FeedBackModal = ({ show = false, handleClose }) => {
             <Container>
                 <div className="text-center">
                     <p className='mt-2 mb-3 text-secondary'>We would like your feedback to improve this system.</p>
-                    <p className='my-2 text-secondary'>What is your opinion of this system?</p>
+                    <p className='my-2 text-purple'>How do you feel about this system?</p>
                 </div>
                 <br />
                 <div className="flex justify-center gap-4 mt-2 mb-2">

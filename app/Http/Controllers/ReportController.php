@@ -75,12 +75,13 @@ class ReportController extends Controller
     public function submitReport(Request $request)
     {
         $user = $request->user();
-        $report = Report::with(['submission_bin','unitHead'])->where('submission_bin_id', $request->submission_bin_id)->where('user_id', $user->id)->first();
+        $report = Report::with(['submission_bin'])->where('submission_bin_id', $request->submission_bin_id)->where('user_id', $user->id)->first();
 
         if ($report) {
             $report->is_submitted = true;
+            $report->status = 'Pending';
             if ($report->save()) {
-                $users = User::whereHasRole(['admin'])->get();
+                $users = User::whereHasRole('admin')->where('campus_id',$user->campus_id)->get();
                 foreach ($users as $key => $user) {
                     $user->notify(new NewReportSubmitted($report));
                 }
@@ -109,7 +110,7 @@ class ReportController extends Controller
     /* API */
     public function unit_heads(Request $request)
     {
-        $unit_heads = User::where('campus_id', $request->campus_id)->whereHasRole(['unit_head'])->get();
+        $unit_heads = User::where('campus_id', $request->campus_id)->where('designation_id', $request->designation_id)->whereHasRole(['unit_head'])->get();
         return response()->json(['unitHeads' => $unit_heads]);
     }
     /* API */

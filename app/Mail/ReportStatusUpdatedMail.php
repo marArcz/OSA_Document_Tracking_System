@@ -3,22 +3,23 @@
 namespace App\Mail;
 
 use App\Models\Report;
-use Illuminate\Mail\Mailables\Address;
+use App\Models\User;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
+use Illuminate\Mail\Mailables\Address;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
-class NewReportMail extends Mailable
+class ReportStatusUpdatedMail extends Mailable
 {
     use Queueable, SerializesModels;
 
     /**
      * Create a new message instance.
      */
-    public function __construct(public Report $report)
+    public function __construct(public Report $report, public User $user)
     {
         //
     }
@@ -29,8 +30,8 @@ class NewReportMail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'New Submitted Report',
-            from: new Address('no-reply.osaemailsystem@gmail.com', $this->report->unitHead->firstname . ' ' . $this->report->unitHead->lastname . ' (LSPU Unit Head)'),
+            subject: 'Your report has been ' . strtolower($this->report->status),
+            from: new Address('no-reply.osaemailsystem@gmail.com', $this->user->firstname . ' ' . $this->user->lastname . ' (Campus Admin)'),
         );
     }
 
@@ -40,11 +41,10 @@ class NewReportMail extends Mailable
     public function content(): Content
     {
         return new Content(
-            markdown: 'emails.new-report-mail',
+            markdown: 'emails.report-status-updated-mail',
             with:[
-                'url'=>url(route('admin.report.open',['report_id'=>$this->report->id])),
-                'url_submission_bin'=>url(route('admin.report.open',['report_id'=>$this->report->id]))
-            ],
+                'url' => url(route('unit_head.submission_bin',['id'=>$this->report->submission_bin_id]))
+            ]
         );
     }
 

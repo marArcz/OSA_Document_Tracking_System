@@ -1,14 +1,15 @@
 import CardComponent from '@/Components/CardComponent'
+import TextProfilePic from '@/Components/TextProfilePic'
 import PanelLayout from '@/Layouts/PanelLayout'
 import { Link } from '@inertiajs/react'
 import axios from 'axios'
 import React from 'react'
 import { useEffect } from 'react'
 import { useState } from 'react'
-import { Button, Card, Form, Nav, Spinner, Table } from 'react-bootstrap'
+import { Button, Card, Form, Image, Nav, Spinner, Table } from 'react-bootstrap'
 import DataTable from 'react-data-table-component'
 
-const Admins = ({campus_admins}) => {
+const Admins = ({ campus_admins }) => {
     const [rows, setRows] = useState([...campus_admins])
     const [fetching, setFetching] = useState(false)
     const [selectedRows, setSelectedRows] = useState([])
@@ -29,16 +30,28 @@ const Admins = ({campus_admins}) => {
 
     const columns = [
         {
-            name: 'Lastname',
-            selector: row => row.lastname
-        },
-        {
-            name: 'Firstname',
-            selector: row => row.firstname
-        },
-        {
-            name: 'Middlename',
-            selector: row => row.middlename
+            name: 'Campus Admin',
+            cell: row => (
+                <div className='flex items-center gap-3'>
+                    <div>
+                        {
+                            row.image ? (
+                                <Image
+                                    src={row.image}
+                                    fluid roundedCircle
+                                    width={35}
+                                    height={35}
+                                />
+                            ) : (
+                                <TextProfilePic size='sm' text={`${row.firstname[0]}`} bg='primary' className=" text-light fw-bold" />
+                            )
+                        }
+                    </div>
+                    <div>
+                        {row.firstname} {row.lastname}
+                    </div>
+                </div>
+            )
         },
         {
             name: 'Email',
@@ -87,54 +100,6 @@ const Admins = ({campus_admins}) => {
                             </div>
                         </div>
                         <hr />
-                        {/* <Table className='' responsive>
-                            <thead>
-                                <tr>
-                                    <th scope='col' className=''>
-                                        <Form.Check
-                                            type="checkbox"
-                                            title='Select All'
-                                        />
-                                    </th>
-                                    <th>Lastname</th>
-                                    <th>Firstname</th>
-                                    <th>Middlename</th>
-                                    <th>Campus</th>
-                                    <th></th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {
-                                    fetching ? (
-                                        <tr>
-                                            <td colSpan={6} className='text-center'>
-                                                <Spinner variant='secondary' className='mt-3' size='sm' />
-                                            </td>
-                                        </tr>
-                                    ) : (
-                                        rows && rows.map((row, index) => (
-                                            <tr>
-                                                <td className=''>
-                                                    <Form.Check
-                                                        type="checkbox"
-                                                        title='Select All'
-                                                    />
-                                                </td>
-                                                <td>{row.lastname}</td>
-                                                <td>{row.firstname}</td>
-                                                <td>{row.middlename}</td>
-                                                <td>{row.campus.name}</td>
-                                                <td>
-                                                    <Link className='link-success nav-link'>
-                                                        <i className='fi fi-rr-pen-square fs-5'></i>
-                                                    </Link>
-                                                </td>
-                                            </tr>
-                                        ))
-                                    )
-                                }
-                            </tbody>
-                        </Table> */}
                         <DataTable
                             // expandableRows
                             // expandableRowsComponent={ExpandedComponent}

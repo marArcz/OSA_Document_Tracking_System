@@ -39,12 +39,14 @@ return [
             'url' => env('MAIL_URL'),
             'host' => env('MAIL_HOST', 'smtp.mailgun.org'),
             'port' => env('MAIL_PORT', 587),
-            // 'encryption' => env('MAIL_ENCRYPTION', 'tls'),
-            'encryption' => null,
+            'encryption' => env('MAIL_ENCRYPTION', 'tls'),
+            // 'encryption' => null,
             'username' => env('MAIL_USERNAME'),
             'password' => env('MAIL_PASSWORD'),
             'timeout' => null,
             'local_domain' => env('MAIL_EHLO_DOMAIN'),
+            'verify_peer' => false,
+            'auth_mode' => false,
         ],
 
         'ses' => [
@@ -117,7 +119,6 @@ return [
 
     'markdown' => [
         'theme' => 'default',
-
         'paths' => [
             resource_path('views/vendor/mail'),
         ],

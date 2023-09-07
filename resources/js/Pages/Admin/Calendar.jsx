@@ -102,6 +102,8 @@ const Calendar = ({ auth, events: allEvents }) => {
                                     events={events}
                                     themeSystem="Sandstone"
                                     editable
+                                    dayMaxEventRows={3}
+                                    eventDrop={e => console.log(e)}
                                     headerToolbar={{
                                         left: 'dayGridMonth today',
                                         center: 'title',

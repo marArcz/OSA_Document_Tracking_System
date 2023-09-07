@@ -8,23 +8,21 @@ import AnnouncementsCard from './AnnouncementsCard'
 const AdminDashboard = ({ }) => {
     const { auth } = usePage().props;
     return (
-        <div className="py-3 px-[1.5rem]">
-            <Row>
-                <Col lg={4}>
-                    {/* <DashboardCard
+        <Row>
+            <Col lg={4}>
+                {/* <DashboardCard
                         subLabel='Unit Heads'
                         label={auth.user.campus.name}
                         icon={<i className='fi fi-rr-user'></i>}
                         value={0}
                         variant='success'
                     /> */}
-                    <AnnouncementsCard className='' />
-                </Col>
-                <Col>
-                    <CalendarCard />
-                </Col>
-            </Row>
-        </div>
+                <AnnouncementsCard className='' />
+            </Col>
+            <Col>
+                <CalendarCard expandButton />
+            </Col>
+        </Row>
     )
 }
 

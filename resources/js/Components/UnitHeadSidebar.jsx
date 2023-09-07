@@ -24,7 +24,7 @@ const UnitHeadSidebar = ({ isActive, setShowFeedbackModal, activeLink }) => {
         },
         {
             type: NavType.BUTTON,
-            text: 'Feedback',
+            text: 'Suggestion',
             icon: <i className="fi fi-rr-comment"></i>,
             onClick: (e) =>{
                 e.preventDefault();

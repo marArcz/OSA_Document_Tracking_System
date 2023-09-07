@@ -77,6 +77,7 @@ Route::delete('/reminders/{id}', [ReminderController::class, 'delete']);
 Route::delete('/announcements/{id}', [AnnouncementController::class, 'delete']);
 Route::patch('/announcements/order', [AnnouncementController::class, 'order']);
 Route::get('/announcements', [AnnouncementController::class, 'getAll']);
+Route::get('/announcements/dashboard', [AnnouncementController::class, 'dashboard']);
 Route::post('/unit-heads/designations', [AdminController::class, 'unit_heads_by_designation']);
 Route::get('/admins', [AdminController::class, 'getAdmins']);
 Route::get('/admins/{campus_id}', [AdminController::class, 'getAdminsByCampus']);
@@ -85,7 +86,7 @@ Route::get('/admins/{campus_id}', [AdminController::class, 'getAdminsByCampus'])
 Route::prefix('/reports')->group(function () {
     Route::get('/{campus_id}/{submission_bin_id}/{unit_head_id}/all', [ReportController::class, 'all']);
     Route::get('/{campus_id}/{submission_bin_id}/{unit_head_id}/approved', [ReportController::class, 'getApproved']);
-    Route::get('/{campus_id}/unit_heads', [ReportController::class, 'unit_heads']);
+    Route::get('/{campus_id}/{designation_id}/unit_heads', [ReportController::class, 'unit_heads']);
     Route::get('/{campus_id}/unit_heads/{designation_id}', [ReportController::class, 'unit_heads_designated']);
 });
 
@@ -114,9 +115,9 @@ Route::prefix('/calendar')->group(function () {
 
 Route::prefix('/notifications')->group(function () {
     Route::get('/{id}', [NotificationController::class, 'get']);
-    Route::get('/general/{id}', [NotificationController::class, 'general']);
-    Route::get('/calendar/{id}', [NotificationController::class, 'calendar']);
-    Route::get('/read', [NotificationController::class, 'marAsRead']);
+    Route::get('/general/{user}', [NotificationController::class, 'general']);
+    Route::get('/calendar/{user}', [NotificationController::class, 'calendar']);
+    Route::patch('/read/{user}', [NotificationController::class, 'markAsRead']);
 })->middleware(['auth']);
 
 Route::prefix('/unit_heads')->group(function () {

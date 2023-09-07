@@ -13,7 +13,8 @@ class CalendarEvent extends Model
         'title',
         'user_id',
         'start',
-        'end'
+        'end',
+        'type'
     ];
 
     public function user(): HasOne

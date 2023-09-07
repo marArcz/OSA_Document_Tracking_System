@@ -45,7 +45,7 @@ const ViewFilteredReports = ({ designation, campus, submissionBins }) => {
     useEffect(() => {
         const getUnitHeads = async () => {
             setFetchingUnitHeads(true)
-            let unitHeads = await axios.get(`/reports/${campus.id}/unit_heads`);
+            let unitHeads = await axios.get(`/reports/${campus.id}/${designation.id}/unit_heads`);
             setUnitHeads(unitHeads.data.unitHeads)
             if (unitHeads.data.unitHeads.length > 0 && selectedUnitHead == null) {
                 setSelectedUnitHead(unitHeads.data.unitHeads[0])

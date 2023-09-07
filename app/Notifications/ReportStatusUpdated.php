@@ -2,8 +2,9 @@
 
 namespace App\Notifications;
 
-use App\Mail\NewReportMail;
+use App\Mail\ReportStatusUpdatedMail;
 use App\Models\Report;
+use App\Models\User;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
@@ -11,15 +12,16 @@ use Illuminate\Notifications\Messages\BroadcastMessage;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-class NewReportSubmitted extends Notification implements ShouldQueue
+class ReportStatusUpdated extends Notification implements ShouldQueue
 {
     use Queueable;
 
     /**
      * Create a new notification instance.
      */
-    public function __construct(public Report $report)
+    public function __construct(public Report $report, public User $user)
     {
+        //
     }
 
     /**
@@ -29,7 +31,7 @@ class NewReportSubmitted extends Notification implements ShouldQueue
      */
     public function via(object $notifiable): array
     {
-        return ['mail', 'database', 'broadcast'];
+        return ['mail', 'database'];
     }
 
     /**
@@ -37,9 +39,25 @@ class NewReportSubmitted extends Notification implements ShouldQueue
      */
     public function toMail(object $notifiable): Mailable
     {
-        return (new NewReportMail($this->report))
+        return (new ReportStatusUpdatedMail($this->report, $this->user))
             ->to($notifiable->email);
     }
+
+    public function toBroadcast(object $notifiable): BroadcastMessage
+    {
+        return new BroadcastMessage([
+            'message' => 'New notification'
+        ]);
+    }
+
+    /**
+     * Get the type of the notification being broadcast.
+     */
+    public function broadcastType(): string
+    {
+        return 'report.status.updated';
+    }
+
 
     /**
      * Get the array representation of the notification.
@@ -50,22 +68,9 @@ class NewReportSubmitted extends Notification implements ShouldQueue
     {
         return [
             'report_id' => $this->report->id,
-            'link' => url(route('admin.report.open', ['report_id' => $this->report->id])),
-            'title' => $this->report->submission_bin->title . ': ' . $this->report->unitHead->firstname . ' ' . $this->report->unitHead->lastname . ' submitted a report',
-            'type' => 'report_submission'
+            'link' => url(route('unit_head.submission_bin', ['id' => $this->report->submission_bin_id])),
+            'title' => $this->report->submission_bin->title . ': Your report has been ' . strtolower($this->report->status),
+            'type' => 'report_status'
         ];
-    }
-
-
-    public function toBroadcast(object $notifiable): BroadcastMessage
-    {
-        return new BroadcastMessage([
-            'message' => 'New notification'
-        ]);
-    }
-
-    public function broadcastType()
-    {
-        return 'notification.admin';
     }
 }

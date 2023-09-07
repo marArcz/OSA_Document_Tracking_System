@@ -15,9 +15,18 @@ use App\Http\Controllers\SubmissionBinController;
 use App\Http\Controllers\SuperAdminController;
 use App\Http\Controllers\UnitHeadController;
 use App\Http\Controllers\UsersController;
+use App\Mail\CalendarEventMail;
+use App\Mail\NewReportMail;
+use App\Models\CalendarEvent;
+use App\Models\Report;
 use App\Models\SubmissionBin;
 use App\Models\User;
+use App\Notifications\CalendarEventNotification;
+use App\Notifications\DueSubmissionBin;
+use App\Notifications\NewReportApproved;
+use App\Notifications\NewReportSubmitted;
 use App\Notifications\NewSubmissionBin;
+use App\Notifications\ReportStatusUpdated;
 use Illuminate\Foundation\Application;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -84,7 +93,7 @@ Route::prefix('/admin')->middleware(['auth:web'])->group(function () {
     });
 });
 
-Route::prefix('/notifications')->middleware(['auth', 'role:unit_head'])->group(function () {
+Route::prefix('/notifications')->middleware(['auth'])->group(function () {
     Route::get('/{id}', [NotificationController::class, 'open'])->name('notifications.open');
 });
 
@@ -99,6 +108,7 @@ Route::prefix('/unit-head')->middleware(['auth', 'role:unit_head'])->group(funct
     Route::get('/reports', [UnitHeadController::class, 'reports'])->name('unit_head.reports');
     Route::get('/reports/{id}/submission-bin', [UnitHeadController::class, 'submission_bin'])->name('unit_head.submission_bin');
     Route::get('/announcements', [UnitHeadController::class, 'announcements'])->name('unit_head.announcements');
+    Route::get('/calendar', [UnitHeadController::class, 'calendar'])->name('unit_head.calendar');
 });
 
 Route::prefix('/submission-bins')->middleware(['auth', 'role:super_admin'])->group(function () {
@@ -162,10 +172,13 @@ Route::prefix('/super-admin')->group(function () {
 
 
 Route::get('/mailable', function () {
-    $submissionBin = SubmissionBin::where('id', '>', 0)->first();
+    $bin = SubmissionBin::where('id', '>', 0)->first();
     $unitHead = User::where('id','>',0)->first();
+    // $admin = User::whereHasRole('admin')->first();
 
-    return (new NewSubmissionBin($submissionBin))
+    $event = CalendarEvent::where('id','>',0)->first();
+
+    return (new DueSubmissionBin($bin))
         ->toMail($unitHead);
 });
 

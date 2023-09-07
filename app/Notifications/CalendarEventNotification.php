@@ -2,24 +2,24 @@
 
 namespace App\Notifications;
 
-use App\Mail\NewReportMail;
-use App\Models\Report;
+use App\Mail\CalendarEventMail;
+use App\Models\CalendarEvent;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
-use Illuminate\Notifications\Messages\BroadcastMessage;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-class NewReportSubmitted extends Notification implements ShouldQueue
+class CalendarEventNotification extends Notification implements ShouldQueue
 {
     use Queueable;
 
     /**
      * Create a new notification instance.
      */
-    public function __construct(public Report $report)
+    public function __construct(public CalendarEvent $event)
     {
+        //
     }
 
     /**
@@ -37,7 +37,7 @@ class NewReportSubmitted extends Notification implements ShouldQueue
      */
     public function toMail(object $notifiable): Mailable
     {
-        return (new NewReportMail($this->report))
+        return (new CalendarEventMail($this->event))
             ->to($notifiable->email);
     }
 
@@ -49,23 +49,9 @@ class NewReportSubmitted extends Notification implements ShouldQueue
     public function toArray(object $notifiable): array
     {
         return [
-            'report_id' => $this->report->id,
-            'link' => url(route('admin.report.open', ['report_id' => $this->report->id])),
-            'title' => $this->report->submission_bin->title . ': ' . $this->report->unitHead->firstname . ' ' . $this->report->unitHead->lastname . ' submitted a report',
-            'type' => 'report_submission'
+            'calendar_event_id' => $this->event->id,
+            'title' => $this->event->title,
+            'type' => 'calendar_event'
         ];
-    }
-
-
-    public function toBroadcast(object $notifiable): BroadcastMessage
-    {
-        return new BroadcastMessage([
-            'message' => 'New notification'
-        ]);
-    }
-
-    public function broadcastType()
-    {
-        return 'notification.admin';
     }
 }

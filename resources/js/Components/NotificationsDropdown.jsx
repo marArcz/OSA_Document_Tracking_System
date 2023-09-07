@@ -5,10 +5,26 @@ import { Badge, Dropdown, Nav, NavItem } from 'react-bootstrap'
 import DropdownItem from 'react-bootstrap/esm/DropdownItem';
 import DropdownMenu from 'react-bootstrap/esm/DropdownMenu';
 import DropdownToggle from 'react-bootstrap/esm/DropdownToggle'
+import { toast } from 'react-toastify';
 
 const NotificationsDropdown = () => {
     const [notifications, setNotifications] = useState([]);
     const { auth } = usePage().props;
+
+    const unitHeadNotifs = [
+        'notification.unitHead',
+        'report.status.updated'
+    ];
+
+    const adminNotifs = [
+        'notification.admin',
+    ];
+
+    const superAdminNotifs = [
+        'new.report.approved',
+    ];
+
+
 
     const getNotifications = () => {
         axios.get(`/notifications/general/${auth.user.id}`)
@@ -22,9 +38,13 @@ const NotificationsDropdown = () => {
         Echo.private('users.' + auth.user.id)
             .notification((notification) => {
                 console.log('notiifcation recieved: ', notification);
-                if (notification.type === 'notification.unitHead') {
-                    getNotifications();
-                }
+                getNotifications();
+                // if (auth.role == 'unit_head' && unitHeadNotifs.includes(notification.type)) {
+                //     getNotifications();
+                // }
+                // else if (auth.role == 'admin' && notification.type === 'notification.admin') {
+                //     getNotifications();
+                // }
             });
     }, [])
 
@@ -39,6 +59,18 @@ const NotificationsDropdown = () => {
             }
         </>
     )
+
+    const markAsRead = () => {
+        axios.patch(`/notifications/read/${auth.user.id}`)
+        .then((res) => {
+            console.log(res);
+            if(res.data.success){
+                let count = notifications.length
+                toast.success(count + (count > 1 ? ' items were':' item was') + " marked as read!");
+                setNotifications([]);
+            }
+        })
+    }
 
     return (
         <>
@@ -60,7 +92,7 @@ const NotificationsDropdown = () => {
                                 <i className='fi fi-rr-bell text-[1rem] text-black-50 leading-none my-0'></i>
                                 <strong>Notifications</strong>
                             </div>
-                            <button disabled={notifications.length == 0} className='btn btn-link btn-sm link-secondary w-max text-decoration-none'>
+                            <button onClick={markAsRead} disabled={notifications.length == 0} className='btn btn-link btn-sm link-secondary w-max text-decoration-none'>
                                 <i className='text-sm me-1 bx bxs-check-circle'></i>
                                 <span className='text-sm'>Mark as read</span>
                             </button>

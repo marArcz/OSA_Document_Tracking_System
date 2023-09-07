@@ -10,7 +10,7 @@ import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd'
 import { Accordion, Button, Card, Container, Dropdown, Form, Placeholder, useAccordionButton } from 'react-bootstrap'
 import { toast } from 'react-toastify'
 
-const SubmissionBins = ({ auth, submission_bins, rows }) => {
+const SubmissionBins = ({ auth, submission_bins, rows, reports = [] }) => {
     const [showConfirmModal, setShowConfirmModal] = useState(false)
     const [id, setId] = useState(null);
     const [processing, setProcessing] = useState(false)
@@ -36,6 +36,17 @@ const SubmissionBins = ({ auth, submission_bins, rows }) => {
                     console.log(res)
                 }, 1500)
             })
+    }
+
+    const getReportsCount = (submission_bin_id) => {
+        let count = 0;
+        for (let report of reports) {
+            if (report.submission_bin_id == submission_bin_id) {
+                count++;
+            }
+        }
+
+        return count;
     }
 
     function CustomToggle({ children, eventKey }) {
@@ -210,7 +221,7 @@ const SubmissionBins = ({ auth, submission_bins, rows }) => {
                                                                     auth.role == 'super_admin' ? (
                                                                         item.approved_reports?.length ?? 0
                                                                     ) : (
-                                                                        item.reports?.length ?? 0
+                                                                        getReportsCount(item.id)
                                                                     )
                                                                 }
                                                             </p>
@@ -223,7 +234,7 @@ const SubmissionBins = ({ auth, submission_bins, rows }) => {
                                                         {/* <Link href={route('admin.submission_bin.details',{id:item.id})} className='rounded-1 text-sm btn btn-light'>
                                                         <small>View more details</small>
                                                     </Link> */}
-                                                        <Link as={'button'} disabled={item.reports.length == 0} href={route('admin.reports.view', { submission_bin_id: item.id })} className='rounded-1 text-sm btn btn-primary'>
+                                                        <Link as={'button'} disabled={auth.role === 'super_admin' ? item.approved_reports.length == 0 : getReportsCount(item.id) == 0} href={route('admin.reports.view', { submission_bin_id: item.id })} className='rounded-1 text-sm btn btn-primary'>
                                                             <small>View Reports</small>
                                                         </Link>
                                                     </div>

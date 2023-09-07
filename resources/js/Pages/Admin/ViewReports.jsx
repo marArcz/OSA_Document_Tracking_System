@@ -12,9 +12,9 @@ import DataTable from 'react-data-table-component'
 
 const ViewReports = ({ submissionBin, campuses }) => {
     const { auth } = usePage().props;
-    const [selectedCampus, setSelectedCampus] = useState(campuses[0])
+    const [selectedCampus, setSelectedCampus] = useState(auth.role === 'admin' ? auth.user.campus : campuses[0])
     const [reports, setReports] = useState([]);
-    const [fetchingReports, setFetchingReports] = useState(true)
+    const [fetchingReports, setFetchingReports] = useState(false)
     const [fetchingUnitHeads, setFetchingUnitHeads] = useState(true)
     const [unitHeads, setUnitHeads] = useState([])
     const [selectedUnitHead, setSelectedUnitHead] = useState(null)
@@ -23,18 +23,6 @@ const ViewReports = ({ submissionBin, campuses }) => {
             name: "Unit Head",
             selector: row => row.unit_head.firstname + " " + row.unit_head.lastname,
         },
-        // {
-        //     name: "Report",
-        //     selector: row => row.attachments[0].name
-        // },
-        // {
-        //     name: "Classification",
-        //     selector: row => row.unit_head.designation.classification.name
-        // },
-        // {
-        //     name: "Designation",
-        //     selector: row => row.unit_head.designation.name
-        // },
     ];
     const fetchReports = async () => {
         setFetchingReports(true)
@@ -83,11 +71,7 @@ const ViewReports = ({ submissionBin, campuses }) => {
             pageTitle='View Reports'
             defaultActiveLink="submission-bins"
             headerTitle={(
-                // <p className='my-0 d-flex align-items-center fs-6'>
-                //     <i className='fi fi-rr-box me-2'></i>
-                //     {/* {submissionBin?.title} */}
-                //     Unit Head Report
-                // </p>
+
                 <HeaderTitle backButton text='Unit Head Report' />
             )}>
 
@@ -130,15 +114,23 @@ const ViewReports = ({ submissionBin, campuses }) => {
                 </Card>
                 <Card className='border-0 shadow-sm rounded-0'>
                     <Card.Body className='p-lg-4'>
-                        <p className="form-text mb-2 text-secondary">Campus</p>
-                        <div className="w-100 border shadow-sm custom-scroll bg-white overflow-auto">
-                            <ElegantNav
-                                list={campuses}
-                                selector={item => item.name}
-                                selectedItem={selectedCampus}
-                                handleSelect={(campus) => setSelectedCampus(campus)}
-                            />
-                        </div>
+                        {
+                            auth.role === 'super_admin' && (
+                                <>
+                                    <p className="form-text mb-2 text-secondary">Campus</p>
+
+                                    <div className="w-100 border shadow-sm custom-scroll bg-white overflow-auto">
+                                        <ElegantNav
+                                            list={campuses}
+                                            selector={item => item.name}
+                                            selectedItem={selectedCampus}
+                                            handleSelect={(campus) => setSelectedCampus(campus)}
+                                        />
+                                    </div>
+                                </>
+                            )
+
+                        }
                         <div className=" mt-3">
                             <Row className='gy-3'>
                                 <Col className='order-1 order-lg-0'>

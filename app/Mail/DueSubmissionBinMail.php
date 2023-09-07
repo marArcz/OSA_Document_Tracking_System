@@ -2,8 +2,7 @@
 
 namespace App\Mail;
 
-use App\Models\Report;
-use Illuminate\Mail\Mailables\Address;
+use App\Models\SubmissionBin;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
@@ -11,14 +10,14 @@ use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
-class NewReportMail extends Mailable
+class DueSubmissionBinMail extends Mailable
 {
     use Queueable, SerializesModels;
 
     /**
      * Create a new message instance.
      */
-    public function __construct(public Report $report)
+    public function __construct(public SubmissionBin $submissionBin)
     {
         //
     }
@@ -29,8 +28,7 @@ class NewReportMail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'New Submitted Report',
-            from: new Address('no-reply.osaemailsystem@gmail.com', $this->report->unitHead->firstname . ' ' . $this->report->unitHead->lastname . ' (LSPU Unit Head)'),
+            subject: $this->submissionBin->title . ' deadline',
         );
     }
 
@@ -40,11 +38,10 @@ class NewReportMail extends Mailable
     public function content(): Content
     {
         return new Content(
-            markdown: 'emails.new-report-mail',
-            with:[
-                'url'=>url(route('admin.report.open',['report_id'=>$this->report->id])),
-                'url_submission_bin'=>url(route('admin.report.open',['report_id'=>$this->report->id]))
-            ],
+            markdown: 'mail.due-submission-bin-mail',
+            with: [
+                'url' => url(route('unit_head.submission_bin', ['id' => $this->submissionBin->id])),
+            ]
         );
     }
 

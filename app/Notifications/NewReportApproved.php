@@ -2,7 +2,7 @@
 
 namespace App\Notifications;
 
-use App\Mail\NewReportMail;
+use App\Mail\ReportApprovedMail;
 use App\Models\Report;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -11,7 +11,7 @@ use Illuminate\Notifications\Messages\BroadcastMessage;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-class NewReportSubmitted extends Notification implements ShouldQueue
+class NewReportApproved extends Notification implements ShouldQueue
 {
     use Queueable;
 
@@ -20,6 +20,7 @@ class NewReportSubmitted extends Notification implements ShouldQueue
      */
     public function __construct(public Report $report)
     {
+        //
     }
 
     /**
@@ -37,8 +38,25 @@ class NewReportSubmitted extends Notification implements ShouldQueue
      */
     public function toMail(object $notifiable): Mailable
     {
-        return (new NewReportMail($this->report))
+        return (new ReportApprovedMail($this->report))
             ->to($notifiable->email);
+    }
+
+
+    public function toBroadcast(object $notifiable): BroadcastMessage
+    {
+        return new BroadcastMessage([
+            'message' => 'New notification'
+        ]);
+    }
+
+
+    /**
+     * Get the type of the notification being broadcast.
+     */
+    public function broadcastType(): string
+    {
+        return 'new.report.approved';
     }
 
     /**
@@ -54,18 +72,5 @@ class NewReportSubmitted extends Notification implements ShouldQueue
             'title' => $this->report->submission_bin->title . ': ' . $this->report->unitHead->firstname . ' ' . $this->report->unitHead->lastname . ' submitted a report',
             'type' => 'report_submission'
         ];
-    }
-
-
-    public function toBroadcast(object $notifiable): BroadcastMessage
-    {
-        return new BroadcastMessage([
-            'message' => 'New notification'
-        ]);
-    }
-
-    public function broadcastType()
-    {
-        return 'notification.admin';
     }
 }
