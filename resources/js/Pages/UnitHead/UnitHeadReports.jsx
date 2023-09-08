@@ -80,6 +80,16 @@ const UnitHeadReports = ({ submissionBins: bins, auth, rows, reports }) => {
                                                     <span className='fw-bold'>{item.title}</span>
                                                 </div>
                                             </div>
+                                            <div className="col-auto text-end">
+                                                <div className="flex justify-end items-center gap-2">
+                                                    {
+                                                        item.deadline_date && (
+                                                            <p className='my-0 text-sm text-secondary'>Due {format(new Date(item.deadline_date), 'MMM dd, yyyy')}</p>
+                                                        )
+                                                    }
+
+                                                </div>
+                                            </div>
                                         </div>
                                     </CustomToggle>
                                 </Card.Header>

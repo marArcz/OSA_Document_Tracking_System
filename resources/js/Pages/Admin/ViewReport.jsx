@@ -1,6 +1,7 @@
 import CommentsView from '@/Components/CommentsView';
 import FileIcon from '@/Components/FileIcon';
 import HeaderTitle from '@/Components/HeaderTitle';
+import { formatDate } from '@/Components/Helper';
 import ModalComponent from '@/Components/ModalComponent';
 import PanelLayout from '@/Layouts/PanelLayout'
 import { Head, useForm, usePage } from '@inertiajs/react';
@@ -147,10 +148,15 @@ const ViewReport = ({ report }) => {
 
                                         {
                                             auth.role === 'super_admin' && (
-                                                <p className={`text-success fw-bold my-0`}>
-                                                    <i className='bx bxs-check-circle me-2'></i>
-                                                    {report.status}
-                                                </p>
+                                                <div className='text-end'>
+                                                    <p className={`text-success fw-bold my-0`}>
+                                                        <i className='bx bxs-check-circle me-2'></i>
+                                                        {report.status}
+                                                    </p>
+                                                    <p className={`text-sm my-0 ${report.remarks.toLowerCase() == 'submitted on time'?'text-success':'text-danger'}`}>
+                                                        <small>{report.remarks}</small>
+                                                    </p>
+                                                </div>
                                             )
                                         }
                                     </div>
@@ -193,7 +199,10 @@ const ViewReport = ({ report }) => {
                         </Card>
                         <Card className='border-0 shadow-sm rounded-0 p-2 mb-2'>
                             <Card.Body className='h-100'>
-                                <p className='text-sm text-danger fw-bold '>Attachments</p>
+                                <p className='text-sm text-danger fw-bold mb-1'>Attachments</p>
+                                <p className='text-sm text-secondary my-0 fw-bold'>
+                                    <span>Submitted on {formatDate(new Date(report.date_submitted))}</span>
+                                </p>
                                 <hr />
                                 <div className="">
                                     <div className="row g-3">

@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\CalendarEvent;
 use App\Models\User;
+use App\Notifications\CalendarEventNotification;
 use App\Notifications\NewCalendarEvent;
 use App\Notifications\NewReportApproved;
 use App\Notifications\NewReportSubmitted;
@@ -52,20 +54,23 @@ class NotificationController extends Controller
         }
         return response()->json($data);
     }
-    public function calendar(Request $request)
+
+    public function calendar(User $user)
     {
-        $user = User::find($request->id);
+        // $user = User::find($request->id);
         if (!$user) {
             $data['notifications'] = [];
             $data['error'] = "User not found!";
         } else {
             $data['notifications'] = $user->unreadNotifications()
-                ->where('type', NewCalendarEvent::class)
+                // ->whereIn('type', [
+                //     NewCalendarEvent::class,
+                //     CalendarEventController::class
+                // ])
                 ->get();
         }
         return response()->json($data);
     }
-
 
     public function open(Request $request)
     {
@@ -80,6 +85,20 @@ class NotificationController extends Controller
     public function markAsRead(User $user)
     {
         $notifications = $user->Notifications()->get();
+        foreach ($notifications as $notification) {
+            $notification->markAsRead();
+        }
+
+        return response()->json(['success' => true, 'user' => $user, 'notifications' => $notifications]);
+    }
+
+    public function markAsReadCalendar(User $user)
+    {
+        $notifications = $user->Notifications()
+            ->whereIn('type',[
+                CalendarEventNotification::class
+            ])
+            ->get();
         foreach ($notifications as $notification) {
             $notification->markAsRead();
         }

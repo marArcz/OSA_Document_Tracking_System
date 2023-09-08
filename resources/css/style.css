@@ -631,7 +631,9 @@ a {
   padding-bottom: 0.8rem !important;
 }
 .custom-select.sm .select-menu {
-  padding-top: 2rem !important;
+  padding-top: 2.5rem !important;
+  height: 50vh;
+  overflow-y: auto;
 }
 .custom-select.sm .select-menu .select-menu-item {
   font-size: 0.9rem;

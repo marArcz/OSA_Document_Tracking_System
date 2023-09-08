@@ -724,12 +724,15 @@ a {
         }
 
         .select-menu {
-            padding-top: 2rem !important;
-
+            padding-top: 2.5rem !important;
+            height: 50vh;
             .select-menu-item {
                 font-size: 0.9rem;
                 padding: 10px;
             }
+
+            overflow-y: auto;
+
         }
     }
 

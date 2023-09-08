@@ -313,7 +313,7 @@ img {
     justify-content: center;
     align-items: center;
     margin-bottom: 20px;
-    padding-top: 60px;
+    padding-top: 40px;
     text-align: center;
     /* margin: auto; */
 }
@@ -328,6 +328,7 @@ img {
     position: relative;
     width: 100%;
     margin: auto;
+    text-align: center;
 }
 .calendar-header {
     width: 100%;

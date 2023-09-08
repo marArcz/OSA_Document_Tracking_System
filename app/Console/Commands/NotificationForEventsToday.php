@@ -29,14 +29,19 @@ class NotificationForEventsToday extends Command
     public function handle()
     {
         //find events for today's date
-        $calendarEvents = CalendarEvent::whereRaw('type = ? (DATE(start) = CURDATE() || (CURDATE() > DATE(start) && DATE(end) < CURDATE()))',['event'])->get();
+        $calendarEvents = CalendarEvent::whereRaw('notified = false && type = ? AND (DATE(start) = CURDATE() OR (CURDATE() > DATE(start) AND DATE(end) < CURDATE()))', ['event'])->get();
 
         $users = User::all();
-
+        $made = 0;
         foreach ($users as $key => $user) {
-            $user->notify(new CalendarEventNotification());
+            foreach ($calendarEvents as $key => $event) {
+                $user->notify(new CalendarEventNotification($event));
+                $made++;
+                $event->notified = true;
+                $event->save();
+            }
         }
 
-        echo 'found ' . count($calendarEvents) . ' event(s).';
+        echo 'made ' . $made . ' event notification(s).';
     }
 }

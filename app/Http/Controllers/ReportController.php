@@ -6,7 +6,9 @@ use App\Models\Report;
 use App\Models\ReportAttachment;
 use App\Models\User;
 use App\Notifications\NewReportSubmitted;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Date;
 
 class ReportController extends Controller
 {
@@ -80,6 +82,19 @@ class ReportController extends Controller
         if ($report) {
             $report->is_submitted = true;
             $report->status = 'Pending';
+            $report->date_submitted = Carbon::now()->toDateTimeString();
+
+            //check if has deadline
+            if($report->deadline_date){
+                if($report->deadline_date > Carbon::now()->toDate()){
+                    $report->remarks = "Submitted late";
+                }else{
+                    $report->remarks = "Submitted on time";
+                }
+            }else{
+                $report->remarks = "Submitted on time";
+            }
+
             if ($report->save()) {
                 $users = User::whereHasRole('admin')->where('campus_id',$user->campus_id)->get();
                 foreach ($users as $key => $user) {
@@ -115,6 +130,12 @@ class ReportController extends Controller
     }
     /* API */
     public function unit_heads_designated(Request $request)
+    {
+        $unit_heads = User::where('campus_id', $request->campus_id)->whereHasRole(['unit_head'])->get();
+        return response()->json(['unitHeads' => $unit_heads]);
+    }
+    /* API */
+    public function unit_heads_campus(Request $request)
     {
         $unit_heads = User::where('campus_id', $request->campus_id)->whereHasRole(['unit_head'])->get();
         return response()->json(['unitHeads' => $unit_heads]);

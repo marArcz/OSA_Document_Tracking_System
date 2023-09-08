@@ -1,6 +1,7 @@
 import AddFileButton from '@/Components/AddFileButton'
 import CardComponent from '@/Components/CardComponent'
 import CommentsView from '@/Components/CommentsView'
+import { formatDate } from '@/Components/Helper'
 import ModalComponent from '@/Components/ModalComponent'
 import PanelLayout from '@/Layouts/PanelLayout'
 import { Link } from '@inertiajs/react'
@@ -16,6 +17,9 @@ const SubmissionBin = ({ submissionBin, auth, report }) => {
     const [viewFile, setViewFile] = useState(null)
     const [isFetchingComments, setIsFetchingComments] = useState(true)
     const [comments, setComments] = useState([]);
+
+    console.log('report: ', report)
+
     const [files, setFiles] = useState(
         report?.attachments.map((a, i) => ({ ...a, uploaded: true })) || []
     );
@@ -30,11 +34,11 @@ const SubmissionBin = ({ submissionBin, auth, report }) => {
     }
 
     const getStatusColor = () => {
-        if(report.status.toLowerCase() == 'approved'){
+        if (report.status.toLowerCase() == 'approved') {
             return 'success';
-        }else if(report.status.toLowerCase() === 'rejected'){
+        } else if (report.status.toLowerCase() === 'rejected') {
             return 'danger fw-bold';
-        }else{
+        } else {
             return 'secondary';
         }
     }
@@ -88,7 +92,7 @@ const SubmissionBin = ({ submissionBin, auth, report }) => {
                         <div className="text-secondary">
                             {
                                 submissionBin.deadline_date ? (
-                                    <p className="text-sm mt-3 mb-0">
+                                    <p className="text-sm mt-3 mb-0 text-danger">
                                         Due {format(new Date(submissionBin.deadline_date), 'MMM d, Y')}
                                     </p>
                                 ) : (
@@ -137,16 +141,25 @@ const SubmissionBin = ({ submissionBin, auth, report }) => {
                                 </p>
                                 {
                                     report?.is_submitted ? (
-                                        <p className={`my-0 text-sm  text-end fw-bold text-${getStatusColor()}`}>
-                                            <span className="me-1">{report.status}</span>
-                                            {/* <i className='bx bxs-check-circle '></i> */}
-                                        </p>
+                                        <>
+                                            <p className='text-start text-sm text-black-50 '>{report.remarks} ({formatDate(new Date(report.date_submitted))})</p>
+                                            <p className={`my-0 text-sm  text-end fw-bold text-${getStatusColor()}`}>
+                                                <span className="me-1">{report.status}</span>
+                                            </p>
+                                        </>
                                     ) : (
                                         files.length <= 0 && (
-                                            <p className="my-0 text-sm fw-bold">No submission yet.</p>
+                                            new Date(submissionBin.deadline_date) < new Date() ? (
+                                                <p className="my-0 text-sm fw-bold uppercas text-end text-dang">
+                                                     Missing
+                                                </p>
+                                            ) : (
+                                                <p className="my-0 text-sm fw-bold">No submission yet.</p>
+                                            )
                                         )
                                     )
                                 }
+
                                 <div className="mt-3 mb-2 ">
                                     <div className='max-h-[245px] overflow-auto'>
                                         <AddFileButton removable={!report?.is_submitted} disableAddingFile={report?.is_submitted} accept='application/pdf' handleViewFile={showFile} submissionBinId={submissionBin.id} userId={auth.user.id} files={files} setFiles={setFiles} />

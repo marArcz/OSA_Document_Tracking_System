@@ -54,22 +54,27 @@ const Announcements = ({ announcements }) => {
                                     <Card.Body className='p-4 '>
                                         <div className=''>
                                             <div className="flex justify-between mb-3">
-                                                <p className='my-0 text-black-50 text-sm'>{formatDate(new Date(item.created_at))}</p>
+                                                <p className='my-0 text-danger text-sm'>{formatDate(new Date(item.created_at))}</p>
                                                 <i className='fi fi-rr-megaphone text-black-50'></i>
                                             </div>
 
-                                            <p title={item.title} className='text-dark bg-warning w-100 fs-5 fw-bold p-3 text-truncate col-12'>
-                                                {item.title}
-                                            </p>
+
                                             <p className='text-dark mb-4 col-12 text-truncate' title={item.content}>{item.content}</p>
 
-                                            <div className="w-100 h-[170px] overflow-hidden border shadow-sm">
-                                                <Image
-                                                    width={150}
-                                                    src={item.image}
-                                                    className="mb-2 w-100 h-auto"
-                                                />
-                                            </div>
+                                            {
+                                                item.image && (
+                                                    <div className="w-100 h-[170px] overflow-hidden border shadow-sm">
+                                                        <Image
+                                                            width={150}
+                                                            src={item.image}
+                                                            className="mb-2 w-100 h-auto"
+                                                        />
+                                                    </div>
+                                                )
+                                            }
+                                            <p title={item.title} className=' text-light rounded bg-danger w-100 fs-6 mt-1 p-3 text-truncate col-12'>
+                                                {item.title}
+                                            </p>
                                             <hr />
                                             <div className="text-end">
                                                 <button

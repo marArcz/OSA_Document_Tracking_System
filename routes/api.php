@@ -88,6 +88,7 @@ Route::prefix('/reports')->group(function () {
     Route::get('/{campus_id}/{submission_bin_id}/{unit_head_id}/approved', [ReportController::class, 'getApproved']);
     Route::get('/{campus_id}/{designation_id}/unit_heads', [ReportController::class, 'unit_heads']);
     Route::get('/{campus_id}/unit_heads/{designation_id}', [ReportController::class, 'unit_heads_designated']);
+    Route::get('/{campus_id}/unit_heads', [ReportController::class, 'unit_heads_campus']);
 });
 
 Route::prefix('/comments')->group(function () {
@@ -118,6 +119,7 @@ Route::prefix('/notifications')->group(function () {
     Route::get('/general/{user}', [NotificationController::class, 'general']);
     Route::get('/calendar/{user}', [NotificationController::class, 'calendar']);
     Route::patch('/read/{user}', [NotificationController::class, 'markAsRead']);
+    Route::patch('/read/calendar/{user}', [NotificationController::class, 'markAsReadCalendar']);
 })->middleware(['auth']);
 
 Route::prefix('/unit_heads')->group(function () {

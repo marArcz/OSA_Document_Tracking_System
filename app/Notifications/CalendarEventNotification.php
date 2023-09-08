@@ -7,6 +7,7 @@ use App\Models\CalendarEvent;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
+use Illuminate\Notifications\Messages\BroadcastMessage;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
@@ -32,6 +33,18 @@ class CalendarEventNotification extends Notification implements ShouldQueue
         return ['mail', 'database', 'broadcast'];
     }
 
+    /*
+     *
+     * Broadcast notifications
+     */
+
+    public function toBroadcast(object $notifiable): BroadcastMessage
+    {
+        return new BroadcastMessage([
+            'type' => 'calendar_event'
+        ]);
+    }
+
     /**
      * Get the mail representation of the notification.
      */
@@ -51,6 +64,7 @@ class CalendarEventNotification extends Notification implements ShouldQueue
         return [
             'calendar_event_id' => $this->event->id,
             'title' => $this->event->title,
+            'start' => $this->event->start,
             'type' => 'calendar_event'
         ];
     }
