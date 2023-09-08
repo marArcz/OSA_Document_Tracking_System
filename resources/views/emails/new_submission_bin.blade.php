@@ -1,4 +1,4 @@
-<x-mail::message>
+<x-mail::message :logo="$logo">
 # {{$submissionBin->title}}
 
 A new submission bin is created

@@ -412,7 +412,8 @@
   list-style-type: none !important;
 }
 .app-sidebar .sidebar-menu .nested[aria-expanded=true] {
-  max-height: 100vh !important;
+  max-height: -moz-max-content !important;
+  max-height: max-content !important;
 }
 .app-sidebar .sidebar-menu .nested a {
   padding-left: 3.1rem !important;

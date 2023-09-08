@@ -1,4 +1,4 @@
-<x-mail::message>
+<x-mail::message :logo="$logo">
 # Calendar Event
 Today is the day!
 <div class="calendar-event">

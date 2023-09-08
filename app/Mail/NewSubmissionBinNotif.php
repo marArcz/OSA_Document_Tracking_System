@@ -2,6 +2,7 @@
 
 namespace App\Mail;
 
+use App\Models\AppSettings;
 use App\Models\SubmissionBin;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -40,7 +41,8 @@ class NewSubmissionBinNotif extends Mailable
         return new Content(
             markdown: 'emails.unit_heads.submission_bin_created',
             with: [
-                'url' => route('unit_head.submission_bin', ['id' => $this->submissionBin->id])
+                'url' => route('unit_head.submission_bin', ['id' => $this->submissionBin->id]),
+                'logo' => AppSettings::first()->logo,
             ]
         );
     }

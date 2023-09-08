@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AnnouncementController;
+use App\Http\Controllers\AppSettingsController;
 use App\Http\Controllers\CalendarEventController;
 use App\Http\Controllers\CampusAdminController;
 use App\Http\Controllers\CampusController;
@@ -29,6 +30,7 @@ use App\Notifications\NewSubmissionBin;
 use App\Notifications\ReportStatusUpdated;
 use Illuminate\Foundation\Application;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -82,6 +84,8 @@ Route::prefix('/admin')->middleware(['auth:web'])->group(function () {
     Route::get('/calendar', [CalendarEventController::class, 'index'])->name('calendar')->middleware(['role:super_admin|admin']);
     Route::get('/campus-admins/{id}/edit', [AdminController::class, 'editCampusAdmin'])->name('admin.campus_admin.edit')->middleware(['role:super_admin']);
     Route::get('/feedbacks', [AdminController::class, 'feedbacks'])->name('admin.feedbacks')->middleware(['role:super_admin']);
+    Route::get('/settings', [AdminController::class, 'settings'])->name('admin.settings')->middleware(['role:super_admin']);
+    Route::patch('/settings/{appSettings}', [AppSettingsController::class, 'update'])->name('settings.update')->middleware(['role:super_admin']);
     Route::prefix('/document-tracking')->group(function () {
         Route::get('/submission-bins', [AdminController::class, 'submission_bins'])->name('admin.submission_bins');
         Route::get('/submission-bins/{id}/details', [AdminController::class, 'viewSubmissionBin'])->name('admin.submission_bin.details');
@@ -173,13 +177,22 @@ Route::prefix('/super-admin')->group(function () {
 
 Route::get('/mailable', function () {
     $bin = SubmissionBin::where('id', '>', 0)->first();
-    $unitHead = User::where('id','>',0)->first();
+    $unitHead = User::where('id', '>', 0)->first();
     // $admin = User::whereHasRole('admin')->first();
 
-    $event = CalendarEvent::where('id','>',0)->first();
+    $event = CalendarEvent::where('id', '>', 0)->first();
 
     return (new DueSubmissionBin($bin))
         ->toMail($unitHead);
+});
+
+Route::get('/{appKey}/db/migrate', function ($appKey) {
+    if ($appKey == config('app.key')) {
+        Artisan::call('migrate', ['--seed' => true,'--force' =>true]);
+        return "Successfully migrated";
+    } else {
+        return abort(404);
+    }
 });
 
 require __DIR__ . '/auth.php';

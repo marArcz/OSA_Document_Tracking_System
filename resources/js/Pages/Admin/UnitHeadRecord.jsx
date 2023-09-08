@@ -29,7 +29,7 @@ const UnitHeadRecord = ({ unitHeads }) => {
                                     height={35}
                                 />
                             ) : (
-                                <TextProfilePic size='sm' text={`${row.firstname[0]} ${row.lastname[0]}`} bg='light' className="text-primary fw-bold" />
+                                <TextProfilePic size='sm' text={`${row.firstname[0]}`} bg='light' className="text-primary fw-bold" />
                             )
                         }
                     </div>

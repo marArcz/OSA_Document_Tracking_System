@@ -10,6 +10,7 @@ import googleCalendarPlugin from '@fullcalendar/google-calendar'
 import interactionPlugin from '@fullcalendar/interaction'
 import { Link } from '@inertiajs/react'
 import CalendarCard from './CalendarCard'
+import AnnouncementsCard from './AnnouncementsCard'
 
 const SuperAdminDashboard = () => {
     const [campuses, setCampuses] = useState([]);
@@ -72,7 +73,8 @@ const SuperAdminDashboard = () => {
                    <CalendarCard viewButton className='mt-3'/>
                 </Col>
                 <Col lg={3}>
-                    <Card className='border-0 p-3 shadow-sm'>
+                    <AnnouncementsCard link={route('admin.announcements')} />
+                    {/* <Card className='border-0 p-3 shadow-sm'>
                         <Card.Body>
                             <p className='fs-6 fw-bold text-sm text-black-50'>Announcements</p>
                             {
@@ -83,7 +85,7 @@ const SuperAdminDashboard = () => {
                                 ))
                             }
                         </Card.Body>
-                    </Card>
+                    </Card> */}
                 </Col>
             </Row>
 

@@ -432,7 +432,7 @@ $profile-photo-sizes: (
             list-style-type: none !important;
 
             &[aria-expanded=true] {
-                max-height: 100vh !important;
+                max-height: max-content !important;
             }
 
             a {

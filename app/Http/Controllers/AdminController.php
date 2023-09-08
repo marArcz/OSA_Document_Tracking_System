@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Admin;
 use App\Models\Announcement;
+use App\Models\AppSettings;
 use App\Models\Campus;
 use App\Models\Classification;
 use App\Models\Designation;
@@ -255,5 +256,10 @@ class AdminController extends Controller
     public function feedbacks(Request $request){
         $data['feedbacks'] = Feedback::with(['user'])->get();
         return Inertia::render('Admin/Feedbacks',$data);
+    }
+
+    public function settings(){
+        $data['settings'] = AppSettings::first();
+        return Inertia::render('Admin/Settings',$data);
     }
 }

@@ -1,4 +1,4 @@
-<x-mail::message>
+<x-mail::message :logo="$logo">
 <div class="">
 <a href="{{$url_submission_bin}}" class="flex">
 <span>{{$report->submission_bin->title}}</span>

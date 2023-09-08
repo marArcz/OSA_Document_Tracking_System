@@ -2,6 +2,7 @@
 
 namespace App\Mail;
 
+use App\Models\AppSettings;
 use App\Models\CalendarEvent;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -39,8 +40,9 @@ class CalendarEventMail extends Mailable
     {
         return new Content(
             markdown: 'mail.calendar-event-mail',
-            with:[
-                'url'=> config('app.url'),
+            with: [
+                'url' => config('app.url'),
+                'logo' => AppSettings::first()->logo
             ]
         );
     }

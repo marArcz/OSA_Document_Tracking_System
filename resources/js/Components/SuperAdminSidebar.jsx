@@ -4,12 +4,75 @@ import SidebarComponent, { NavType } from './SidebarComponent'
 import { Link } from '@inertiajs/react'
 import axios from 'axios'
 import { useNavMenuLoadedState, useNavMenuState } from '@/States/States'
+import Downloadables from '@/constants/downloadables.json';
+import FileIcon from './FileIcon'
+// import listReactFiles from 'list-react-files'
 
 const SuperAdminSidebar = ({ isActive, activeLink, setShowFeedbackModal }) => {
     const url = window.location.href;
     const [classifications, setClassifications] = useState([])
     const { navList, setNavList } = useNavMenuState()
     const { isLoaded, setIsLoaded } = useNavMenuLoadedState()
+    const downloadableNav = [];
+
+    const folders = Object.keys(Downloadables);
+
+    for (let folder of folders) {
+        var navLinks = [];
+        for (let downloadable of Downloadables[folder]) {
+            if (typeof downloadable == 'string') {
+                let navLink = {
+                    type: NavType.DOWNLOADABLE,
+                    text: (
+                        <small>{downloadable}</small>
+                    ),
+                    icon: (
+                        <FileIcon size='xs' file={{ name: `${downloadable}`, uri: `/downloadables/${folder.toUpperCase()}/${downloadable}` }} />
+                    ),
+                    downloadable: `/downloadables/${folder.toUpperCase()}/${downloadable}`
+                }
+                navLinks.push(navLink)
+            } else {
+                // if object
+                let subFolders = Object.keys(downloadable);
+                var subNavLinks = [];
+                for (let subFolder of subFolders) {
+                    for (let subDownloadable of downloadable[subFolder]) {
+                        let subNavLink = {
+                            type: NavType.DOWNLOADABLE,
+                            text: (
+                                <small>{subDownloadable}</small>
+                            ),
+                            icon: (
+                                <FileIcon size='xs' file={{ name: `${subDownloadable}`, uri: `/downloadables/${folder.toUpperCase()}/${subFolder}/${subDownloadable}` }} />
+                            ),
+                            downloadable: `/downloadables/${folder.toUpperCase()}/${subFolder}/${subDownloadable}`
+                        }
+                        subNavLinks.push(subNavLink);
+                    }
+                    let navLink = {
+                        type: NavType.DROPDOWN,
+                        text: (
+                            <small>{subFolder}</small>
+                        ),
+                        icon: <i className='fi fi-rr-folder'></i>,
+                        navList: subNavLinks
+                    }
+                    navLinks.push(navLink)
+                }
+            }
+        }
+        let navDropdown = {
+            type: NavType.DROPDOWN,
+            text: folder,
+            icon: <i className='fi fi-rr-folder'></i>,
+            opened: false,
+            navList: navLinks
+        }
+        downloadableNav.push(navDropdown)
+    }
+
+
     const menu = [
         {
             type: NavType.LINK,
@@ -40,13 +103,6 @@ const SuperAdminSidebar = ({ isActive, activeLink, setShowFeedbackModal }) => {
                     opened: false,
                     navList: []
                 },
-                // {
-                //     type: NavType.LINK,
-                //     text: 'Statistics',
-                //     icon: <i className='fi fi-rr-boxes'></i>,
-                //     href: route('admin.submission_bins'),
-                //     urlPath: 'submission-bins'
-                // },
             ]
         },
         {
@@ -100,7 +156,7 @@ const SuperAdminSidebar = ({ isActive, activeLink, setShowFeedbackModal }) => {
         {
             type: NavType.LINK,
             text: 'Unit Heads',
-            icon:<i className='fi fi-rr-user'></i>,
+            icon: <i className='fi fi-rr-user'></i>,
             href: route('admin.unit_heads.records'),
             urlPath: 'unit-heads/records'
         },
@@ -111,7 +167,24 @@ const SuperAdminSidebar = ({ isActive, activeLink, setShowFeedbackModal }) => {
             href: route('calendar'),
             urlPath: 'calendar'
         },
-
+        {
+            type: NavType.DROPDOWN,
+            text: (
+                <span>
+                    Downloadable <small>(ISO 9001_2015)</small>
+                </span>
+            ),
+            icon: <i className='fi fi-rs-document'></i>,
+            opened: false,
+            navList: downloadableNav
+        },
+        {
+            type: NavType.LINK,
+            text: 'Settings',
+            icon: <i className="fi fi-rr-settings"></i>,
+            href: route('admin.settings'),
+            urlPath: 'settings'
+        },
     ];
 
     useEffect(() => {

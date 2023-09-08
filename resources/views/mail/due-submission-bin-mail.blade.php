@@ -1,4 +1,4 @@
-<x-mail::message>
+<x-mail::message :logo="$logo">
 # {{$submissionBin->title}}
 
 <!-- # Submission is due today! -->

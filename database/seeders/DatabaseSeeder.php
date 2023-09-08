@@ -75,5 +75,10 @@ class DatabaseSeeder extends Seeder
         $this->call([
             RolesAndPermission::class,
         ]);
+
+        // create settings
+        DB::table('app_settings')->insert([
+            'logo' => '/images/logo.png',
+        ]);
     }
 }

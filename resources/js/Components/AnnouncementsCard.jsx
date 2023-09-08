@@ -6,7 +6,7 @@ import React, { useEffect, useState } from 'react'
 import { Badge, Button, Card, Col, Image, ListGroup, ListGroupItem, Placeholder, Row } from 'react-bootstrap'
 import ReactTimeAgo from 'react-time-ago';
 
-const AnnouncementsCard = ({ className = "" }) => {
+const AnnouncementsCard = ({ className = "",link=null }) => {
     const [announcements, setAnnouncements] = useState([]);
     const [fetching, setFetching] = useState(true);
     const [isLoaded, setIsLoaded] = useState(false);
@@ -145,7 +145,7 @@ const AnnouncementsCard = ({ className = "" }) => {
                                     ))
                                 }
                                 <Link
-                                    href={route('unit_head.announcements')}
+                                    href={link ?? route('unit_head.announcements')}
                                     className='link-primary text-sm'
                                 >
                                     See All...

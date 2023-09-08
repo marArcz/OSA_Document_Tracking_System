@@ -7,7 +7,8 @@ import { Nav } from 'react-bootstrap'
 export const NavType = {
     LINK: 0,
     DROPDOWN: 1,
-    BUTTON: 2
+    BUTTON: 2,
+    DOWNLOADABLE: 3
 }
 
 const NavLink = ({ item, activeLink }) => {
@@ -18,6 +19,17 @@ const NavLink = ({ item, activeLink }) => {
                 {item.icon}
                 <span>{item.text}</span>
             </Link>
+        </li>
+    )
+}
+const NavDownloadable = ({ item, activeLink }) => {
+    const currentUrl = window.location;
+    return (
+        <li>
+            <a target='_blank' download={true} href={item.downloadable}>
+                {item.icon}
+                <span>{item.text}</span>
+            </a>
         </li>
     )
 }
@@ -86,7 +98,7 @@ const NavDropdown = ({ item, activeLink }) => {
     const matched = 0;
 
     const matchesKey = currentUrl.pathname.split('/')[2] === item.key;
-    const active = isActive(item,activeLink) || matchesKey
+    const active = isActive(item, activeLink) || matchesKey
 
     // console.log('dropdownItemData: ', { item, active })
 
@@ -109,7 +121,11 @@ const NavDropdown = ({ item, activeLink }) => {
                             i.type === NavType.BUTTON ? (
                                 <NavButton key={index} item={i} />
                             ) : (
-                                <NavDropdown activeLink={activeLink} key={index} item={i} />
+                                i.type === NavType.DOWNLOADABLE ? (
+                                    <NavDownloadable activeLink={activeLink} key={index} item={i} />
+                                ) : (
+                                    <NavDropdown activeLink={activeLink} key={index} item={i} />
+                                )
                             )
                         )
                     ))
@@ -120,7 +136,7 @@ const NavDropdown = ({ item, activeLink }) => {
 }
 
 const SidebarComponent = ({ isActive: activeNav, activeLink }) => {
-    const {navList, setNavList} = useNavMenuState()
+    const { navList, setNavList } = useNavMenuState()
     return (
         <div className={`app-sidebar shadow-sm bg-white ${activeNav ? 'active' : ''}`}>
             <div className="sidebar-menu">

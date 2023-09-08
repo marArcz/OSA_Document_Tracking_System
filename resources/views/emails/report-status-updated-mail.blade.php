@@ -1,4 +1,4 @@
-<x-mail::message>
+<x-mail::message :logo="$logo">
 {{$report->submission_bin->title}}
 <hr>
 

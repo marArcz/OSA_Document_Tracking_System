@@ -39,7 +39,7 @@ class SubmissionBinController extends Controller
             $user->notify(new NewSubmissionBin($bin));
         }
 
-        return redirect()->intended(route('admin.submission_bins'))->with('succes', 'Successfully created!');
+        return redirect()->intended(route('admin.submission_bins'))->with('success', 'Successfully created!');
     }
 
     public function edit(Request $request)

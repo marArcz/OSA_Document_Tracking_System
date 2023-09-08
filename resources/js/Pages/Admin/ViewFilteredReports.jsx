@@ -1,9 +1,10 @@
 import ElegantNav from '@/Components/ElegantNav'
 import HeaderTitle from '@/Components/HeaderTitle'
 import CustomSelectDropdown from '@/Components/SignInDropdownButton'
+import TextProfilePic from '@/Components/TextProfilePic'
 import UnitHeadReportCard from '@/Components/UnitHeadReportCard'
 import PanelLayout from '@/Layouts/PanelLayout'
-import { router, usePage } from '@inertiajs/react'
+import { Link, router, usePage } from '@inertiajs/react'
 import axios from 'axios'
 import { format } from 'date-fns'
 import React, { useEffect, useState } from 'react'
@@ -87,58 +88,73 @@ const ViewFilteredReports = ({ designation, campus, submissionBins }) => {
         >
 
             <div className="px-[1.5rem] py-3">
-                <Card className='border-0 shadow-sm rounded-0 mb-2'>
-                    <Card.Body>
-                        <p className='fw-bold'>Select submission bin</p>
-                        <div className="w-100">
-                            <CustomSelectDropdown
-                                selected={{ value: submissionBin.id, text: submissionBin.title }}
-                                handleSelect={onSelect}
-                                size='sm'
-                                rounded
-                                textAlign='start'
-                                className={'my-0'}
-                                menu={submissionBins.map((item) => ({ value: item.id, text: item.title }))}
-                            />
-                        </div>
-                    </Card.Body>
-                </Card>
-                <Card className='border-0 shadow-sm rounded-0 mb-2'>
-                    <Card.Body>
-                        <p className='flex items-center text-lg my-0'>
-                            <i className='fi fi-rr-box me-2'></i>
-                            {submissionBin.title}
-                        </p>
-                        <div className="text-secondary">
-                            {
-                                submissionBin.deadline_date ? (
-                                    <p className="text-sm mt-3 mb-0">
-                                        Due {format(new Date(submissionBin.deadline_date), 'MMM d, Y / hh:mm aaa')}
+                {
+                    submissionBins.length > 0 ? (
+                        <>
+                            <Card className='border-0 shadow-sm rounded-0 mb-2'>
+                                <Card.Body>
+                                    <p className='fw-bold'>Select submission bin</p>
+                                    <div className="w-100">
+                                        <CustomSelectDropdown
+                                            selected={{ value: submissionBin?.id, text: submissionBin?.title }}
+                                            handleSelect={onSelect}
+                                            size='sm'
+                                            rounded
+                                            textAlign='start'
+                                            className={'my-0'}
+                                            menu={submissionBins.map((item) => ({ value: item.id, text: item.title }))}
+                                        />
+                                    </div>
+                                </Card.Body>
+                            </Card>
+                            <Card className='border-0 shadow-sm rounded-0 mb-2'>
+                                <Card.Body>
+                                    <p className='flex items-center text-lg my-0'>
+                                        <i className='fi fi-rr-box me-2'></i>
+                                        {submissionBin?.title}
                                     </p>
-                                ) : (
-                                    <p className='mt-3 mb-0 text-sm'>
-                                        No deadline.
-                                    </p>
-                                )
-                            }
-                        </div>
-                        <hr />
+                                    <div className="text-secondary">
+                                        {
+                                            submissionBin?.deadline_date ? (
+                                                <p className="text-sm mt-3 mb-0">
+                                                    Due {format(new Date(submissionBin?.deadline_date), 'MMM d, Y / hh:mm aaa')}
+                                                </p>
+                                            ) : (
+                                                <p className='mt-3 mb-0 text-sm'>
+                                                    No deadline.
+                                                </p>
+                                            )
+                                        }
+                                    </div>
+                                    <hr />
 
-                        {
-                            submissionBin.instruction ? (
-                                <>
-                                    <p className='text-sm text-secondary my-1'>
-                                        {submissionBin.instruction}
-                                    </p>
-                                </>
-                            ) : (
-                                <p className='text-sm text-black-50 my-1'>
-                                    No instruction.
-                                </p>
-                            )
-                        }
-                    </Card.Body>
-                </Card>
+                                    {
+                                        submissionBin?.instruction ? (
+                                            <>
+                                                <p className='text-sm text-secondary my-1'>
+                                                    {submissionBin?.instruction}
+                                                </p>
+                                            </>
+                                        ) : (
+                                            <p className='text-sm text-black-50 my-1'>
+                                                No instruction.
+                                            </p>
+                                        )
+                                    }
+                                </Card.Body>
+                            </Card>
+                        </>
+                    ) : (
+                        <Card className='border-0 shadow-sm rounded-0 mb-3'>
+                            <Card.Body>
+                                <p className='fw-bold'>No Submission bin found.</p>
+                                <Link href={route('admin.create_submission_bin')}>
+                                    Create Now
+                                </Link>
+                            </Card.Body>
+                        </Card>
+                    )
+                }
                 <Card className='border-0 shadow-sm rounded-0'>
                     <Card.Body className='p-lg-4 p-4'>
                         <div className="">
@@ -209,12 +225,18 @@ const ViewFilteredReports = ({ designation, campus, submissionBins }) => {
                                                                     onClick={() => setSelectedUnitHead(unitHead)}
                                                                     className={`flex gap-3 items-center py-2 px-2 rounded-pill cursor-pointer ${unitHead.id == selectedUnitHead?.id ? 'bg-light-primary' : ''}`}
                                                                 >
-                                                                    <Image
-                                                                        src={unitHead.image}
-                                                                        width={30}
-                                                                        height={30}
-                                                                        roundedCircle
-                                                                    />
+                                                                    {
+                                                                        unitHead.image ? (
+                                                                            <Image
+                                                                                src={unitHead.image}
+                                                                                width={30}
+                                                                                height={30}
+                                                                                roundedCircle
+                                                                            />
+                                                                        ) : (
+                                                                            <TextProfilePic size='sm' text={`${unitHead.firstname[0]}`} bg='light' className="text-primary fw-bold" />
+                                                                        )
+                                                                    }
                                                                     <p className="my-0">
                                                                         {unitHead.firstname} {unitHead.lastname}
                                                                     </p>
