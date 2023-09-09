@@ -95,7 +95,7 @@ const Calendar = ({ auth, events: allEvents }) => {
                             <Card.Body className='p-4 text-sm'>
 
                                 <FullCalendar
-
+                                    handleWindowResize
                                     plugins={[dayGridPlugin, interactionPlugin]}
                                     initialView="dayGridMonth"
                                     weekends:false
@@ -105,10 +105,13 @@ const Calendar = ({ auth, events: allEvents }) => {
                                     dayMaxEventRows={3}
                                     eventDrop={e => console.log(e)}
                                     headerToolbar={{
-                                        left: 'dayGridMonth today',
-                                        center: 'title',
+                                        left: 'title',
+                                        center: '',
                                         right: 'prev,next'
                                     }}
+                                    titleFormat={
+                                        { year: 'numeric', month: 'short'}
+                                    }
                                     eventClick={onEventSelect}
                                     selectable
                                     select={onSelectDate}

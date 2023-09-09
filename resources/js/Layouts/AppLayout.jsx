@@ -11,11 +11,11 @@ const AppLayout = ({ children, auth }) => {
     const [showPageLoader, setShowPageLoader] = useState(true)
     const { auth: authPageProps } = usePage().props;
     const { isMobile, setIsMobile } = useWindowState();
-    const {isNavActive, setNavActive} = useNavState();
+    const { isNavActive, setNavActive } = useNavState();
     const handleResize = () => setIsMobile(window.innerWidth <= 900);
     router.on('finish', () => {
-        if(isMobile){
-            setNavActive(!isNavActive);
+        if (isMobile) {
+            setNavActive(true);
         }
     })
     useEffect(() => {

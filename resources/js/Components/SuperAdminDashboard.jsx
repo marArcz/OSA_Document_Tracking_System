@@ -54,23 +54,73 @@ const SuperAdminDashboard = () => {
                 <Col>
                     <Row className='gy-3 gx-3'>
                         {
-                            campuses.map((campus, index) => (
-                                <Col key={index} lg={6} md={6} xs={6}>
-                                    {/* submission bins */}
-                                    <DashboardCard
-                                        label='Unit Heads'
-                                        subLabel={campus.name}
-                                        value={campus.unit_heads?.length ?? 0}
-                                        variant='success'
-                                        key={index}
-                                        icon={<i className='fi fi-rr-user fs-5'></i>}
-                                    />
-                                </Col>
-                            ))
+                            fetchingCampus ? (
+                                <>
+                                    <Col lg={6} md={6} xs={6}>
+                                        {/* submission bins */}
+                                        <DashboardCard
+                                            label='Unit Heads'
+                                            subLabel="..."
+                                            value="..."
+                                            variant='success'
+                                            icon={<i className='fi fi-rr-user fs-5'></i>}
+                                        />
+                                    </Col>
+                                    <Col lg={6} md={6} xs={6}>
+                                        {/* submission bins */}
+                                        <DashboardCard
+                                            label='Unit Heads'
+                                            subLabel="..."
+                                            value="..."
+                                            variant='success'
+                                            icon={<i className='fi fi-rr-user fs-5'></i>}
+                                        />
+                                    </Col>
+                                    <Col lg={6} md={6} xs={6}>
+                                        {/* submission bins */}
+                                        <DashboardCard
+                                            label='Unit Heads'
+                                            subLabel="..."
+                                            value="..."
+                                            variant='success'
+                                            icon={<i className='fi fi-rr-user fs-5'></i>}
+                                        />
+                                    </Col>
+                                    <Col lg={6} md={6} xs={6}>
+                                        {/* submission bins */}
+                                        <DashboardCard
+                                            label='Unit Heads'
+                                            subLabel="..."
+                                            value="..."
+                                            variant='success'
+                                            icon={<i className='fi fi-rr-user fs-5'></i>}
+                                        />
+                                    </Col>
+                                </>
+                            ) : (
+                                <>
+                                    {
+                                        campuses.map((campus, index) => (
+                                            <Col key={index} lg={6} md={6} xs={6}>
+                                                {/* submission bins */}
+                                                <DashboardCard
+                                                    label='Unit Heads'
+                                                    subLabel={campus.name}
+                                                    value={campus.unit_heads?.length ?? 0}
+                                                    variant='success'
+                                                    key={index}
+                                                    icon={<i className='fi fi-rr-user fs-5'></i>}
+                                                />
+                                            </Col>
+                                        ))
+                                    }
+                                </>
+                            )
                         }
 
+
                     </Row>
-                   <CalendarCard viewButton className='mt-3'/>
+                    <CalendarCard viewButton className='mt-3' />
                 </Col>
                 <Col lg={3}>
                     <AnnouncementsCard link={route('admin.announcements')} />

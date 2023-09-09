@@ -1,4 +1,5 @@
 import ConfirmModal from '@/Components/ConfirmModal'
+import { TextButton } from '@/Components/CustomBtn'
 import ModalComponent from '@/Components/ModalComponent'
 import PanelLayout, { LayoutType } from '@/Layouts/PanelLayout'
 import { Head, Link, router } from '@inertiajs/react'
@@ -114,14 +115,18 @@ const Announcements = ({ auth, announcements: announcementList }) => {
                                     </div>
                                 )
                             }
+                            <hr />
+                            <div className="text-end">
+                                <TextButton text='Close' onClick={closeViewModal}/>
+                            </div>
                         </div>
                     )
                 }
             </ModalComponent>
             <ConfirmModal processing={processing} show={showConfirmModal} handleClose={() => setShowConfirmModal(false)} onConfirm={onConfirm} onCancel={() => setShowConfirmModal(false)} />
-            <div className='py-3'>
-                <div className="px-[1.5rem]">
-                    <Card className='border-0 shadow-sm mt-3 p-lg-3 p-3'>
+            <div className=''>
+                <div className="content-wrapper">
+                    <Card className='border-0 shadow-sm mt-3 p-lg-3 p-2'>
                         <Card.Header className='bg-white bg-opacity-80 pb-3'>
                             <div className="lg:flex justify-content-between items-center">
                                 <div className='my-1'>

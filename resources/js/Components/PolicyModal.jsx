@@ -37,10 +37,10 @@ const PolicyModal = ({ show, handleClose }) => {
                 onHide={handleClose}
             // backdrop={processing}
             >
-                <Modal.Header closeVariant='white' closeButton className='bg-primary text-light fw-bold fs-6 py-3 px-4'>
+                <Modal.Header closeVariant='white' closeButton className='bg-primary text-light fw-bold fs-6 rounded-1 py-3 px-4'>
                     Privacy Policy
                 </Modal.Header>
-                <Modal.Body className='p-4  bg-light'>
+                <Modal.Body className='p-3 p-lg-4  bg-light'>
                     {
                         processing ? (
                             <div className=''>

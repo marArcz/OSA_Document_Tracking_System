@@ -74,10 +74,10 @@ const Admins = ({ campus_admins }) => {
 
     return (
         <PanelLayout headerTitle="Campus Admins" defaultActiveLink='admins'>
-            <div className="py-3 px-[1.5rem]">
+            <div className="content-wrapper">
                 <CardComponent>
                     <Card.Body>
-                        <div className=' flex align-items-center gap-4'>
+                        <div className=' flex-wrap flex align-items-center gap-3'>
                             <div>
                                 <Link className='link-primary nav-link' href={route('admin.admins.create')}>
                                     <div className="flex gap-2 items-center fw-medium text-sm">

@@ -162,7 +162,7 @@
 .app-header {
   width: 100%;
   transition: 300ms;
-  z-index: 7 !important;
+  z-index: 10 !important;
   top: 0;
 }
 .app-header .navbar {
@@ -172,7 +172,7 @@
   margin-left: 17.5rem !important;
   height: 4.5rem;
   transition: 300ms;
-  z-index: 10 !important;
+  z-index: 15 !important;
 }
 .app-header .sub-header {
   z-index: 7 !important;
@@ -621,6 +621,11 @@ a {
 .content-wrapper {
   padding: 1.3rem 1.5rem !important;
 }
+@media screen and (max-width: 600px) {
+  .content-wrapper {
+    padding: 0.9rem 0.8rem !important;
+  }
+}
 
 .custom-select {
   position: relative;
@@ -686,8 +691,6 @@ a {
   top: 1.5rem;
   padding-top: 3rem !important;
   z-index: 2;
-  height: -moz-max-content;
-  height: max-content;
   box-shadow: 1px 1px 5px rgb(186, 184, 184);
   width: 100%;
   max-width: 100% !important;
@@ -699,6 +702,8 @@ a {
 }
 .custom-select .select-menu[aria-expanded=true] {
   max-height: 100vh;
+  height: -moz-min-content;
+  height: min-content;
   display: block;
 }
 .custom-select .select-menu .select-menu-item {

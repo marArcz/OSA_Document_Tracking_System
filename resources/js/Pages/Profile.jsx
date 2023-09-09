@@ -130,7 +130,7 @@ const Profile = ({ auth, }) => {
                 }
             </TransparentModal>
             <ImageUploader show={showImageUploader} closeOnComplete handleClose={() => setShowImageUploader(false)} onCompleted={(img) => setData('image', img)} />
-            <div className="py-3 px-[1.5rem]">
+            <div className="content-wrapper">
                 <CardComponent>
                     <Card.Body>
                         <Form onSubmit={onSubmit}>

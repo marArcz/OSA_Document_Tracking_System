@@ -72,17 +72,7 @@ const SubmissionBins = ({ auth, submission_bins, rows, reports = [] }) => {
     const onConfirmDelete = () => {
         setShowConfirmModal(false)
         if (id) {
-            // axios.delete(`/submissionBins/${id}`)
-            //     .then((res) => {
-            //         let bins = submissionBins.filter((row, index) => row.id !== id)
-            //         bins = bins.sort((a, b) => b.id - a.id)
-            //         setLastRowId(bins[bins.length - 1].id);
-            //         setSubmissionBins(bins)
-            //         setShowConfirmModal(false)
 
-            //         setId(null)
-            //         toast.success('Successfully deleted!');
-            //     })
             router.delete(route('submission_bins.delete', { id }), {
                 preserveState: false
             });
@@ -132,16 +122,27 @@ const SubmissionBins = ({ auth, submission_bins, rows, reports = [] }) => {
                     />
                 )
             }
-            <div className='py-3 px-[1.5rem]'>
-                <div className="flex justify-between items-end">
-                    <div>
-                        <Link href={route('admin.create_submission_bin')} variant='primary' className='btn btn-primary rounded-pill py-2 px-3 mt-3'>
-                            <i className='bx bx-plus'></i> Create
-                        </Link>
-                        <p className="text-sm mt-3 text-secondary">This is where you can create submission bins for the accomplishment reports of unit heads.</p>
-                    </div>
-                </div>
+            <div className='content-wrapper'>
+                {
+                    auth.role === 'super_admin' ? (
+                        <>
+                            <div className="flex justify-between items-end">
+                                <div>
+                                    <Link href={route('admin.create_submission_bin')} variant='primary' className='btn btn-primary rounded-pill py-2 px-3 mt-3'>
+                                        <i className='bx bx-plus'></i> Create
+                                    </Link>
+                                    <p className="text-sm mt-3 text-secondary">This is where you can create submission bins for the accomplishment reports of unit heads.</p>
+                                </div>
+                            </div>
+                        </>
+                    ) : (
+                        <>
+                            <p className="text-sm mt-3 text-secondary">Submission bins for the accomplishment reports of unit heads.</p>
+                        </>
+                    )
+                }
                 <hr />
+
                 <div className="mb-3">
                     <Form onSubmit={onSearchSubmit}>
                         <div className="flex">

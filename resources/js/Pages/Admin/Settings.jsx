@@ -61,9 +61,9 @@ const Settings = ({ settings }) => {
             defaultActiveLink={"settings"}
         >
             <Head title='Settings' />
-            <ContentWrapper>
+            <div className='content-wrapper'>
                 <Card className='border-0 shadow-sm'>
-                    <Card.Body className='p-4'>
+                    <Card.Body className='p-lg-4 p-3'>
                         <Form onSubmit={onSubmit}>
                             <Image
                                 src={data.logo}
@@ -111,7 +111,7 @@ const Settings = ({ settings }) => {
                         </Form>
                     </Card.Body>
                 </Card>
-            </ContentWrapper>
+            </div>
 
         </PanelLayout>
     )

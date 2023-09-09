@@ -94,7 +94,7 @@ const NavbarComponent = ({ isActive, setIsActive, headerTitle }) => {
                                     </div>
                                     <Nav className='flex-column px-3 mt-2'>
                                         <Nav.Item>
-                                            <Nav.Link as={Link} href={route('profile.edit')} className='link-secondary'>
+                                            <Nav.Link preserveScroll={false} as={Link} href={route('profile.edit')} className='link-secondary'>
                                                 Profile
                                             </Nav.Link>
                                         </Nav.Item>

@@ -21,7 +21,7 @@ const CreateAdmin = ({ campuses }) => {
 
     return (
         <PanelLayout headerTitle="Campus Admin" defaultActiveLink="admins">
-            <div className="py-3 px-[1.5rem]">
+        <div className="content-wrapper">
                 <CardComponent>
                     <Card.Body>
                         <Form onSubmit={onSubmit}>
@@ -70,7 +70,7 @@ const CreateAdmin = ({ campuses }) => {
                                 <Row className='gy-3'>
                                     <Col lg>
                                         <Form.Label>
-                                            <div className="flex gap-2 items-center">
+                                            <div className="flex gap-2 items-center flex-wrap">
                                                 <span className="text-sm text-danger ">*</span>
                                                 <Image
                                                     src='/images/google.png'

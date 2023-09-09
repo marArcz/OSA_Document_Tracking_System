@@ -100,8 +100,8 @@ const UnitHeadRecord = ({ unitHeads }) => {
 
     return (
         <PanelLayout headerTitle="Unit Heads" defaultActiveLink="unit-heads/records">
-            <div className="py-3 px-[1.5rem]">
-                <Card className='border-0 shadow-sm py-2 px-3'>
+            <div className="content-wrapper">
+                <Card className='border-0 shadow-sm py-2 px-2 px-lg-3'>
                     <Card.Body>
                         <div className="flex justify-between items-center mb-3">
                             <div>
@@ -109,7 +109,7 @@ const UnitHeadRecord = ({ unitHeads }) => {
                             </div>
                         </div>
                         <div className="mb-2">
-                            <div className=' flex align-items-center gap-4'>
+                            <div className=' flex align-items-center gap-4 flex-wrap'>
                                 <div>
                                     <Link className='link-primary nav-link' href={route('admin.unit_heads.create')}>
                                         <div className="flex gap-2 items-center fw-medium text-sm">

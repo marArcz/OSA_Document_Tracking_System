@@ -96,7 +96,7 @@ $profile-photo-sizes: (
 .app-header {
     width: 100%;
     transition: 300ms;
-    z-index: 7 !important;
+    z-index: 10 !important;
     top: 0;
 
     .navbar {
@@ -106,7 +106,7 @@ $profile-photo-sizes: (
         margin-left: $sidebar-w-active !important;
         height: $navbar-h;
         transition: 300ms;
-        z-index: 10 !important;
+        z-index: 15 !important;
     }
 
     .sub-header {
@@ -709,6 +709,10 @@ a {
 
 .content-wrapper {
     padding: 1.3rem 1.5rem !important;
+
+    @media screen and (max-width:600px) {
+        padding: 0.9rem 0.8rem !important;
+    }
 }
 
 .custom-select {
@@ -789,7 +793,6 @@ a {
         top: 1.5rem;
         padding-top: 3rem !important;
         z-index: 2;
-        height: max-content;
         box-shadow: 1px 1px 5px rgb(186, 184, 184);
         width: 100%;
         max-width: 100% !important;
@@ -801,6 +804,7 @@ a {
 
         &[aria-expanded=true] {
             max-height: 100vh;
+            height: min-content;
             display: block;
         }
 

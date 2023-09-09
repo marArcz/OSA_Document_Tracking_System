@@ -87,7 +87,7 @@ const ViewFilteredReports = ({ designation, campus, submissionBins }) => {
             )}
         >
 
-            <div className="px-[1.5rem] py-3">
+            <div className="content-wrapper">
                 {
                     submissionBins.length > 0 ? (
                         <>

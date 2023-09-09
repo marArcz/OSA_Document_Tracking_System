@@ -14,7 +14,7 @@ import { Alert, Card, Col, Row } from 'react-bootstrap';
 export default function Dashboard({ auth }) {
     return (
         <PanelLayout userAuth={auth} defaultActiveLink="dashboard">
-            <ContentWrapper>
+            <div className='content-wrapper'>
                 {
                     auth.role === 'unit_head' ? (
                         <UnitHeadDashboard />
@@ -26,7 +26,7 @@ export default function Dashboard({ auth }) {
                         )
                     )
                 }
-            </ContentWrapper>
+            </div>
         </PanelLayout>
     );
 }

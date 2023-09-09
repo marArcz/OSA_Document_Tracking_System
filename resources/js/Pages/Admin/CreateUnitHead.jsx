@@ -23,7 +23,7 @@ const CreateUnitHead = ({ auth, classifications, campuses }) => {
 
     return (
         <PanelLayout headerTitle="Unit Heads" defaultActiveLink="unit-heads/records">
-            <div className="px-[1.5rem] py-3">
+            <div className="content-wrapper">
                 <p className='fw-bold my-1 text-secondary fs-6'>Creating New Unit Head</p>
                 {auth.user.campus_id && (
                     <p className='my-1 text-sm text-secondary fw-bold'>{auth.user.campus?.name} Campus</p>
@@ -62,9 +62,9 @@ const CreateUnitHead = ({ auth, classifications, campuses }) => {
                                     </Col>
                                 </Row>
                                 <Row className='gy-3 mb-3'>
-                                    <Col lg>
+                                    <Col lg={12}>
                                         <Form.Label className='text-secondary'>
-                                            <div className="flex gap-2 items-center">
+                                            <div className="flex flex-wrap gap-2 items-center">
                                                 <span className="text-sm text-danger ">*</span>
                                                 <Image
                                                     src='/images/google.png'
@@ -86,7 +86,7 @@ const CreateUnitHead = ({ auth, classifications, campuses }) => {
                                         />
                                         <p className="mb-0 mt-2 text-sm text-danger">{errors?.email}</p>
                                     </Col>
-                                    <Col>
+                                    <Col xs={12} lg={6}>
                                         <Form.Label className='text-secondary'>Classification:</Form.Label>
                                         <Form.Select value={classificationIndex} onChange={e => setClassificationIndex(e.target.value)}>
                                             {
@@ -96,7 +96,7 @@ const CreateUnitHead = ({ auth, classifications, campuses }) => {
                                             }
                                         </Form.Select>
                                     </Col>
-                                    <Col>
+                                    <Col xs={12} lg={6}>
                                         <Form.Label className='text-secondary'>
                                             <span className="text-sm text-danger me-1">*</span>
                                             Designation:

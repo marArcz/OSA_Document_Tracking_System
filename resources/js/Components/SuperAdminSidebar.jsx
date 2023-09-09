@@ -176,7 +176,8 @@ const SuperAdminSidebar = ({ isActive, activeLink, setShowFeedbackModal }) => {
             ),
             icon: <i className='fi fi-rs-document'></i>,
             opened: false,
-            navList: downloadableNav
+            navList: downloadableNav,
+            key:'downloadable'
         },
         {
             type: NavType.LINK,

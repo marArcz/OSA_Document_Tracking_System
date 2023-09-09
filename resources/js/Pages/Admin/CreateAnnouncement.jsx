@@ -23,7 +23,7 @@ const CreateAnnouncement = ({ auth }) => {
             <ImageUploader closeOnComplete onCompleted={imgUrl => setData('image', imgUrl)} show={showUploader} handleClose={() => setShowUploader(false)} />
             <div className='py-3'>
                 <div className="container-fluid">
-                    <Card className='border-0 shadow-sm p-3'>
+                    <Card className='border-0 shadow-sm p-2 p-lg-3'>
                         <Card.Body>
                             <p className="form-text">New Announcement</p>
                             <hr />
