@@ -71,7 +71,7 @@ class UnitHeadController extends Controller
 
     public function submission_bin(Request $request, $id)
     {
-        $submissionBin = SubmissionBin::where('id',$id)->firstOrFailed();
+        $submissionBin = SubmissionBin::where('id',$id)->firstOrFail();
         $data['submissionBin'] = $submissionBin;
         $data['report'] = Report::with(['attachments'])->where('submission_bin_id', $submissionBin->id)->where('user_id', $request->user()->id)->first();
 

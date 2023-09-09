@@ -40,6 +40,16 @@ const CommentsView = ({ user, submissionBin, unitHead, className = "" }) => {
     const [comment, setComment] = useState('')
     const [submittingComment, setSubmittingComment] = useState(false)
 
+    const fetchComments = (commentsData) => {
+        axios.get(`/comments/${unitHead.id}/${submissionBin.id}/get`)
+            .then((res) => {
+                setIsFetchingComments(false)
+                if (JSON.stringify(commentsData) !== JSON.stringify(res.data.comments)) {
+                    setComments(res.data.comments);
+                }
+            })
+            .catch(err => console.log(err))
+    }
     const addComment = (comment) => {
         setSubmittingComment(true)
         var formData = new FormData();
@@ -52,22 +62,9 @@ const CommentsView = ({ user, submissionBin, unitHead, className = "" }) => {
             .then((res) => {
                 setSubmittingComment(false)
                 setComment('')
+                fetchComments();
                 // console.log('add comment: ', res)
             })
-    }
-
-
-
-
-    const fetchComments = (commentsData) => {
-        axios.get(`/comments/${unitHead.id}/${submissionBin.id}/get`)
-            .then((res) => {
-                setIsFetchingComments(false)
-                if (JSON.stringify(commentsData) !== JSON.stringify(res.data.comments)) {
-                    setComments(res.data.comments);
-                }
-            })
-            .catch(err => console.log(err))
     }
 
     useEffect(() => {
@@ -81,7 +78,8 @@ const CommentsView = ({ user, submissionBin, unitHead, className = "" }) => {
 
         var channel = pusher.subscribe(channelName);
         channel.bind('new-comment', function (data) {
-            setComments(comments => ([...comments, data.reportComment]));
+            // setComments(comments => ([...comments, data.reportComment]));
+            fetchComments();
         });
     }, []);
 
