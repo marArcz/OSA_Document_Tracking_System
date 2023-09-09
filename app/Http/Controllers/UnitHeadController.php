@@ -69,10 +69,10 @@ class UnitHeadController extends Controller
         return Inertia::render('UnitHead/UnitHeadReports', $data);
     }
 
-    public function submission_bin(Request $request)
+    public function submission_bin(Request $request, SubmissionBin $submissionBin)
     {
-        $data['submissionBin'] = SubmissionBin::find($request->id);
-        $data['report'] = Report::with(['attachments'])->where('submission_bin_id', $request->id)->where('user_id', $request->user()->id)->first();
+        $data['submissionBin'] = $submissionBin;
+        $data['report'] = Report::with(['attachments'])->where('submission_bin_id', $submissionBin->id)->where('user_id', $request->user()->id)->first();
 
         return Inertia::render('UnitHead/SubmissionBin', $data);
     }

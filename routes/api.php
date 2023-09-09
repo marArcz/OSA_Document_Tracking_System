@@ -3,6 +3,7 @@
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AnnouncementController;
 use App\Http\Controllers\Api\ClassificationController;
+use App\Http\Controllers\AppSettingsController;
 use App\Http\Controllers\CalendarEventController;
 use App\Http\Controllers\CampusController;
 use App\Http\Controllers\NotificationController;
@@ -14,6 +15,7 @@ use App\Http\Controllers\SubmissionBinController;
 use App\Http\Controllers\SuperAdminController;
 use App\Http\Controllers\UnitHeadController;
 use App\Http\Controllers\UsersController;
+use App\Models\AppSettings;
 use App\Models\CalendarEvent;
 use App\Models\Reminder;
 use App\Models\ReportComment;
@@ -130,4 +132,4 @@ Route::prefix('/reminders')->group(function () {
     Route::get('/', [ReminderController::class, 'all']);
 })->middleware(['auth']);
 
-
+Route::get('/policy', [AppSettingsController::class, 'getPolicy']);

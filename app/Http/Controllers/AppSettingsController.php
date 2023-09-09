@@ -15,4 +15,9 @@ class AppSettingsController extends Controller
 
         return redirect()->back()->with('success','Successfully updated settings!');
     }
+
+    public function getPolicy(){
+        $appSettings = AppSettings::first();
+        return response()->json(['policy' => $appSettings->policy]);
+    }
 }

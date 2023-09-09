@@ -23,7 +23,6 @@ const NavLink = ({ item, activeLink }) => {
     )
 }
 const NavDownloadable = ({ item, activeLink }) => {
-    const currentUrl = window.location;
     return (
         <li>
             <a target='_blank' download={true} href={item.downloadable}>
@@ -98,7 +97,7 @@ const NavDropdown = ({ item, activeLink }) => {
     const matched = 0;
 
     const matchesKey = currentUrl.pathname.split('/')[2] === item.key;
-    const active = isActive(item, activeLink) || matchesKey
+    const active =  isActive(item, activeLink) || matchesKey
 
     // console.log('dropdownItemData: ', { item, active })
 
@@ -151,7 +150,11 @@ const SidebarComponent = ({ isActive: activeNav, activeLink }) => {
                                 item.type === NavType.BUTTON ? (
                                     <NavButton key={index} item={item} />
                                 ) : (
-                                    <NavDropdown activeLink={activeLink} key={index} item={item} />
+                                    item.type === NavType.DOWNLOADABLE ? (
+                                        <NavDownloadable activeLink={activeLink} key={index} item={item} />
+                                    ) : (
+                                        <NavDropdown activeLink={activeLink} key={index} item={item} />
+                                    )
                                 )
                             )
                         ))

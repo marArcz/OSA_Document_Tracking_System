@@ -6,6 +6,7 @@ import { Head, useForm } from '@inertiajs/react';
 import React from 'react'
 import { useState } from 'react'
 import { Button, Card, Form, Image } from 'react-bootstrap';
+import ReactQuill from 'react-quill';
 import { toast } from 'react-toastify';
 
 const Settings = ({ settings }) => {
@@ -14,7 +15,7 @@ const Settings = ({ settings }) => {
     const [isUploading, setIsUploading] = useState(false)
     const { data, setData, patch } = useForm({
         logo: settings.logo,
-        policy: settings.policy??''
+        policy: settings.policy ?? ''
     })
 
     const onLogoSelect = (e) => {
@@ -48,6 +49,7 @@ const Settings = ({ settings }) => {
         e.preventDefault();
         patch(route('settings.update', { id: settings.id }))
     }
+
     return (
         <PanelLayout
             headerTitle={(
@@ -69,10 +71,10 @@ const Settings = ({ settings }) => {
                                 fluid
                                 className='mb-3'
                             />
-                            <Form.Label className=' text-secondary fw-semibold'>
-                                {isUploading ? "Uploading image..." : "Change App Logo:"}
+                            <Form.Label className=' text-dark fw-semibold'>
+                                {isUploading ? "Uploading image..." : "App Logo:"}
                             </Form.Label>
-                            <div className="flex mb-3">
+                            <div className="flex mb-4">
                                 <Form.Control
                                     disabled={isUploading}
                                     onChange={onLogoSelect}
@@ -88,6 +90,18 @@ const Settings = ({ settings }) => {
                                     Reset
                                 </Button>
                             </div>
+                            <div className="mb-3">
+                                <Form.Label className='fw-bold'>Privacy Policy</Form.Label>
+                                {/* <textarea
+                                    value={data.policy}
+                                    onChange={e => setData('policy',e.target.value)}
+                                    className='form-control'
+                                    rows={10}
+                                >
+                                </textarea> */}
+                                <ReactQuill theme="snow" value={data.policy} onChange={(value) => setData('policy',value)} />
+                            </div>
+
                             <hr />
                             <div className=" mt-3">
                                 <Button className="rounded-1" variant='primary' type='submit'>

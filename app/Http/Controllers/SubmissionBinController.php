@@ -58,8 +58,8 @@ class SubmissionBinController extends Controller
         $submission_bin = SubmissionBin::where('id', $request->id)->firstOrFail();
         $submission_bin->delete();
 
-        // return redirect()->back()->with('success','Successfully deleted!');
-        return response()->json(['success' => true]);
+        return redirect(route('admin.submission_bins'))->with('success','Successfully deleted!');
+        // return response()->json(['success' => true]);
     }
 
     public function all(Request $request)

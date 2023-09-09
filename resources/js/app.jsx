@@ -14,6 +14,7 @@ import { GoogleOAuthProvider } from '@react-oauth/google';
 import TimeAgo from 'javascript-time-ago';
 import en from 'javascript-time-ago/locale/en.json'
 import ru from 'javascript-time-ago/locale/ru.json'
+import 'react-quill/dist/quill.snow.css';
 
 const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
 // const googleClientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
@@ -24,7 +25,7 @@ TimeAgo.addDefaultLocale(en)
 TimeAgo.addLocale(ru)
 
 createInertiaApp({
-    title: (title) => `${title} - ${appName}`,
+    title: (title) => `${title ? title + ' - ' : title} ${appName}`,
     resolve: (name) => resolvePageComponent(`./Pages/${name}.jsx`, import.meta.glob('./Pages/**/*.jsx')),
     setup({ el, App, props }) {
         const root = createRoot(el);

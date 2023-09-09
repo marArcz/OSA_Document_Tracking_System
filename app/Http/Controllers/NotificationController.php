@@ -30,29 +30,28 @@ class NotificationController extends Controller
     //
     public function general(User $user)
     {
-        // if (!$user) {
-        //     $data['notifications'] = [];
-        //     $data['error'] = "User not found!";
-        // } else {
-        //     if ($user->hasRole('super_admin')) {
-        //         $data['notifications'] = $user->unreadNotifications()
-        //             ->whereIn('type', [
-        //                 NewReportApproved::class,
-        //             ])
-        //             ->get();
-        //     } else if ($user->hasRole('admin')) {
-        //         $data['notifications'] = $user->unreadNotifications()->where('type', NewReportSubmitted::class)->get();
-        //     } else {
-        //         // for unit heads
-        //         $data['notifications'] = $user->unreadNotifications()
-        //             ->whereIn('type', [
-        //                 NewSubmissionBin::class,
-        //                 ReportStatusUpdated::class
-        //             ])
-        //             ->get();
-        //     }
-        // }
-        $data['notifications'] = $user->unreadNotifications()->get();
+        if (!$user) {
+            $data['notifications'] = [];
+            $data['error'] = "User not found!";
+        } else {
+            if ($user->hasRole('super_admin')) {
+                $data['notifications'] = $user->unreadNotifications()
+                    ->whereIn('type', [
+                        NewReportApproved::class,
+                    ])
+                    ->get();
+            } else if ($user->hasRole('admin')) {
+                $data['notifications'] = $user->unreadNotifications()->where('type', NewReportSubmitted::class)->get();
+            } else {
+                // for unit heads
+                $data['notifications'] = $user->unreadNotifications()
+                    ->whereIn('type', [
+                        NewSubmissionBin::class,
+                        ReportStatusUpdated::class
+                    ])
+                    ->get();
+            }
+        }
         return response()->json($data);
     }
 
@@ -64,10 +63,10 @@ class NotificationController extends Controller
             $data['error'] = "User not found!";
         } else {
             $data['notifications'] = $user->unreadNotifications()
-                // ->whereIn('type', [
-                //     NewCalendarEvent::class,
-                //     CalendarEventController::class
-                // ])
+                ->whereIn('type', [
+                    NewCalendarEvent::class,
+                    CalendarEventController::class
+                ])
                 ->get();
         }
         return response()->json($data);

@@ -2,6 +2,7 @@ import React from 'react'
 import SidebarComponent, { NavType } from './SidebarComponent';
 import { useNavMenuLoadedState, useNavMenuState } from '@/States/States';
 import { useEffect } from 'react';
+import NavDownloadable from './NavDownloadable';
 
 const UnitHeadSidebar = ({ isActive, setShowFeedbackModal, activeLink }) => {
     const { setNavList } = useNavMenuState();
@@ -34,9 +35,21 @@ const UnitHeadSidebar = ({ isActive, setShowFeedbackModal, activeLink }) => {
         {
             type: NavType.LINK,
             text: 'Accomplishment Reports',
-            icon: <i className="fi fi-rr-document"></i>,
+            icon: <i className="fi fi-rr-box"></i>,
             href: route('unit_head.reports'),
             urlPath: 'reports',
+        },
+          {
+            type: NavType.DROPDOWN,
+            text: (
+                <span>
+                    Downloadable <small>(ISO 9001_2015)</small>
+                </span>
+            ),
+            icon: <i className='fi fi-rs-document'></i>,
+            opened: false,
+            navList: NavDownloadable(),
+            key:'downloadable'
         },
     ];
 

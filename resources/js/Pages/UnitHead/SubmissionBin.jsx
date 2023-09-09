@@ -149,7 +149,7 @@ const SubmissionBin = ({ submissionBin, auth, report }) => {
                                         </>
                                     ) : (
                                         files.length <= 0 && (
-                                            new Date(submissionBin.deadline_date) < new Date() ? (
+                                            submissionBin.deadline_date && new Date(submissionBin.deadline_date) < new Date() ? (
                                                 <p className="my-0 text-sm fw-bold uppercas text-end text-dang">
                                                      Missing
                                                 </p>

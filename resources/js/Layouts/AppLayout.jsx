@@ -1,6 +1,7 @@
 import PageLoader from '@/Components/PageLoader';
-import { useLoaderState, useThemeState, useUserAuthState } from '@/States/States'
-import { usePage } from '@inertiajs/react';
+import PolicyModal from '@/Components/PolicyModal';
+import { useLoaderState, usePolicyState, useThemeState, useUserAuthState } from '@/States/States'
+import { router, usePage, useRemember } from '@inertiajs/react';
 import React, { Suspense, useEffect, useState } from 'react'
 
 const AppLayout = ({ children, auth }) => {
@@ -8,20 +9,25 @@ const AppLayout = ({ children, auth }) => {
     const { userAuth, setUserAuth } = useUserAuthState();
     const { showLoader, setShowLoader } = useLoaderState();
     const [showPageLoader, setShowPageLoader] = useState(true)
-    const { auth:authPageProps } = usePage().props;
+    const { auth: authPageProps } = usePage().props;
+
 
     useEffect(() => {
-        console.log('auth: ', authPageProps)
         setUserAuth(authPageProps)
-        setTimeout(() => setShowLoader(false), 1000)
+        setTimeout(() => {
+            setShowLoader(false)
+        }, 1000)
+
     }, []);
-    
+
     useEffect(() => {
         document.querySelector('html').setAttribute('data-bs-theme', theme)
     }, [theme])
 
+
     return (
         <div className='app' data-bs-theme={theme}>
+
             <PageLoader show={showLoader} />
             {children}
         </div>

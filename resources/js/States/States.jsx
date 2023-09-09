@@ -30,3 +30,7 @@ export const useNavMenuLoadedState = create((set) => ({
     isLoaded: false,
     setIsLoaded: (st) => set({ isLoadedL: st })
 }))
+export const usePolicyState = create((set) => ({
+    hasReadPolicy: false,
+    setHasReadPolicy: (st) => set({ hasReadPolicy: st })
+}))

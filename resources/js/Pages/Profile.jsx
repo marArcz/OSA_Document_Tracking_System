@@ -35,7 +35,8 @@ const Profile = ({ auth, }) => {
         firstname: user.firstname,
         lastname: user.lastname,
         middlename: user.middlename,
-        phone: user.phone
+        phone: user.phone,
+        email: user.email
     })
 
     const inputElemRef = useRef();
@@ -146,8 +147,8 @@ const Profile = ({ auth, }) => {
                                                 height={150}
                                                 className='m-0 rounded-3'
                                             />
-                                        ):(
-                                            <TextProfilePic  text={`${unitHead.firstname[0]} ${unitHead.lastname[0]}`} bg='light' className="text-primary fw-bold" />
+                                        ) : (
+                                            <TextProfilePic text={`${unitHead.firstname[0]} ${unitHead.lastname[0]}`} bg='light' className="text-primary fw-bold" />
                                         )
                                     }
                                 </Col>
@@ -201,12 +202,22 @@ const Profile = ({ auth, }) => {
                                 </Col>
                                 <Col lg={4}>
                                     <Form.Label className=' text-sm'>Email Address:</Form.Label>
-                                    <Form.Control
-                                        type='text'
-                                        value={auth.user.email}
-                                        readOnly
-                                        disabled
-                                    />
+                                    {
+                                        auth.role === 'super_admin' ? (
+                                            <Form.Control
+                                                type='text'
+                                                value={data.email}
+                                                onChange={e => setData('email', e.target.value)}
+                                            />
+                                        ) : (
+                                            <Form.Control
+                                                type='text'
+                                                value={auth.user.email}
+                                                readOnly
+                                                disabled
+                                            />
+                                        )
+                                    }
                                 </Col>
                             </Row>
                             {
@@ -253,41 +264,6 @@ const Profile = ({ auth, }) => {
                         </Form>
                     </Card.Body>
                 </CardComponent>
-                {/* <CardComponent className='mt-3'>
-                    <Card.Body>
-                        <p className='text-primary fw-bold'>Change Account Password</p>
-                        <Form>
-                            <div className="mb-3">
-                                <Form.Label className='text-sm'>Current Password:</Form.Label>
-                                <Form.Control
-                                    type='password'
-                                    value={currentPassword}
-                                    onChange={e => setCurrentPassword(e.target.value)}
-                                    required
-                                />
-                            </div>
-                            <div className="mb-3">
-                                <Form.Label className='text-sm'>New Password:</Form.Label>
-                                <Form.Control
-                                    type='password'
-                                    value={newPassword}
-                                    onChange={e => setNewPassword(e.target.value)}
-                                    required
-                                />
-                            </div>
-                            <div className="mb-3">
-                                <Form.Label className='text-sm'>Confirm Password:</Form.Label>
-                                <Form.Control
-                                    type='password'
-                                    value={confirmPassword}
-                                    onChange={e => setConfirmPassword(e.target.value)}
-                                    required
-                                />
-                            </div>
-                            <Button variant='primary' className='text-light' size='sm' type='submit'>Change Password</Button>
-                        </Form>
-                    </Card.Body>
-                </CardComponent> */}
             </div>
         </PanelLayout>
     )

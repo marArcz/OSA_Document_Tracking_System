@@ -72,17 +72,20 @@ const SubmissionBins = ({ auth, submission_bins, rows, reports = [] }) => {
     const onConfirmDelete = () => {
         setShowConfirmModal(false)
         if (id) {
-            axios.delete(`/submissionBins/${id}`)
-                .then((res) => {
-                    let bins = submissionBins.filter((row, index) => row.id !== id)
-                    bins = bins.sort((a, b) => b.id - a.id)
-                    setLastRowId(bins[bins.length - 1].id);
-                    setSubmissionBins(bins)
-                    setShowConfirmModal(false)
+            // axios.delete(`/submissionBins/${id}`)
+            //     .then((res) => {
+            //         let bins = submissionBins.filter((row, index) => row.id !== id)
+            //         bins = bins.sort((a, b) => b.id - a.id)
+            //         setLastRowId(bins[bins.length - 1].id);
+            //         setSubmissionBins(bins)
+            //         setShowConfirmModal(false)
 
-                    setId(null)
-                    toast.success('Successfully deleted!');
-                })
+            //         setId(null)
+            //         toast.success('Successfully deleted!');
+            //     })
+            router.delete(route('submission_bins.delete', { id }), {
+                preserveState: false
+            });
         }
     }
 

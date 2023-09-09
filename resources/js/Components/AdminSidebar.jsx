@@ -5,6 +5,7 @@ import { Link, usePage } from '@inertiajs/react'
 import axios from 'axios'
 import FeedBackModal from './FeedBackModal'
 import { useNavMenuLoadedState, useNavMenuState } from '@/States/States'
+import NavDownloadable from './NavDownloadable'
 
 const AdminSidebar = ({ isActive, activeLink, setShowFeedbackModal }) => {
     const url = window.location.href;
@@ -46,6 +47,13 @@ const AdminSidebar = ({ isActive, activeLink, setShowFeedbackModal }) => {
             ]
         },
         {
+            type: NavType.LINK,
+            text: 'Announcements',
+            icon: <i className="fi fi-rr-bullhorn"></i>,
+            href: route('unit_head.announcements'),
+            urlPath: 'announcements',
+        },
+        {
             type: NavType.BUTTON,
             text: 'Suggestion',
             icon: <i className="fi fi-rr-comment-alt"></i>,
@@ -74,6 +82,18 @@ const AdminSidebar = ({ isActive, activeLink, setShowFeedbackModal }) => {
                     urlPath: 'unit-heads/records'
                 },
             ]
+        },
+        {
+            type: NavType.DROPDOWN,
+            text: (
+                <span>
+                    Downloadable <small>(ISO 9001_2015)</small>
+                </span>
+            ),
+            icon: <i className='fi fi-rs-document'></i>,
+            opened: false,
+            navList: NavDownloadable(),
+            key:'downloadable'
         },
     ];
 

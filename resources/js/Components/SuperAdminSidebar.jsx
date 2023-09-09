@@ -133,33 +133,33 @@ const SuperAdminSidebar = ({ isActive, activeLink, setShowFeedbackModal }) => {
             href: route('admin.admins'),
             urlPath: 'admins'
         },
-        // {
-        //     type: NavType.DROPDOWN,
-        //     text: 'Unit Heads',
-        //     icon: <i className="fi fi-rr-users-alt"></i>,
-        //     key: 'unit-heads',
-        //     navList: [
-        //         {
-        //             type: NavType.LINK,
-        //             text: 'Profile',
-        //             href: route('admin.unit_heads.profiles'),
-        //             urlPath: 'unit-heads/profile'
-        //         },
-        //         {
-        //             type: NavType.LINK,
-        //             text: 'Info and Account',
-        //             href: route('admin.unit_heads.records'),
-        //             urlPath: 'unit-heads/records'
-        //         },
-        //     ]
-        // },
         {
-            type: NavType.LINK,
+            type: NavType.DROPDOWN,
             text: 'Unit Heads',
-            icon: <i className='fi fi-rr-user'></i>,
-            href: route('admin.unit_heads.records'),
-            urlPath: 'unit-heads/records'
+            icon: <i className="fi fi-rr-users-alt"></i>,
+            key: 'unit-heads',
+            navList: [
+                {
+                    type: NavType.LINK,
+                    text: 'Profile',
+                    href: route('admin.unit_heads.profiles'),
+                    urlPath: 'unit-heads/profile'
+                },
+                {
+                    type: NavType.LINK,
+                    text: 'Info and Account',
+                    href: route('admin.unit_heads.records'),
+                    urlPath: 'unit-heads/records'
+                },
+            ]
         },
+        // {
+        //     type: NavType.LINK,
+        //     text: 'Unit Heads',
+        //     icon: <i className='fi fi-rr-user'></i>,
+        //     href: route('admin.unit_heads.records'),
+        //     urlPath: 'unit-heads/records'
+        // },
         {
             type: NavType.LINK,
             text: 'Calendar',

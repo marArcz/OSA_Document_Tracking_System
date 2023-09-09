@@ -31,6 +31,9 @@ class ProfileController extends Controller
             $user->lastname = $request->lastname;
             $user->middlename = $request->middlename;
             $user->phone = $request->phone;
+            if ($user->hasRole('super_admin')) {
+                $user->email = $request->email;
+            }
 
             $user->save();
             return redirect()->intended(route('profile.edit'))->with('success', 'Successfully saved changes!');
