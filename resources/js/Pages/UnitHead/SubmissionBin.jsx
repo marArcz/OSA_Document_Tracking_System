@@ -78,7 +78,7 @@ const SubmissionBin = ({ submissionBin, auth, report }) => {
                     )
                 }
             </ModalComponent>
-            <div className="px-[1.5rem] py-3">
+            <div className="content-wrapper">
                 <p className='fs-6 text-primary'>
                     {auth.user?.campus?.name} Campus
                 </p>

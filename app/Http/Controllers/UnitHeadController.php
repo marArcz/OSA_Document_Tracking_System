@@ -69,8 +69,9 @@ class UnitHeadController extends Controller
         return Inertia::render('UnitHead/UnitHeadReports', $data);
     }
 
-    public function submission_bin(Request $request, SubmissionBin $submissionBin)
+    public function submission_bin(Request $request, $id)
     {
+        $submissionBin = SubmissionBin::where('id',$id)->firstOrFailed();
         $data['submissionBin'] = $submissionBin;
         $data['report'] = Report::with(['attachments'])->where('submission_bin_id', $submissionBin->id)->where('user_id', $request->user()->id)->first();
 
@@ -93,7 +94,8 @@ class UnitHeadController extends Controller
 
         return response()->json(['success' => true]);
     }
-    public function calendar(){
+    public function calendar()
+    {
         return Inertia::render('UnitHead/Calendar');
     }
 }

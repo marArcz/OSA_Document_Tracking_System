@@ -75,7 +75,7 @@ const ViewReports = ({ submissionBin, campuses }) => {
                 <HeaderTitle backButton text='Unit Head Report' />
             )}>
 
-            <div className="px-[1.5rem] py-3">
+            <div className="content-wrapper">
                 <Card className='mb-3 border-0 shadow-sm rounded-0'>
                     <Card.Body>
                         <p className='flex items-center text-lg my-0'>

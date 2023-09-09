@@ -87,7 +87,7 @@ const ViewReport = ({ report }) => {
                 }
             </ModalComponent>
             <Head title={report.unit_head.firstname + " " + report.unit_head.lastname + ' | ' + report.submission_bin.title} />
-            <div className="p-3">
+            <div className="content-wrapper">
                 <Row className=' bg-transparent gy-2 gx-2'>
                     <Col>
                         <Card className='border-0 shadow-sm rounded-0 p-2 mb-2'>

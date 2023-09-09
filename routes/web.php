@@ -110,7 +110,7 @@ Route::prefix('/unit-head')->middleware(['auth', 'role:super_admin|admin'])->gro
 
 Route::prefix('/unit-head')->middleware(['auth', 'role:unit_head'])->group(function () {
     Route::get('/reports', [UnitHeadController::class, 'reports'])->name('unit_head.reports');
-    Route::get('/reports/{submissionBin}/submission-bin', [UnitHeadController::class, 'submission_bin'])->name('unit_head.submission_bin');
+    Route::get('/reports/{id}/submission-bin', [UnitHeadController::class, 'submission_bin'])->name('unit_head.submission_bin');
     Route::get('/calendar', [UnitHeadController::class, 'calendar'])->name('unit_head.calendar');
 });
 Route::get('/announcements', [UnitHeadController::class, 'announcements'])->name('unit_head.announcements')->middleware(['role:admin|unit_head']);

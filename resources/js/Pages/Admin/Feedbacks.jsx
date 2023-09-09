@@ -44,7 +44,7 @@ const Feedbacks = ({ feedbacks = [] }) => {
         <PanelLayout
             headerTitle="Feedbacks"
         >
-            <div className="py-3 px-[1.5rem]">
+            <div className="content-wrapper">
                 <DataTable
                     columns={columns}
                     pagination
