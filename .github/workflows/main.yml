@@ -1,5 +1,4 @@
-name: Generate a build and push to another branch
-
+name: install npm packages
 on:
   push:
     branches:
@@ -15,3 +14,5 @@ jobs:
 
       - name: Install all dependencies
         run: npm install
+      - name: Push
+        uses: s0/git-publish-subdir-action@develop
