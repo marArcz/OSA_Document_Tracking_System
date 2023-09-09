@@ -1,13 +1,14 @@
 import CardComponent from '@/Components/CardComponent'
 import TextProfilePic from '@/Components/TextProfilePic'
 import PanelLayout from '@/Layouts/PanelLayout'
-import { Link } from '@inertiajs/react'
+import { Link, router } from '@inertiajs/react'
 import axios from 'axios'
 import React from 'react'
 import { useEffect } from 'react'
 import { useState } from 'react'
 import { Button, Card, Form, Image, Nav, Spinner, Table } from 'react-bootstrap'
 import DataTable from 'react-data-table-component'
+import { toast } from 'react-toastify'
 
 const Admins = ({ campus_admins }) => {
     const [rows, setRows] = useState([...campus_admins])
@@ -72,6 +73,36 @@ const Admins = ({ campus_admins }) => {
         }
     ]
 
+    const deleteBtnClicked = () => {
+        Swal.fire({
+            title: 'Are you sure to delete this admin?',
+            text: "You won't be able to revert this!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, delete it!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                deleteRows();
+            }
+        })
+    }
+    const deleteRows = () => {
+        var formData = new FormData();
+        for (let row of selectedRows) {
+            formData.append('id[]', row.id);
+            axios.post(route('admins.delete.many'), formData, MultipartHeader)
+                .then((res) => {
+                    toast.success('Successfully deleted!');
+                    let newRows = rows.filter((row, index) => !selectedRows.includes(row));
+                    setRows(newRows);
+                    setSelectedRows([]);
+                })
+        }
+    }
+
+
     return (
         <PanelLayout headerTitle="Campus Admins" defaultActiveLink='admins'>
             <div className="content-wrapper">
@@ -93,7 +124,7 @@ const Admins = ({ campus_admins }) => {
                                 </button>
                             </div>
                             <div className='cursor-pointer'>
-                                <button disabled={selectedRows.length == 0} type='button' className="d-flex align-items-center text-decoration-none gap-2 items-center btn btn-link link-danger btn-sm fw-medium text-sm">
+                                <button onClick={deleteBtnClicked} disabled={selectedRows.length == 0} type='button' className="d-flex align-items-center text-decoration-none gap-2 items-center btn btn-link link-danger btn-sm fw-medium text-sm">
                                     <i className='fi fi-rr-trash'></i>
                                     <span>Delete Selected</span>
                                 </button>

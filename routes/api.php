@@ -128,6 +128,8 @@ Route::prefix('/unit_heads')->group(function () {
     Route::post('/delete/many', [UnitHeadController::class, 'deleteMany'])->name('unit_heads.delete.many');
 })->middleware(['auth']);
 
+Route::post('/admins/delete/many', [AdminController::class, 'deleteMany'])->name('admins.delete.many')->middleware(['auth','role:super_admin']);
+
 Route::prefix('/reminders')->group(function () {
     Route::get('/', [ReminderController::class, 'all']);
 })->middleware(['auth']);

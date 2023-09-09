@@ -132,9 +132,9 @@ class AdminController extends Controller
     public function submission_bins(Request $request)
     {
         if ($request->user()->hasRole('admin')) {
-            $data['reports'] = Report::whereIn('user_id',User::select('id')->where('campus_id',$request->user()->campus_id))->where('is_submitted',true)->get();
+            $data['reports'] = Report::whereIn('user_id', User::select('id')->where('campus_id', $request->user()->campus_id))->where('is_submitted', true)->get();
             $data['submission_bins'] = SubmissionBin::limit(10)->orderByDesc('id')->get();
-        }else{
+        } else {
             $data['submission_bins'] = SubmissionBin::with(['approved_reports'])->limit(5)->orderByDesc('id')->get();
         }
         $data['rows'] = count(SubmissionBin::all());
@@ -253,13 +253,27 @@ class AdminController extends Controller
         $data['submissionBin'] = SubmissionBin::find($request->id);
         return Inertia::render('Admin/SubmissionBin', $data);
     }
-    public function feedbacks(Request $request){
+    public function feedbacks(Request $request)
+    {
         $data['feedbacks'] = Feedback::with(['user'])->get();
-        return Inertia::render('Admin/Feedbacks',$data);
+        return Inertia::render('Admin/Feedbacks', $data);
     }
 
-    public function settings(){
+    public function settings()
+    {
         $data['settings'] = AppSettings::first();
-        return Inertia::render('Admin/Settings',$data);
+        return Inertia::render('Admin/Settings', $data);
+    }
+
+    public function deleteMany(Request $request)
+    {
+        $ids = $request->id;
+
+        foreach ($ids as $key => $id) {
+            $admin = User::where('id',$id)->whereHasRole(['admin'])->first();
+            $admin->delete();
+        }
+
+        return response()->json(['success' => true]);
     }
 }

@@ -42,11 +42,14 @@ const CalendarCard = ({ viewButton = false, className = "", expandButton = false
                         weekends:false
                         events={events}
                         headerToolbar={{
-                            left: 'today',
-                            center: 'title',
+                            left: 'title',
+                            center: '',
                             right: 'prev,next',
 
                         }}
+                        titleFormat={
+                            { year: 'numeric', month: 'short' }
+                        }
                         themeSystem="bootstrap5"
                     />
                 </div>
@@ -81,10 +84,14 @@ const CalendarCard = ({ viewButton = false, className = "", expandButton = false
                         weekends:false
                         events={events}
                         headerToolbar={{
-                            left: 'today',
-                            center: 'title',
-                            right: 'prev,next'
+                            left: 'title',
+                            center: '',
+                            right: 'prev,next',
+
                         }}
+                        titleFormat={
+                            { year: 'numeric', month: 'short' }
+                        }
                         themeSystem="bootstrap5"
                     />
                 </Card.Body>
