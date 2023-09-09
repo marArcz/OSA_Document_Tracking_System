@@ -1,6 +1,6 @@
 import PageLoader from '@/Components/PageLoader';
 import PolicyModal from '@/Components/PolicyModal';
-import { useLoaderState, usePolicyState, useThemeState, useUserAuthState } from '@/States/States'
+import { useLoaderState, useNavState, usePolicyState, useThemeState, useUserAuthState, useWindowState } from '@/States/States'
 import { router, usePage, useRemember } from '@inertiajs/react';
 import React, { Suspense, useEffect, useState } from 'react'
 
@@ -10,7 +10,19 @@ const AppLayout = ({ children, auth }) => {
     const { showLoader, setShowLoader } = useLoaderState();
     const [showPageLoader, setShowPageLoader] = useState(true)
     const { auth: authPageProps } = usePage().props;
-
+    const { isMobile, setIsMobile } = useWindowState();
+    const {isNavActive, setNavActive} = useNavState();
+    const handleResize = () => setIsMobile(window.innerWidth <= 900);
+    router.on('finish', () => {
+        if(isMobile){
+            setNavActive(!isNavActive);
+        }
+    })
+    useEffect(() => {
+        setIsMobile(window.innerWidth <= 900)
+        window.addEventListener("resize", () => handleResize);
+        return () => window.removeEventListener("resize", () => handleResize);
+    }, []);
 
     useEffect(() => {
         setUserAuth(authPageProps)

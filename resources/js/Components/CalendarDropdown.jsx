@@ -48,7 +48,7 @@ const CalendarDropdown = () => {
 
     return (
         <>
-            <Dropdown align="end" as={NavItem} className=''>
+            <Dropdown align="end" as={NavItem} className='dropdown-expand'>
                 <DropdownToggle bsPrefix="nav-profile-toggler" className="cursor-pointer btn btn-link nav-link bg-transparent text-decoration-none">
                     <div className="c-icon my-0 position-relative">
                         <i className='fi fi-rr-calendar-day text-[1.1rem] text-dark leading-none my-0'></i>

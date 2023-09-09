@@ -34,3 +34,7 @@ export const usePolicyState = create((set) => ({
     hasReadPolicy: false,
     setHasReadPolicy: (st) => set({ hasReadPolicy: st })
 }))
+export const useWindowState = create((set) => ({
+    isMobile: false,
+    setIsMobile: (st) => set({ isMobile: st })
+}))

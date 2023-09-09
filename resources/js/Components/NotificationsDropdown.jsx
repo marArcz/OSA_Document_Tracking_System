@@ -74,8 +74,8 @@ const NotificationsDropdown = () => {
 
     return (
         <>
-            <Dropdown align="end" as={NavItem} className=''>
-                <DropdownToggle bsPrefix="nav-profile-toggler" className="cursor-pointer btn btn-link nav-link bg-transparent text-decoration-none">
+            <Dropdown as={NavItem} className='dropdown-expand' align="end">
+                <DropdownToggle  bsPrefix="nav-profile-toggler" className="cursor-pointer btn btn-link nav-link bg-transparent text-decoration-none">
                     <div className="c-icon my-0 position-relative">
                         <i className='fi fi-rr-bell text-[1.1rem] text-dark leading-none  my-0'></i>
                         {

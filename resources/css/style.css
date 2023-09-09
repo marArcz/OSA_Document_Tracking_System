@@ -999,4 +999,14 @@ body::-webkit-scrollbar-thumb:hover {
     transform: scale(0.95);
     box-shadow: 0 0 0 0 rgba(0, 0, 0, 0);
   }
+}
+@media screen and (max-width: 540px) {
+  .dropdown.dropdown-expand {
+    position: static !important;
+  }
+}
+@media screen and (max-width: 540px) {
+  .dropdown.dropdown-expand .dropdown-menu-end {
+    width: 100vw !important;
+  }
 }/*# sourceMappingURL=style.css.map */

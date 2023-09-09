@@ -72,7 +72,7 @@ const Announcements = ({ announcements }) => {
                                                     </div>
                                                 )
                                             }
-                                            <p title={item.title} className=' text-light rounded bg-danger w-100 fs-6 mt-1 p-3 text-truncate col-12'>
+                                            <p title={item.title} className=' text-dark rounded bg-warning w-100 fs-6 mt-1 p-3 text-truncate col-12'>
                                                 {item.title}
                                             </p>
                                             <hr />

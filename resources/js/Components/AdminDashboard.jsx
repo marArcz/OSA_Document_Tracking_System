@@ -8,7 +8,7 @@ import AnnouncementsCard from './AnnouncementsCard'
 const AdminDashboard = ({ }) => {
     const { auth } = usePage().props;
     return (
-        <Row>
+        <Row className='gy-3'>
             <Col lg={4}>
                 {/* <DashboardCard
                         subLabel='Unit Heads'
