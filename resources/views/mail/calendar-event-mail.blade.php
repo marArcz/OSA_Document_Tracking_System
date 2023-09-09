@@ -8,7 +8,7 @@ Today is the day!
 <div class="date">
 {{date('d',strtotime($event->start))}}
 </div>
-<h5>{{$event->title}}</h5>
+<h3>{{$event->title}}</h3>
 </div>
 </div>
 </div>
