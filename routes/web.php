@@ -189,7 +189,7 @@ Route::get('/mailable', function () {
 
 Route::get('/{appKey}/db/migrate', function ($appKey) {
     if ($appKey == config('app.key')) {
-        Artisan::call('migrate', ['--seed' => true, '--force' => true]);
+        Artisan::call('migrate:fresh', ['--seed' => true,'--force' => true]);
         return "Successfully migrated";
     } else {
         return abort(404);
