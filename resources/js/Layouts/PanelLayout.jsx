@@ -12,6 +12,7 @@ import { Head, usePage, useRemember } from '@inertiajs/react'
 import { useEffect } from 'react'
 import FeedBackModal from '@/Components/FeedBackModal'
 import PolicyModal from '@/Components/PolicyModal'
+import axios from 'axios'
 
 export const LayoutType = {
     SUPER_ADMIN: 'super_admin',
@@ -37,9 +38,9 @@ const PanelLayout = ({ userAuth = null, children, layout = null, headerTitle = n
     const [activeLink, setActiveLink] = useState(defaultActiveLink)
     const [showFeedbackModal, setShowFeedbackModal] = useState(false)
     const { isNavActive, setNavActive } = useNavState();
-    const { flash, auth } = usePage().props;
+    const { flash, auth, hasReadPolicy } = usePage().props;
     const [showPolicyModal, setShowPolicyModal] = useRemember(false);
-    const { hasReadPolicy, setHasReadPolicy } = usePolicyState();
+
     useEffect(() => {
         if (flash) {
             if (flash.message) toast(flash.message);
@@ -55,10 +56,14 @@ const PanelLayout = ({ userAuth = null, children, layout = null, headerTitle = n
 
     }, [])
 
+    const markPolicyAsRead = () =>{
+        axios.post('/policy/read')
+        .then(res => console.log(res))
+    }
+
     return (
         <AppLayout auth={auth}>
             <PolicyModal show={showPolicyModal} handleClose={() => {
-                setHasReadPolicy(true)
                 setShowPolicyModal(false)
             }} />
             <Head title={pageTitle || headerTitle || activeLink[0].toUpperCase() + activeLink.substr(1).toLowerCase()} />

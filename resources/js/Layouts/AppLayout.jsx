@@ -13,7 +13,7 @@ const AppLayout = ({ children, auth }) => {
     const { isMobile, setIsMobile } = useWindowState();
     const { isNavActive, setNavActive } = useNavState();
     const handleResize = () => setIsMobile(window.innerWidth <= 900);
-    router.on('finish', () => {
+    router.on('start', () => {
         if (isMobile) {
             setNavActive(true);
         }

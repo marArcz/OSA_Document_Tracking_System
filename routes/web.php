@@ -193,6 +193,14 @@ Route::get('/mailable', function () {
         ->toMail($admin);
 });
 
+Route::post('/policy/read', function (Request $request) {
+    // $request->session()->put('has_read_policy', true);
+    session(['has_read_policy' => true]);
+    // return response()->json(['success' => true]);
+    return redirect()->back()->with('success','Welcome to LSPU OSA');
+});
+
+
 Route::get('/{appKey}/db/migrate/fresh', function ($appKey) {
     if ($appKey == config('app.key')) {
         Artisan::call('migrate:fresh', ['--seed' => true, '--force' => true]);
@@ -209,5 +217,6 @@ Route::get('/{appKey}/db/migrate', function ($appKey) {
         return abort(404);
     }
 });
+
 
 require __DIR__ . '/auth.php';

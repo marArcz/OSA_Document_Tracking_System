@@ -98,6 +98,12 @@ Route::prefix('/comments')->group(function () {
     Route::get('/{unit_head_id}/{submission_bin_id}/get', [ReportCommentController::class, 'get']);
 });
 
+Route::post('/policy/read', function (Request $request) {
+    // $request->session()->put('has_read_policy', true);
+    session(['has_read_policy' => true]);
+    return response()->json(['success' => true]);
+});
+
 
 Route::prefix('/campus')->group(function () {
     Route::get('/', [CampusController::class, 'all']);
@@ -128,7 +134,7 @@ Route::prefix('/unit_heads')->group(function () {
     Route::post('/delete/many', [UnitHeadController::class, 'deleteMany'])->name('unit_heads.delete.many');
 })->middleware(['auth']);
 
-Route::post('/admins/delete/many', [AdminController::class, 'deleteMany'])->name('admins.delete.many')->middleware(['auth','role:super_admin']);
+Route::post('/admins/delete/many', [AdminController::class, 'deleteMany'])->name('admins.delete.many')->middleware(['auth', 'role:super_admin']);
 
 Route::prefix('/reminders')->group(function () {
     Route::get('/', [ReminderController::class, 'all']);
