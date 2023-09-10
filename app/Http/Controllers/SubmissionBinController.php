@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Events\SubmissionBinCreated;
 use App\Mail\NewSubmissionBinNotif;
 use App\Models\CalendarEvent;
+use App\Models\Report;
 use App\Models\SubmissionBin;
 use App\Models\User;
 use App\Notifications\NewSubmissionBin;
@@ -24,9 +25,9 @@ class SubmissionBinController extends Controller
         ]);
         $bin->save();
 
-        if($bin->deadline_date){
+        if ($bin->deadline_date) {
             $calendarEvent = new CalendarEvent([
-                'title' => $bin->title . ", deadline" . ($bin->deadline_time ? " @". $bin->deadline_time :''),
+                'title' => $bin->title . ", deadline" . ($bin->deadline_time ? " @" . $bin->deadline_time : ''),
                 'user_id' => $request->user()->id,
                 'start' => $bin->deadline_date,
                 'end' => $bin->deadline_date
@@ -37,6 +38,14 @@ class SubmissionBinController extends Controller
         $users = User::whereHasRole(['admin', 'unit_head'])->get();
         foreach ($users as $key => $user) {
             $user->notify(new NewSubmissionBin($bin));
+        }
+
+        $unitHeads = User::whereHasRole('unit_head')->get();
+        foreach ($unitHeads as $key => $unitHead) {
+            $report = Report::create([
+                'user_id' => $unitHead->id,
+                'submission_bin_id' => $bin->id,
+            ]);
         }
 
         return redirect()->intended(route('admin.submission_bins'))->with('success', 'Successfully created!');
@@ -58,7 +67,7 @@ class SubmissionBinController extends Controller
         $submission_bin = SubmissionBin::where('id', $request->id)->firstOrFail();
         $submission_bin->delete();
 
-        return redirect(route('admin.submission_bins'))->with('success','Successfully deleted!');
+        return redirect(route('admin.submission_bins'))->with('success', 'Successfully deleted!');
         // return response()->json(['success' => true]);
     }
 

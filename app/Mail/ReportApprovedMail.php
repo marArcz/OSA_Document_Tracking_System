@@ -2,6 +2,7 @@
 
 namespace App\Mail;
 
+use App\Models\AppSettings;
 use App\Models\Report;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -43,7 +44,8 @@ class ReportApprovedMail extends Mailable
             markdown: 'emails.report-approved-mail',
             with: [
                 'url' => url(route('admin.report.open', ['report_id' => $this->report->id])),
-                'url_submission_bin' => url(route('admin.report.open', ['report_id' => $this->report->id]))
+                'url_submission_bin' => url(route('admin.report.open', ['report_id' => $this->report->id])),
+                'logo' => AppSettings::first()->logo,
             ],
         );
     }

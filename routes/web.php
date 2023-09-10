@@ -1,5 +1,6 @@
 <?php
 
+use App\Events\NewCommentAdded;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AnnouncementController;
 use App\Http\Controllers\AppSettingsController;
@@ -20,10 +21,12 @@ use App\Mail\CalendarEventMail;
 use App\Mail\NewReportMail;
 use App\Models\CalendarEvent;
 use App\Models\Report;
+use App\Models\ReportComment;
 use App\Models\SubmissionBin;
 use App\Models\User;
 use App\Notifications\CalendarEventNotification;
 use App\Notifications\DueSubmissionBin;
+use App\Notifications\NewComment;
 use App\Notifications\NewReportApproved;
 use App\Notifications\NewReportSubmitted;
 use App\Notifications\NewSubmissionBin;
@@ -116,6 +119,8 @@ Route::prefix('/unit-head')->middleware(['auth', 'role:unit_head'])->group(funct
 Route::get('/announcements', [UnitHeadController::class, 'announcements'])->name('unit_head.announcements')->middleware(['role:admin|unit_head']);
 
 
+
+
 Route::prefix('/submission-bins')->middleware(['auth', 'role:super_admin'])->group(function () {
     Route::post('/create', [SubmissionBinController::class, 'create'])->name('submission_bins.create');
     Route::delete('/{id}', [SubmissionBinController::class, 'delete'])->name('submission_bins.delete');
@@ -131,7 +136,7 @@ Route::prefix('/announcements')->middleware(['auth', 'role:super_admin'])->group
 Route::prefix('/reports')->middleware(['auth'])->group(function () {
     Route::patch('/{submission_bin_id}/submit', [ReportController::class, 'submitReport'])->name('reports.submit');
     Route::patch('/{submission_bin_id}/unsubmit', [ReportController::class, 'unSubmitReport'])->name('reports.unsubmit');
-    Route::get('/attachment/{id}/view', [ReportAttachmentController::class, 'view'])->name('reports.attachment.view');
+    Route::get('/{report}/view', [ReportController::class, 'view'])->name('reports.view');
     Route::patch('{id}/status/update', [ReportAttachmentController::class, 'updateStatus'])->name('reports.status.update');
 });
 
@@ -177,19 +182,20 @@ Route::prefix('/super-admin')->group(function () {
 
 
 Route::get('/mailable', function () {
-    $bin = SubmissionBin::where('id', '>', 0)->first();
+    // $bin = SubmissionBin::where('id', '>', 0)->first();
     $unitHead = User::where('id', '>', 0)->first();
-    // $admin = User::whereHasRole('admin')->first();
-
+    $admin = User::whereHasRole('super_admin')->first();
+    $report = $unitHead->reports()->first();
     $event = CalendarEvent::where('id', '>', 0)->first();
+    $comment = ReportComment::first();
 
-    return (new DueSubmissionBin($bin))
-        ->toMail($unitHead);
+    return (new NewComment($comment))
+        ->toMail($admin);
 });
 
 Route::get('/{appKey}/db/migrate', function ($appKey) {
     if ($appKey == config('app.key')) {
-        Artisan::call('migrate:fresh', ['--seed' => true,'--force' => true]);
+        Artisan::call('migrate:fresh', ['--seed' => true, '--force' => true]);
         return "Successfully migrated";
     } else {
         return abort(404);

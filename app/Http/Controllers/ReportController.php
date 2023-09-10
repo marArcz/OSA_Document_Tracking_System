@@ -85,20 +85,20 @@ class ReportController extends Controller
             $report->date_submitted = Carbon::now()->toDateTimeString();
 
             //check if has deadline
-            if($report->deadline_date){
-                if($report->deadline_date > Carbon::now()->toDate()){
+            if ($report->deadline_date) {
+                if ($report->deadline_date > Carbon::now()->toDate()) {
                     $report->remarks = "Submitted late";
-                }else{
+                } else {
                     $report->remarks = "Submitted on time";
                 }
-            }else{
+            } else {
                 $report->remarks = "Submitted on time";
             }
 
             if ($report->save()) {
-                $users = User::whereHasRole('admin')->where('campus_id',$user->campus_id)->get();
-                foreach ($users as $key => $user) {
-                    $user->notify(new NewReportSubmitted($report));
+                $admin = User::whereHasRole('admin')->where('campus_id', $user->campus_id)->get();
+                foreach ($admin as $key => $admin) {
+                    $admin->notify(new NewReportSubmitted($report));
                 }
 
                 return redirect()->back()->with("success", 'Successfully submitted!');
@@ -139,5 +139,14 @@ class ReportController extends Controller
     {
         $unit_heads = User::where('campus_id', $request->campus_id)->whereHasRole(['unit_head'])->get();
         return response()->json(['unitHeads' => $unit_heads]);
+    }
+
+    public function view(Request $request, Report $report)
+    {
+        if ($request->user()->hasRole('unit_head')) {
+            return redirect()->route('unit_head.submission_bin', ['id' => $report->submission_bin_id]);
+        } else {
+            return redirect()->route('admin.report.open', ['report_id' => $report->id]);
+        }
     }
 }

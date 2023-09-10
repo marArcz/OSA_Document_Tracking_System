@@ -244,7 +244,7 @@ class AdminController extends Controller
     public function viewReport(Request $request)
     {
         // $reports = SubmissionBin::whereIn('id',Report::select('id')->where('status','Approved'))->with(['reports'])->get();
-        $data['report'] = Report::with(['submission_bin'])->where('id', $request->report_id)->first();
+        $data['report'] = Report::with(['submission_bin'])->where('id', $request->report_id)->firstOrFail();
         return Inertia::render('Admin/ViewReport', $data);
     }
 

@@ -302,6 +302,10 @@ img {
     gap: 10px;
 }
 
+.flex img{
+    margin-right: 10px;
+}
+
 .calendar-event-date {
     width: 100%;
     height: max-content;
@@ -339,4 +343,12 @@ img {
     background: #283493c2;
     border-radius: 5px 5px 0 0;
 
+}
+
+.profile-pic{
+    border-radius: 50%;
+}
+
+p{
+    margin: 0;
 }

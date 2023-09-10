@@ -34,7 +34,7 @@ class Report extends Model
         return $this->hasMany(ReportComment::class,'report_id','id');
     }
 
-    public function submission_bin() :BelongsTo
+    public function submission_bin():BelongsTo
     {
         return $this->belongsTo(SubmissionBin::class,'submission_bin_id','id');
     }

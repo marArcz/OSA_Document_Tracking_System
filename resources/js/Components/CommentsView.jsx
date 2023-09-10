@@ -32,7 +32,7 @@ const AddCommentForm = ({ comment, setComment, addComment, submittingComment = f
     </Form>
 )
 
-const CommentsView = ({ user, submissionBin, unitHead, className = "" }) => {
+const CommentsView = ({ user, submissionBin, unitHead, className = "",report }) => {
 
     const [comments, setComments] = useState([])
     const [isFetchingComments, setIsFetchingComments] = useState(true)
@@ -55,6 +55,7 @@ const CommentsView = ({ user, submissionBin, unitHead, className = "" }) => {
         var formData = new FormData();
         formData.append('comment', comment);
         formData.append('user_id', user.id);
+        formData.append('report_id', report.id);
         formData.append('unit_head_id', unitHead.id);
         formData.append('submission_bin_id', submissionBin.id);
 

@@ -2,6 +2,7 @@
 
 namespace App\Mail;
 
+use App\Models\AppSettings;
 use App\Models\Report;
 use App\Models\User;
 use Illuminate\Bus\Queueable;
@@ -43,7 +44,8 @@ class ReportStatusUpdatedMail extends Mailable
         return new Content(
             markdown: 'emails.report-status-updated-mail',
             with:[
-                'url' => url(route('unit_head.submission_bin',['id'=>$this->report->submission_bin_id]))
+                'url' => url(route('unit_head.submission_bin',['id'=>$this->report->submission_bin_id])),
+                'logo' => AppSettings::first()->logo,
             ]
         );
     }

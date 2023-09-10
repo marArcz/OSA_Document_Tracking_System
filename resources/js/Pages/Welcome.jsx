@@ -111,7 +111,7 @@ const Welcome = () => {
                                 }}
                                 menu={[
                                     { value: 'unit_head', text: 'Sign in as Unit Head' },
-                                    { value: 'admin', text: 'Sign in as Administrator' },
+                                    { value: 'admin', text: 'Sign in as Campus Admin' },
                                     { value: 'super_admin', text: 'Sign in as Super Admin' },
                                 ]}
                             />

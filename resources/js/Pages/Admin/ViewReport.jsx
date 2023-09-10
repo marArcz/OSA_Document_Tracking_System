@@ -3,6 +3,7 @@ import FileIcon from '@/Components/FileIcon';
 import HeaderTitle from '@/Components/HeaderTitle';
 import { formatDate } from '@/Components/Helper';
 import ModalComponent from '@/Components/ModalComponent';
+import TextProfilePic from '@/Components/TextProfilePic';
 import PanelLayout from '@/Layouts/PanelLayout'
 import { Head, useForm, usePage } from '@inertiajs/react';
 import React, { useState, useEffect } from 'react'
@@ -149,13 +150,23 @@ const ViewReport = ({ report }) => {
                                         {
                                             auth.role === 'super_admin' && (
                                                 <div className='text-end'>
-                                                    <p className={`text-success fw-bold my-0`}>
-                                                        <i className='bx bxs-check-circle me-2'></i>
-                                                        {report.status}
-                                                    </p>
-                                                    <p className={`text-sm my-0 ${report.remarks.toLowerCase() == 'submitted on time'?'text-success':'text-danger'}`}>
-                                                        <small>{report.remarks}</small>
-                                                    </p>
+                                                    {
+                                                        report.status === 'Approved' ? (
+                                                            <>
+                                                                <p className={`text-success fw-bold my-0`}>
+                                                                    <i className='bx bxs-check-circle me-2'></i>
+                                                                    {report.status}
+                                                                </p>
+                                                                <p className={`text-sm my-0 ${report.remarks.toLowerCase() == 'submitted on time' ? 'text-success' : 'text-danger'}`}>
+                                                                    <small>{report.remarks}</small>
+                                                                </p>
+                                                            </>
+                                                        ) : (
+                                                            <p className={`text-secondary fw-bold my-0`}>
+                                                                {report.status}
+                                                            </p>
+                                                        )
+                                                    }
                                                 </div>
                                             )
                                         }
@@ -164,12 +175,18 @@ const ViewReport = ({ report }) => {
                                 <hr />
                                 <div className='flex gap-x-4 w-100'>
                                     <div>
-                                        <Image
-                                            src={report.unit_head.image}
-                                            width={50}
-                                            height={50}
-                                            roundedCircle
-                                        />
+                                        {
+                                            report.unit_head.image ? (
+                                                <Image
+                                                    src={report.unit_head.image}
+                                                    width={50}
+                                                    height={50}
+                                                    roundedCircle
+                                                />
+                                            ) : (
+                                                <TextProfilePic className="text-light" size='sm' text={report.unit_head.firstname[0]} />
+                                            )
+                                        }
                                     </div>
                                     <div className='w-100 '>
                                         <p className="my-0 fw-bold">{report.unit_head.firstname + ' ' + report.unit_head.lastname}</p>
@@ -200,35 +217,100 @@ const ViewReport = ({ report }) => {
                         <Card className='border-0 shadow-sm rounded-0 p-2 mb-2'>
                             <Card.Body className='h-100'>
                                 <p className='text-sm text-danger fw-bold mb-1'>Attachments</p>
-                                <p className='text-sm text-secondary my-0 fw-bold'>
-                                    <span>Submitted on {formatDate(new Date(report.date_submitted))}</span>
-                                </p>
+                                {
+                                    report.is_submitted? (
+                                        <>
+                                            {
+                                                auth.role === 'super_admin' ? (
+                                                    report.status === 'Approved' ? (
+                                                        <p className='text-sm text-secondary my-0 fw-bold'>
+                                                            <span>Submitted on {formatDate(new Date(report.date_submitted))}</span>
+                                                        </p>
+                                                    ) : null
+                                                ) : (
+                                                    <p className='text-sm text-secondary my-0 fw-bold'>
+                                                        <span>Submitted on {formatDate(new Date(report.date_submitted))}</span>
+                                                    </p>
+                                                )
+                                            }
+                                        </>
+                                    ):null
+                                }
                                 <hr />
                                 <div className="">
-                                    <div className="row g-3">
-                                        {
-                                            report.attachments.map((att, index) => (
-                                                // <ListGroupItem key={index} className={` cursor-pointer ${att.id === selectedFile.id ? 'bg-light-primary rounded-1' : ''}`} onClick={() => setSelectedFile(att)}>
-                                                //     {att.name}
-                                                // </ListGroupItem>
-                                                <Col key={index} xl={2} lg={3} sm={4} xs={6}>
-                                                    <div onClick={() => {
-                                                        setSelectedFile(att)
-                                                        setShowFileModal(true)
-                                                    }} className={`text-center rounded p-3 cursor-pointer ${selectedFile?.id === att.id ? 'bg-light' : ''}`} title={att.name}>
-                                                        <FileIcon
-                                                            file={att}
-                                                            className={"mx-auto"}
-                                                            size='sm'
-                                                        />
-                                                        <p className="text-center mt-3 mb-0 col-11 text-sm text-truncate">
-                                                            <small>{att.name}</small>
-                                                        </p>
-                                                    </div>
-                                                </Col>
-                                            ))
-                                        }
-                                    </div>
+                                    {
+                                        auth.role === 'admin' ? (
+                                            <div className="row g-3">
+                                                {
+                                                    report.attachments.length == 0 && (
+                                                        <p>No submission yet.</p>
+                                                    )
+                                                }
+                                                {
+                                                    report.attachments.map((att, index) => (
+                                                        // <ListGroupItem key={index} className={` cursor-pointer ${att.id === selectedFile.id ? 'bg-light-primary rounded-1' : ''}`} onClick={() => setSelectedFile(att)}>
+                                                        //     {att.name}
+                                                        // </ListGroupItem>
+                                                        <Col key={index} xl={2} lg={3} sm={4} xs={6}>
+                                                            <div onClick={() => {
+                                                                setSelectedFile(att)
+                                                                setShowFileModal(true)
+                                                            }} className={`text-center rounded p-3 cursor-pointer ${selectedFile?.id === att.id ? 'bg-light' : ''}`} title={att.name}>
+                                                                <FileIcon
+                                                                    file={att}
+                                                                    className={"mx-auto"}
+                                                                    size='sm'
+                                                                />
+                                                                <p className="text-center mt-3 mb-0 col-11 text-sm text-truncate">
+                                                                    <small>{att.name}</small>
+                                                                </p>
+                                                            </div>
+                                                        </Col>
+                                                    ))
+                                                }
+
+                                            </div>
+                                        ) : (
+                                            <>
+                                                {
+                                                    report.status === 'Approved' ? (
+                                                        <div className="row g-3">
+                                                            {
+                                                                report.attachments.length == 0 && (
+                                                                    <p>No submission yet.</p>
+                                                                )
+                                                            }
+                                                            {
+                                                                report.attachments.map((att, index) => (
+                                                                    // <ListGroupItem key={index} className={` cursor-pointer ${att.id === selectedFile.id ? 'bg-light-primary rounded-1' : ''}`} onClick={() => setSelectedFile(att)}>
+                                                                    //     {att.name}
+                                                                    // </ListGroupItem>
+                                                                    <Col key={index} xl={2} lg={3} sm={4} xs={6}>
+                                                                        <div onClick={() => {
+                                                                            setSelectedFile(att)
+                                                                            setShowFileModal(true)
+                                                                        }} className={`text-center rounded p-3 cursor-pointer ${selectedFile?.id === att.id ? 'bg-light' : ''}`} title={att.name}>
+                                                                            <FileIcon
+                                                                                file={att}
+                                                                                className={"mx-auto"}
+                                                                                size='sm'
+                                                                            />
+                                                                            <p className="text-center mt-3 mb-0 col-11 text-sm text-truncate">
+                                                                                <small>{att.name}</small>
+                                                                            </p>
+                                                                        </div>
+                                                                    </Col>
+                                                                ))
+                                                            }
+
+                                                        </div>
+                                                    ) : (
+                                                        <p>No submission yet.</p>
+                                                    )
+                                                }
+                                            </>
+                                        )
+                                    }
                                 </div>
                             </Card.Body>
                         </Card>
@@ -238,7 +320,7 @@ const ViewReport = ({ report }) => {
                             <Card.Body className='p-4 '>
                                 <p className='text-sm fw-bold text-primary'>Private Comments</p>
                                 <hr />
-                                <CommentsView user={auth.user} submissionBin={report.submission_bin} unitHead={report.unit_head} />
+                                <CommentsView report={report} user={auth.user} submissionBin={report.submission_bin} unitHead={report.unit_head} />
                             </Card.Body>
                         </Card>
                     </Col>

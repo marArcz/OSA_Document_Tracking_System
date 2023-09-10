@@ -39,6 +39,7 @@ class User extends Authenticatable implements LaratrustUser
         'google_access_token'
     ];
 
+
     public function name():string
     {
         return $this->firstname . ' ' . $this->lastname;

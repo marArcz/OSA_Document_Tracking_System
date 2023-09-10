@@ -128,7 +128,7 @@ const SubmissionBin = ({ submissionBin, auth, report }) => {
                                     Private Comments
                                 </p>
                                 <div className="mt-4">
-                                    <CommentsView unitHead={auth.user} user={auth.user} submissionBin={submissionBin} />
+                                    <CommentsView report={report} unitHead={auth.user} user={auth.user} submissionBin={submissionBin} />
                                 </div>
                             </Card.Body>
                         </Card>
