@@ -28,12 +28,13 @@ const Announcements = ({ announcements }) => {
                             <span>Announcement</span>
                             <i className='fi fi-rr-megaphone'></i>
                         </p> */}
-                        <p title={announcement.title} className='text-dark bg-warning w-100 fs-5 fw-bold p-3 text-truncate col-12'>
+                        <p title={announcement.title} className='text-dark mb-1 w-100 fs-6 fw-bold text-truncate col-12'>
                             {announcement.title}
                         </p>
+                        <p className='my-0 text-sm'>{formatDate(new Date(announcement.created_at))}</p>
                         <div className="mt-3">
                             <p>{announcement.content}</p>
-                            <Col lg={5} md={8} sm={8} xs={12}>
+                            <Col lg={5} md={8} sm={8} xs={12} >
                                 <Image
                                     src={announcement.image}
                                     fluid
@@ -53,8 +54,11 @@ const Announcements = ({ announcements }) => {
                                 <Card className='border-0 shadow-sm'>
                                     <Card.Body className='p-4 '>
                                         <div className=''>
+                                            <p title={item.title} className=' text-dark fw-bold w-100 fs-6 mt-1 mb-2 text-truncate col-12'>
+                                                {item.title}
+                                            </p>
                                             <div className="flex justify-between mb-3">
-                                                <p className='my-0 text-danger text-sm'>{formatDate(new Date(item.created_at))}</p>
+                                                <p className='my-0 text-sm'>{formatDate(new Date(item.created_at))}</p>
                                                 <i className='fi fi-rr-megaphone text-black-50'></i>
                                             </div>
 
@@ -72,9 +76,8 @@ const Announcements = ({ announcements }) => {
                                                     </div>
                                                 )
                                             }
-                                            <p title={item.title} className=' text-dark rounded bg-warning w-100 fs-6 mt-1 p-3 text-truncate col-12'>
-                                                {item.title}
-                                            </p>
+
+
                                             <hr />
                                             <div className="text-end">
                                                 <button
