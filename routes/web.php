@@ -193,9 +193,17 @@ Route::get('/mailable', function () {
         ->toMail($admin);
 });
 
-Route::get('/{appKey}/db/migrate', function ($appKey) {
+Route::get('/{appKey}/db/migrate/fresh', function ($appKey) {
     if ($appKey == config('app.key')) {
         Artisan::call('migrate:fresh', ['--seed' => true, '--force' => true]);
+        return "Successfully migrated";
+    } else {
+        return abort(404);
+    }
+});
+Route::get('/{appKey}/db/migrate', function ($appKey) {
+    if ($appKey == config('app.key')) {
+        Artisan::call('migrate', ['--force' => true]);
         return "Successfully migrated";
     } else {
         return abort(404);
