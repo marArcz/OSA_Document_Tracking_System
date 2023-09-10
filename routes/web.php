@@ -61,7 +61,7 @@ Route::get('/', function () {
 
 // super admin
 Route::prefix('/admin')->group(function () {
-    Route::get('/', [AdminController::class, 'index'])->name('admin.index');
+    // Route::get('/', [AdminController::class, 'index'])->name('admin.index');
     Route::get('/register', [AdminController::class, 'register'])->name('admin.register')->middleware('guest');
     Route::post('/create', [AdminController::class, 'create'])->name('admin.create')->middleware('guest');
 });
