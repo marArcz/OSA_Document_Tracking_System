@@ -194,8 +194,8 @@ Route::get('/mailable', function () {
 });
 
 Route::post('/policy/read', function (Request $request) {
-    // $request->session()->put('has_read_policy', true);
-    session(['has_read_policy' => true]);
+    $request->session()->put('has_read_policy', true);
+    // session(['has_read_policy' => true]);
     // return response()->json(['success' => true]);
     return redirect()->back()->with('success','Welcome to LSPU OSA');
 });

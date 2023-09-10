@@ -50,7 +50,7 @@ class HandleInertiaRequests extends Middleware
                 },
                 'prevPage' => url()->previous(),
                 'appLogo' => AppSettings::first()->logo,
-                'hasReadPolicy' => fn () => session('has_read_policy', false)
+                'hasReadPolicy' => fn () => $request->session()->get('has_read_policy', false)
             ]);
         } catch (\Throwable $th) {
             return array_merge(parent::share($request), []);
