@@ -14,29 +14,19 @@ const EditSubmissionBin = ({ submissionBin }) => {
 
     const onSubmit = (e) => {
         e.preventDefault();
-        patch(route('submission_bins.update',{id:submissionBin.id}))
+        patch(route('submission_bins.update', { id: submissionBin.id }))
     }
 
     return (
         <PanelLayout headerTitle="Edit Submission Bin">
-            <div className="py-3 px-[1.5rem]">
+            <div className="content-wrapper">
                 <CardComponent>
                     <Card.Body>
                         <Form onSubmit={onSubmit}>
-                            <div className="flex mb-4">
-                                <p className='flex items-center gap-2 my-1 me-auto fw-bolder'>
-                                    <i className='fi fi-rr-box'></i>
-                                    <span>New Submission Bin</span>
-                                </p>
-                                <div className='flex gap-2'>
-                                    <Link disabled={processing} href={route('admin.submission_bins')} className="btn btn-sm btn-secondary">
-                                        Cancel
-                                    </Link>
-                                    <Button disabled={processing} variant='primary' size='sm' type='submit'>
-                                        Submit <i className=' bx bx-right-arrow-alt'></i>
-                                    </Button>
-                                </div>
-                            </div>
+                            <p className='flex items-center gap-2 mb-3 me-auto fw-bolder'>
+                                <i className='fi fi-rr-box'></i>
+                                <span>Edit Submission Bin</span>
+                            </p>
                             <div className="mb-3">
                                 <Form.Label>Title:</Form.Label>
                                 <Form.Control
@@ -69,6 +59,16 @@ const EditSubmissionBin = ({ submissionBin }) => {
                                             onChange={e => setData('deadline_time', e.target.value)}
                                         />
                                     </div>
+                                </div>
+                            </div>
+                            <div className="flex mt-5 justify-end flex-wrap gap-2">
+                                <div className='flex gap-2'>
+                                    <Link disabled={processing} href={route('admin.submission_bins')} className="btn btn-sm btn-secondary">
+                                        Cancel
+                                    </Link>
+                                    <Button disabled={processing} variant='primary' size='sm' type='submit'>
+                                        Submit <i className=' bx bx-right-arrow-alt'></i>
+                                    </Button>
                                 </div>
                             </div>
                         </Form>
