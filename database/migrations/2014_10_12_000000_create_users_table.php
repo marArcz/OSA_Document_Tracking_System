@@ -21,7 +21,7 @@ return new class extends Migration
             $table->string('phone')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password')->nullable();
-            $table->string('image')->nullable();
+            $table->string('image',500)->nullable();
             $table->unsignedBigInteger('designation_id')->nullable();
             $table->unsignedBigInteger('campus_id')->nullable();
             $table->string('employee_no')->nullable();
